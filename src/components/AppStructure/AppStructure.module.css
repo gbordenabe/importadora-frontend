@@ -1,0 +1,33 @@
+.appContainer {
+	width: 100%;
+	min-height: 100vh;
+	background-color: #081f40;
+}
+
+.appStructure__container {
+	width: 100%;
+	min-height: 100vh;
+	position: relative;
+	padding: 0px 300px;
+}
+
+.appStructure__container::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url("../../assets/fondo-tierra.png");
+	mix-blend-mode: soft-light;
+	background-size: cover;
+}
+
+.contentContainer {
+	position: relative;
+	z-index: 1;
+
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}

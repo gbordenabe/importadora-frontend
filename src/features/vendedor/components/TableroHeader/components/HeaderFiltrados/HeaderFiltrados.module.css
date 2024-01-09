@@ -1,0 +1,114 @@
+.header__filtrados__container {
+	width: 100%;
+	display: flex;
+	gap: 5px;
+	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.header__filtrados__buttons {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 10px;
+}
+.header__filtrados__icon {
+	width: 25px;
+	height: 25px;
+	display: grid;
+	place-content: center;
+	background: var(--gris-oscuro);
+	border-radius: 100%;
+	color: #fff;
+	cursor: pointer;
+}
+/* Separador */
+.verticalSeparator {
+	width: 1px;
+	min-height: 100%;
+	background-color: #fff;
+	margin: 0 5px;
+}
+
+/* content */
+.header__filtrados__content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.header__filtrados__content__item {
+	background: rgba(215, 215, 215, 0.5);
+	border-radius: 5px;
+	padding: 5px 10px;
+	max-height: 31px;
+
+	display: flex;
+	gap: 10px;
+}
+
+/* first row */
+.header__filtrados__content__itemGroup {
+	display: flex;
+	gap: 5px;
+}
+.header__filtrados__selection {
+	background-color: var(--gris-oscuro);
+	border-radius: 100px;
+	padding: 4px 8px;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+.header__filtrados__select__color {
+	width: 10px;
+	height: 10px;
+	border-radius: 100px;
+}
+.header__filtrados__green {
+	background-color: #89dc7f;
+}
+.header__filtrados__yellow {
+	background-color: #ffe600;
+}
+.header__filtrados__red {
+	background-color: #d72f2f;
+}
+.header__filtrados__blue {
+	background-color: #629bf8;
+}
+
+.header__filtrados__documentType {
+	display: flex;
+	gap: 5px;
+}
+.header__filtrados__documentType__item {
+	background-color: var(--gris-oscuro);
+	font-size: 14px;
+	color: #fff;
+	padding: 0 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50px;
+	width: 100%;
+	white-space: nowrap;
+}
+
+/* row 2 */
+.header__filtrados__content__item__row2 {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+
+	background: rgba(215, 215, 215, 0.5);
+	border-radius: 5px;
+	padding: 5px 10px;
+	max-height: 31px;
+
+	gap: 10px;
+}
+
+.header__filtrados__content__text {
+	white-space: nowrap;
+}

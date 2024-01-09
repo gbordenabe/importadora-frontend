@@ -1,0 +1,66 @@
+.tableroVendedor__container {
+	padding: 20px;
+	border-radius: 10px;
+	border: 1px solid #000;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	backdrop-filter: blur(10px);
+}
+
+.tableroVendedor__title {
+	color: #fff;
+}
+
+.tableroVendedor__content {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* Lista */
+
+.tableroVendedor__list {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
+	padding: 15px;
+	border-radius: 10px;
+
+	overflow-y: scroll;
+	max-height: 550px;
+	min-height: 550px;
+}
+
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... ) scroll*/
+.tableroVendedor__list::-webkit-scrollbar {
+	-webkit-appearance: none;
+}
+
+.tableroVendedor__list::-webkit-scrollbar:vertical {
+	width: 14px;
+	background-color: #c5c5c5;
+	border-radius: 7px;
+}
+
+.tableroVendedor__list::-webkit-scrollbar-button:increment,
+.tableroVendedor__list::-webkit-scrollbar-button {
+	display: none;
+}
+
+.tableroVendedor__list::-webkit-scrollbar:horizontal {
+	height: 10px;
+}
+
+.tableroVendedor__list::-webkit-scrollbar-thumb {
+	background-color: #404040;
+	border-radius: 20px;
+	border: 4px solid #c5c5c5;
+}
+
+.tableroVendedor__list::-webkit-scrollbar-track {
+	border-radius: 10px;
+}

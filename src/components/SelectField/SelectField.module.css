@@ -1,0 +1,21 @@
+.column__item {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+.row__item {
+	width: 100%;
+
+	display: grid;
+	grid-template-columns: max-content 1fr;
+	align-items: center;
+	gap: 5px;
+}
+
+.emptyMessage__text {
+	width: min-content;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

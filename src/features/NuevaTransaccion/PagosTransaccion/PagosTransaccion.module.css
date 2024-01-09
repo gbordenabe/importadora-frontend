@@ -1,0 +1,33 @@
+.box__container {
+	padding: 10px;
+	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.box__head {
+	display: flex;
+	justify-content: space-between;
+}
+
+.box__button__head {
+	border-radius: 20px;
+	padding: 5px 16px;
+	background-color: var(--azul-claro);
+	color: #fff;
+	font-size: 14px;
+}
+
+.box__content {
+	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
+	padding: 5px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.box__content__item {
+	width: 250px;
+}

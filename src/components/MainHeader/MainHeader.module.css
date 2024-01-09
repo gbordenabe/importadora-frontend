@@ -1,0 +1,13 @@
+.mainHeader__container {
+	width: 100%;
+}
+
+.logo__container {
+	width: auto;
+	height: 100px;
+}
+.logoImg {
+	background-size: cover;
+	width: auto;
+	height: 100%;
+}
