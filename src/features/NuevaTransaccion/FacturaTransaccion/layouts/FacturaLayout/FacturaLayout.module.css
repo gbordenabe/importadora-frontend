@@ -1,0 +1,40 @@
+.layout__container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	background-color: var(--fondo-claro);
+	padding: 5px 10px;
+	border-radius: 10px;
+}
+
+.layout__header {
+	display: flex;
+	justify-content: space-between;
+}
+.layout__header__group {
+	display: flex;
+	gap: 10px;
+}
+.layout__header__title {
+	font-weight: 600;
+}
+.layout__header__textAdjunto {
+	font-size: 14px;
+	color: #888;
+}
+
+.layout__content {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.layout__content__group__one {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 10px;
+}
+
+.layout__content__group__two {
+	display: grid;
+	gap: 10px;
+}

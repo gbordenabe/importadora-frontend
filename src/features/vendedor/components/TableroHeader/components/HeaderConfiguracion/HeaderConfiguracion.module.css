@@ -7,22 +7,6 @@
 	padding: 10px;
 }
 
-.primary__button,
-.secondary__button {
-	width: 100%;
-	padding: 8px 16px;
-	border-radius: 16px;
-	font-weight: 600;
-	font-size: 14px;
-	background-color: #404040;
-	color: #fff;
-	cursor: pointer;
-}
-
-.primary__button {
-	background-color: var(--azul-claro);
-}
-
 .buttons__icons__container {
 	display: flex;
 	gap: 10px;

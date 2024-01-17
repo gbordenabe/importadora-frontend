@@ -1,0 +1,81 @@
+.list__itemsBox__container {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1.6fr;
+	gap: 30px;
+	align-items: center;
+}
+
+.tableroVendedor__list__row {
+	width: 100%;
+	padding: 8px 10px;
+	background: rgba(215, 215, 215, 0.5);
+	border-radius: 15px;
+	display: flex;
+	gap: 5px;
+}
+.tableroVendedor__list__item__box {
+	height: fit-content;
+	padding: 10px 15px;
+	background: #e1e7ed;
+	border-radius: 12px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 3px;
+}
+
+.tableroVendedor__buttons {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 10px;
+}
+
+.tableroVendedor__color {
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	background-color: #629bf8;
+}
+
+.tableroVendedor__icon {
+	width: 25px;
+	height: 25px;
+	display: grid;
+	place-content: center;
+	background: #f0f2f4;
+	border-radius: 100%;
+	cursor: pointer;
+}
+
+/* Separador */
+.verticalSeparator {
+	width: 1px;
+	min-height: 100%;
+	background-color: #948a8a;
+	margin: 0 5px;
+}
+
+.itemBox__text {
+	font-size: 15px;
+}
+
+.itemBox__text span {
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.list__item__estado__container {
+	display: flex;
+	gap: 5px;
+	align-items: center;
+}
+.list__item__color {
+	width: 15px;
+	height: 15px;
+	background-color: #89dc7f;
+	border-radius: 100%;
+}

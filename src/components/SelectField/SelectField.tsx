@@ -40,6 +40,7 @@ export const SelectField = ({
 
 			<Dropdown
 				className="p-inputtext-sm"
+				style={{ minWidth: "150px" }}
 				value={value}
 				name={name}
 				onChange={onChange}

@@ -1,0 +1,15 @@
+.item__group__container {
+	display: flex;
+
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+}
+.item__group {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	border: solid 1px #333;
+	border-radius: 10px;
+	padding: 10px;
+}

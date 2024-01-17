@@ -41,6 +41,7 @@ export const TextBoxField = ({
 
 			<InputText
 				className="p-inputtext-sm"
+				style={{ minWidth: "150px" }}
 				value={value}
 				name={name}
 				type={type}

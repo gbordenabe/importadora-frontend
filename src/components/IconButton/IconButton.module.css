@@ -1,0 +1,15 @@
+.icon__container {
+	min-width: 40px;
+	min-height: 40px;
+	border-radius: 50px;
+	background-color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	cursor: pointer;
+}
+
+.icon__container:hover {
+	transform: scale(1.1);
+}

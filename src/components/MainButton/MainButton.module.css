@@ -1,0 +1,15 @@
+.mainButton__container {
+	padding: 8px 16px;
+	border-radius: 16px;
+	background-color: #0094ff;
+	color: #fff;
+
+	font-weight: 600;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.mainButton__container:hover {
+	transform: scale(1.05);
+}

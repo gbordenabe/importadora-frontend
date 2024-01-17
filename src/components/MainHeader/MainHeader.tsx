@@ -1,5 +1,6 @@
 import style from "./MainHeader.module.css";
-import logoImg from "../../assets/logo.svg";
+// import logoImg from "../../assets/logo.svg";
+import logoImg from "../../assets/logo.png";
 
 export const MainHeader = () => {
 	return (

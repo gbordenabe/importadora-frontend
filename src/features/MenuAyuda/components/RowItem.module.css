@@ -1,0 +1,19 @@
+.rowItem__container {
+	display: grid;
+	grid-template-columns: 25px 1fr;
+	align-items: center;
+	gap: 10px;
+  padding: 10px 0;
+}
+
+.rowItem__color {
+	width: 25px;
+	height: 25px;
+	background-color: #333;
+	border-radius: 25px;
+}
+
+.rowItem__title {
+	font-weight: 700;
+	color: #3e4451;
+}

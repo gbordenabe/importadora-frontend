@@ -2,16 +2,13 @@
 	width: 100%;
 	min-height: 100vh;
 	background-color: #081f40;
-}
-
-.appStructure__container {
-	width: 100%;
-	min-height: 100vh;
 	position: relative;
-	padding: 0px 300px;
+	display: flex;
+	justify-content: center;
+	padding: 20px 0;
 }
 
-.appStructure__container::before {
+.appContainer::before {
 	content: "";
 	position: absolute;
 	top: 0;
@@ -19,15 +16,18 @@
 	width: 100%;
 	height: 100%;
 	background-image: url("../../assets/fondo-tierra.png");
+	background-attachment: fixed;
 	mix-blend-mode: soft-light;
 	background-size: cover;
 }
 
 .contentContainer {
+	width: 100%;
+	max-width: 1200px;
 	position: relative;
 	z-index: 1;
-
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+	/* margin: 0 auto; */
 }

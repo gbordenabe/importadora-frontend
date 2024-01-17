@@ -1,9 +1,13 @@
 .box__container {
+	max-width: 100%;
 	padding: 10px;
 	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
 	border-radius: 10px;
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr;
 	flex-direction: column;
+
+	justify-content: space-between;
 	gap: 10px;
 }
 
@@ -13,6 +17,7 @@
 }
 
 .box__button__head {
+	height: fit-content;
 	border-radius: 20px;
 	padding: 5px 16px;
 	background-color: var(--azul-claro);
@@ -21,11 +26,12 @@
 }
 
 .box__content {
-	background: var(--fondo-claro, rgba(255, 255, 255, 0.5));
-	padding: 5px;
-	border-radius: 5px;
+	max-height: 200px;
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	gap: 10px;
+	overflow-y: auto;
+	padding-right: 10px; /*Modificar para espaciado del scrollbar*/
 }
 
 .box__content__item {

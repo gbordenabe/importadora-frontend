@@ -5,7 +5,7 @@ import { ContentStructure } from "../../components/ContentStructure/ContentStruc
 
 import { MainTitle } from "@/components/MainTitle/MainTitle";
 import { BoxContent } from "../../components/BoxContent/BoxContent";
-import { HeaderTransaccion } from "./HeaderTransaccion/HeaderTransaccion";
+import { HeaderTransaccion } from "../../components/HeaderTransaccion/HeaderTransaccion";
 import { UsuariosTransaccion } from "./UsuariosTransaccion/UsuariosTransaccion";
 import { PagosTransaccion } from "./PagosTransaccion/PagosTransaccion";
 import { FacturaTransaccion } from "./FacturaTransaccion/FacturaTransaccion";
@@ -27,12 +27,11 @@ export const NuevaTransaccion = () => {
 						<FacturaTransaccion />
 						<SaldosTransaccion />
 					</div>
-
-					<div>
-						<p>Volver atrás</p>
-						<button>Confirmar Transacción</button>
-					</div>
 				</BoxContent>
+				<div>
+					<p>Volver atrás</p>
+					<button>Confirmar Transacción</button>
+				</div>
 			</ContentStructure>
 		</AppStructure>
 	);

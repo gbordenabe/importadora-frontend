@@ -1,0 +1,13 @@
+.form__container {
+	display: grid;
+	gap: 20px;
+}
+.form__group {
+	display: grid;
+	gap: 10px;
+}
+
+.container__buttons {
+	display: flex;
+	justify-content: space-between;
+}

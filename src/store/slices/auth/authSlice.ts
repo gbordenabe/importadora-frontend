@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export interface AuthState {
 	isLoading: boolean;
-	login: boolean | null;
+	login: any;
 }
 
 const initialState: AuthState = {
 	isLoading: true,
-	login: null,
+	login: {},
 };
 
 export const authSlice = createSlice({

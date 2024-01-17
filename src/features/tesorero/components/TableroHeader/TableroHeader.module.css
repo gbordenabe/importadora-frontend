@@ -1,0 +1,6 @@
+.tableroVendedor__content__header {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 180px;
+	gap: 10px;
+}
