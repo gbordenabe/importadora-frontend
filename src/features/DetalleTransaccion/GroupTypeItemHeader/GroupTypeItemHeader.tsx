@@ -1,6 +1,6 @@
 import style from "./GroupTypeItemHeader.module.css";
-import { MainButton } from "@/components/MainButton/MainButton";
 import { ChipText } from "@/components/ChipText/ChipText";
+import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 
 interface Props {
 	onShowData: () => void;
@@ -18,7 +18,7 @@ export const GroupTypeItemHeader = ({ onShowData, title }: Props) => {
 				</div>
 
 				<div>
-					<MainButton text="Revisar" onClick={onShowData} />
+					<SecondaryButton text="Revisar" onClick={onShowData} />
 				</div>
 			</div>
 			<div>

@@ -6,7 +6,7 @@ import { TableroHeader } from "../components/TableroHeader/TableroHeader";
 import { ListItemRow } from "../components/ListItemRow/ListItemRow";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { useModal } from "@/hooks/useModal";
-import { AddModal } from "@/features/TableroUsuario/AddModal/AddModal";
+import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
 
 export const TableroTesorero = () => {
 	const menuAyuda = useModal();
@@ -48,7 +48,7 @@ export const TableroTesorero = () => {
 				modalStatus={menuAyuda.modalStatus}
 				onHideModal={menuAyuda.onHideModal}
 			>
-				<AddModal onHideModal={menuAyuda.onHideModal} />
+				<MenuAyuda onHideModal={menuAyuda.onHideModal} />
 			</PrimeModal>
 		</>
 	);

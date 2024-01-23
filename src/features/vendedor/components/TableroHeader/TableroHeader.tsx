@@ -4,12 +4,13 @@ import { HeaderFiltrados } from "./components/HeaderFiltrados/HeaderFiltrados";
 
 interface Props {
 	showMenuAyuda?: () => void;
+	showProfileEdit?: () => void;
 }
 
-export const TableroHeader = ({ showMenuAyuda }: Props) => {
+export const TableroHeader = ({ showMenuAyuda, showProfileEdit }: Props) => {
 	return (
 		<div className={style.tableroVendedor__content__header}>
-			<HeaderConfiguracion showMenuAyuda={showMenuAyuda} />
+			<HeaderConfiguracion showMenuAyuda={showMenuAyuda} showProfileEdit={showProfileEdit} />
 
 			<HeaderFiltrados />
 		</div>

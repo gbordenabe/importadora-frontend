@@ -1,25 +1,32 @@
 import style from "./SaldosTransaccion.module.css";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addNewBalances } from "@/store/slices/newTransaction";
-import { pagosStructure } from "../data/data";
+
+import { saldosStructure } from "../data/data";
 import { NuevoRegistro } from "../components/NuevoRegistro/NuevoRegistro";
 import { CreditoLayout } from "./layouts/CreditoLayout/CreditoLayout";
 import { NotaCreditoLayout } from "./layouts/NotaCreditoLayout/NotaCreditoLayout";
 import { RetencionLayout } from "./layouts/RetencionLayout/RetencionLayout";
+import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { useDocumentStateHook } from "@/hooks/useDocumentState";
 
-export const SaldosTransaccion = () => {
-	const dispatch = useAppDispatch();
-	const { saldos } = useAppSelector((store) => store.newTransaction);
+interface Props {
+	saldos?: any;
+	setSaldos?: any;
+}
 
-	const handleAddRegister = (data: any) => {
-		dispatch(addNewBalances(data));
+export const SaldosTransaccion = ({ saldos, setSaldos }: Props) => {
+	const handleAddRegister = (newData: any) => {
+		setSaldos((prev: any) => [...prev, newData]);
 	};
+
+	const { handleChangeInput, handleChangeResumen } = useDocumentStateHook(saldos, setSaldos);
 
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
 				<h2>Saldos</h2>
-				<button className={style.box__button__head}>Confirmar</button>
+				<div>
+					<PrimaryButton text="Confirmar" />
+				</div>
 			</div>
 
 			{saldos.length > 0 && (
@@ -28,15 +35,36 @@ export const SaldosTransaccion = () => {
 						saldos.map((saldo: any, index: number) => (
 							<div key={saldo.tipo + index}>
 								{saldo.tipo === "Crédito" && (
-									<CreditoLayout index={index} tipo={saldo.tipo} subtipo={saldo.subtipo} />
+									<CreditoLayout
+										index={index}
+										tipo={saldo.tipo}
+										subtipo={saldo.subtipo}
+										saldo={saldo}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
+									/>
 								)}
 
 								{saldo.tipo === "Nota de crédito" && (
-									<NotaCreditoLayout index={index} tipo={saldo.tipo} subtipo={saldo.subtipo} />
+									<NotaCreditoLayout
+										index={index}
+										tipo={saldo.tipo}
+										subtipo={saldo.subtipo}
+										saldo={saldo}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
+									/>
 								)}
 
 								{saldo.tipo === "Retención" && (
-									<RetencionLayout index={index} tipo={saldo.tipo} subtipo={saldo.subtipo} />
+									<RetencionLayout
+										index={index}
+										tipo={saldo.tipo}
+										subtipo={saldo.subtipo}
+										saldo={saldo}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
+									/>
 								)}
 							</div>
 						))}
@@ -45,7 +73,7 @@ export const SaldosTransaccion = () => {
 
 			<NuevoRegistro
 				addNewRegister={handleAddRegister}
-				dataStructure={pagosStructure}
+				dataStructure={saldosStructure}
 				addButtonText="+ Nuevo Saldo"
 				listOptions={listOptions}
 				listTitle="Tipo de saldo"

@@ -1,25 +1,32 @@
 import style from "./PagosTransaccion.module.css";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { addNewPayment } from "@/store/slices/newTransaction";
+
 import { pagosStructure } from "../data/data";
 import { NuevoRegistro } from "../components/NuevoRegistro/NuevoRegistro";
 import { ChequeLayout } from "./layouts/ChequeLayout/ChequeLayout";
 import { DepositoLayout } from "./layouts/DepositoLayout/DepositoLayout";
 import { EfectivoTransferenciaLayout } from "./layouts/EfectivoTransferenciaLayout/EfectivoTransferenciaLayout";
+import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { useDocumentStateHook } from "@/hooks/useDocumentState";
 
-export const PagosTransaccion = () => {
-	const dispatch = useAppDispatch();
-	const { pagos } = useAppSelector((store) => store.newTransaction);
+interface Props {
+	pagos?: any;
+	setPagos?: any;
+}
 
-	const handleAddRegister = (data: any) => {
-		dispatch(addNewPayment(data));
+export const PagosTransaccion = ({ pagos, setPagos }: Props) => {
+	const handleAddRegister = (newData: any) => {
+		setPagos((prev: any) => [...prev, newData]);
 	};
+
+	const { handleChangeInput, handleChangeResumen } = useDocumentStateHook(pagos, setPagos);
 
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
 				<h2>Pagos</h2>
-				<button className={style.box__button__head}>Confirmar</button>
+				<div>
+					<PrimaryButton text="Confirmar" />
+				</div>
 			</div>
 
 			{pagos.length > 0 && (
@@ -28,16 +35,33 @@ export const PagosTransaccion = () => {
 						pagos.map((pago: any, index: number) => (
 							<div key={pago.tipo + index}>
 								{pago.tipo === "Cheque" && (
-									<ChequeLayout index={index} tipo={pago.tipo} subtipo={pago.subtipo} />
+									<ChequeLayout
+										index={index}
+										tipo={pago.tipo}
+										subtipo={pago.subtipo}
+										pago={pago}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
+									/>
 								)}
 								{pago.tipo === "Depósito" && (
-									<DepositoLayout index={index} tipo={pago.tipo} subtipo={pago.subtipo} />
+									<DepositoLayout
+										index={index}
+										tipo={pago.tipo}
+										subtipo={pago.subtipo}
+										pago={pago}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
+									/>
 								)}
 								{pago.tipo === "Efectivo / Transferencia" && (
 									<EfectivoTransferenciaLayout
 										index={index}
 										tipo={pago.tipo}
 										subtipo={pago.subtipo}
+										pago={pago}
+										onChange={(e: any) => handleChangeInput(index, e)}
+										handleChangeResumen={handleChangeResumen}
 									/>
 								)}
 							</div>

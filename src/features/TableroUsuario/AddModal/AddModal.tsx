@@ -36,7 +36,10 @@ export const AddModal = ({ onHideModal, optionCreateSelect, setOptionCreateSelec
 			)}
 
 			{optionCreateSelect === "Empresa" && (
-				<FormularioEmpresa setOptionCreateSelect={setOptionCreateSelect} />
+				<FormularioEmpresa
+					setOptionCreateSelect={setOptionCreateSelect}
+					onHideModal={onHideModal}
+				/>
 			)}
 			{optionCreateSelect === "Cliente" && (
 				<FormularioCliente setOptionCreateSelect={setOptionCreateSelect} />

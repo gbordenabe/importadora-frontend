@@ -1,21 +1,42 @@
-import { SelectField } from "@/components/SelectField/SelectField";
+import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import style from "./UsuariosTransaccion.module.css";
+import { SelectField } from "@/components/SelectField/SelectField";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
+import { handleChangeInput } from "@/helpers/handleTextBox";
 
-export const UsuariosTransaccion = () => {
+interface Props {
+	usuarios?: any;
+	setUsuarios?: any;
+}
+
+export const UsuariosTransaccion = ({ usuarios, setUsuarios }: Props) => {
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
 				<h2>Usuarios</h2>
-				<button className={style.box__button__head}>Confirmar</button>
+				<div>
+					<PrimaryButton text="Confirmar" />
+				</div>
 			</div>
 
 			<div className={style.box__content}>
 				<div className={style.box__content__item}>
-					<SelectField textLabel="Empresa" value="" name="" options={[]} onChange={() => {}} />
+					<SelectField
+						textLabel="Empresa"
+						value={usuarios.empresa}
+						name="empresa"
+						options={[]}
+						onChange={(e) => handleChangeInput(e, setUsuarios)}
+					/>
 				</div>
 				<div className={style.box__content__item}>
-					<TextBoxField textLabel="Cliente" value="" name="" onChange={() => {}} placeholder="Nombre del cliente"/>
+					<TextBoxField
+						textLabel="Cliente"
+						value={usuarios.cliente}
+						name="cliente"
+						onChange={(e) => handleChangeInput(e, setUsuarios)}
+						placeholder="Nombre del cliente"
+					/>
 				</div>
 			</div>
 		</div>

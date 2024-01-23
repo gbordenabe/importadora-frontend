@@ -11,12 +11,16 @@ import { useNavigate } from "react-router-dom";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { useModal } from "@/hooks/useModal";
 import { AddModal } from "./AddModal/AddModal";
+import { useGetFetch } from "@/hooks/useGetFetch";
 
 export const TableroUsuario = () => {
 	const navigate = useNavigate();
 	const crearModal = useModal();
 
 	const [optionCreateSelect, setOptionCreateSelect] = useState("");
+
+	const EmpresaFetch = useGetFetch("/empresa");
+
 	return (
 		<>
 			<AppStructure>
@@ -37,6 +41,8 @@ export const TableroUsuario = () => {
 
 							<div className={style.tableroUsuario__list}>
 								<div className={style.tableroUsuario__list__items}>
+									{EmpresaFetch?.data && EmpresaFetch?.data.map((empresa: any) => <UsuarioItem />)}
+									{/* <UsuarioItem />
 									<UsuarioItem />
 									<UsuarioItem />
 									<UsuarioItem />
@@ -44,8 +50,7 @@ export const TableroUsuario = () => {
 									<UsuarioItem />
 									<UsuarioItem />
 									<UsuarioItem />
-									<UsuarioItem />
-									<UsuarioItem />
+									<UsuarioItem /> */}
 								</div>
 							</div>
 						</BoxContent>

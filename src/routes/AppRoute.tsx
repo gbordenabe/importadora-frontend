@@ -21,7 +21,7 @@ export function AppRoutes() {
 						<Route path="/recuperar-password" element={<RecuperarContraseña />} />
 						<Route path="/cambiar-password" element={<CambiarContraseña />} />
 					</>
-				) : login.username == "dmachuca" ? (
+				) : login.roles[0] == "vendedor" ? (
 					<>
 						<Route path="/tablero-vendedor" element={<TableroVendedor />} />
 						<Route path="/nueva-transaccion" element={<NuevaTransaccion />} />

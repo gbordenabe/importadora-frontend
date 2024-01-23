@@ -4,3 +4,9 @@
 	grid-template-columns: 1fr 1fr;
 	gap: 10px;
 }
+
+.tipo__documentos__group {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}

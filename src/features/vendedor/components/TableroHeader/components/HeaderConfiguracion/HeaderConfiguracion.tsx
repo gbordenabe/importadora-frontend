@@ -9,9 +9,10 @@ import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 
 interface Props {
 	showMenuAyuda?: () => void;
+	showProfileEdit?: () => void;
 }
 
-export const HeaderConfiguracion = ({ showMenuAyuda }: Props) => {
+export const HeaderConfiguracion = ({ showMenuAyuda, showProfileEdit }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
@@ -28,7 +29,7 @@ export const HeaderConfiguracion = ({ showMenuAyuda }: Props) => {
 				<button className={style.button__icon} onClick={showMenuAyuda}>
 					<IoHelpCircleOutline size={25} />
 				</button>
-				<button className={style.button__icon}>
+				<button className={style.button__icon} onClick={showProfileEdit}>
 					<LuSettings size={20} />
 				</button>
 			</div>

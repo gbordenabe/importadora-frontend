@@ -20,6 +20,7 @@ export const NuevoRegistro = ({
 }: Props) => {
 	// pasos
 	const [stepNewRegister, setStepNewRegister] = useState(1);
+	
 	const handleStepNewRegister = () => {
 		if (listTitle === "Factura") {
 			handleAddNewRegister("Factura o nota de débito", null);

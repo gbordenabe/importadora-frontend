@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface AuthState {
+export interface NewTransaction {
 	isLoading: boolean;
 	facturas: any;
 	pagos: any;
 	saldos: any;
 }
 
-const initialState: AuthState = {
+const initialState: NewTransaction = {
 	isLoading: true,
 	facturas: [],
 	pagos: [],
@@ -30,8 +30,12 @@ export const newTransactionSlice = createSlice({
 		addNewBills: (state, action) => {
 			state.facturas = [...state.facturas, action.payload];
 		},
+		setResumenPagos: (state, action) => {
+			const { indice, resumen } = action.payload;
+			state.pagos[indice].resumen = resumen;
+		},
 	},
 });
 
-export const { isLoading, addNewPayment, addNewBalances, addNewBills } =
+export const { isLoading, addNewPayment, addNewBalances, addNewBills, setResumenPagos } =
 	newTransactionSlice.actions;

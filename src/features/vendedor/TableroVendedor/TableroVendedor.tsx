@@ -7,9 +7,11 @@ import { ListItemRow } from "../components/ListItemRow/ListItemRow";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
 import { useModal } from "@/hooks/useModal";
+import { Perfil } from "@/features/Perfil/Perfil";
 
 export const TableroVendedor = () => {
 	const menuAyuda = useModal();
+	const profileEdit = useModal();
 	const { login } = useAppSelector((state) => state.auth);
 
 	return (
@@ -18,11 +20,14 @@ export const TableroVendedor = () => {
 				<MainHeader />
 				<div className={style.tableroVendedor__container}>
 					<h2 className={style.tableroVendedor__title}>
-						Bienvenido {login.username}, este es tu tablero de transacciones
+						Bienvenido {login.name}, este es tu tablero de transacciones
 					</h2>
 
 					<div className={style.tableroVendedor__content}>
-						<TableroHeader showMenuAyuda={menuAyuda.onVisibleModal} />
+						<TableroHeader
+							showMenuAyuda={menuAyuda.onVisibleModal}
+							showProfileEdit={profileEdit.onVisibleModal}
+						/>
 
 						<div className={style.tableroVendedor__list}>
 							<div className={style.tableroVendedor__list__items}>
@@ -47,6 +52,15 @@ export const TableroVendedor = () => {
 				onHideModal={menuAyuda.onHideModal}
 			>
 				<MenuAyuda onHideModal={menuAyuda.onHideModal} />
+			</PrimeModal>
+
+			{/* Profile edit*/}
+			<PrimeModal
+				header=""
+				modalStatus={profileEdit.modalStatus}
+				onHideModal={profileEdit.onHideModal}
+			>
+				<Perfil onHideModal={profileEdit.onHideModal} />
 			</PrimeModal>
 		</>
 	);
