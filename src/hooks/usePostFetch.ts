@@ -83,5 +83,6 @@ export const usePostFetch = (
 	return {
 		postFetchData,
 		isLoadingPost,
+		errorPost,
 	};
 };

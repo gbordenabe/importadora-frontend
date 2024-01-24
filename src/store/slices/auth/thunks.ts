@@ -1,6 +1,6 @@
 import { AppThunk } from "../../store";
 import { authApi } from "@/connections";
-import { isLoading, setLogin } from "./authSlice";
+import { setLogin } from "./authSlice";
 
 export const getUser = (payload: string): AppThunk => {
 	return async (dispatch) => {

@@ -58,5 +58,6 @@ export const useDeleteFetch = (
 	return {
 		deleteFetchData,
 		isLoadingDelete,
+		errorDelete,
 	};
 };

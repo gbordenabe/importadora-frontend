@@ -41,7 +41,8 @@ export const TableroUsuario = () => {
 
 							<div className={style.tableroUsuario__list}>
 								<div className={style.tableroUsuario__list__items}>
-									{EmpresaFetch?.data && EmpresaFetch?.data.map((empresa: any) => <UsuarioItem />)}
+									{EmpresaFetch?.data &&
+										EmpresaFetch?.data.map((empresa: any) => <UsuarioItem {...empresa} />)}
 									{/* <UsuarioItem />
 									<UsuarioItem />
 									<UsuarioItem />
