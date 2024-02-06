@@ -11,6 +11,7 @@ interface Props {
 }
 
 export const FacturaTransaccion = ({ facturas, setFacturas }: Props) => {
+	
 	const handleAddRegister = () => {
 		setFacturas((prev: any) => [...prev, facturasStructure]);
 	};
@@ -20,7 +21,7 @@ export const FacturaTransaccion = ({ facturas, setFacturas }: Props) => {
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
-				<h2>Factura o nota de débito</h2>
+				<h2> Factura o nota de débito </h2>
 				<div>
 					<PrimaryButton text="Confirmar" />
 				</div>

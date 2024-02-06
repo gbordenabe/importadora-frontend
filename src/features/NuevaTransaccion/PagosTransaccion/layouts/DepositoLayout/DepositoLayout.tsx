@@ -5,6 +5,7 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
+import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
 	index: number;
@@ -55,8 +56,8 @@ export const DepositoLayout = ({
 					<div className={style.layout__content}>
 						<div className={style.layout__content__group__one}>
 							<TextBoxField
-								name="number"
-								value={pago.number}
+								name="document_number"
+								value={pago.document_number}
 								onChange={onChange}
 								placeholder="Número de operación"
 							/>
@@ -65,25 +66,27 @@ export const DepositoLayout = ({
 								value={pago.amount}
 								onChange={onChange}
 								placeholder="Monto"
+								type="number"
 							/>
-							<TextBoxField
-								name="fecha"
-								value={pago.fecha}
+
+							<CalendarInput
+								name="date"
+								value={pago.date}
 								onChange={onChange}
-								placeholder="Fecha"
 							/>
 						</div>
 						<div className={style.layout__content__group__two}>
-							<SelectField
-								name="banco"
-								value={pago.banco}
+
+							<TextBoxField
+								name="bank_name"
+								value={pago.bank_name}
 								onChange={onChange}
 								placeholder="Banco"
-								options={[]}
 							/>
+
 							<TextBoxField
-								name="obs"
-								value={pago.obs}
+								name="observation"
+								value={pago.observation}
 								onChange={onChange}
 								placeholder="Observaciones"
 							/>

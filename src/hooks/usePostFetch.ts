@@ -51,7 +51,7 @@ export const usePostFetch = (
 		try {
 			setIsLoadingPost(true);
 
-			const token = localStorage.getItem("rt__grifosBackoffice");
+			const token = localStorage.getItem("rt__importadora");
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
@@ -83,6 +83,5 @@ export const usePostFetch = (
 	return {
 		postFetchData,
 		isLoadingPost,
-		errorPost,
 	};
 };

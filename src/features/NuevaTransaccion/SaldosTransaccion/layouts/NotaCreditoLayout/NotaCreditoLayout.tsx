@@ -4,6 +4,7 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
+import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
 	index: number;
@@ -54,19 +55,28 @@ export const NotaCreditoLayout = ({
 								value={saldo.amount}
 								onChange={onChange}
 								placeholder="Monto"
+								type="number"
 							/>
+
 							<TextBoxField
-								name="porcentaje"
-								value={saldo.porcentaje}
+								name="porcentage"
+								value={saldo.porcentage}
 								onChange={onChange}
 								placeholder="Porcentaje"
+								type="number"
 							/>
-							<TextBoxField name="fecha" value="" onChange={onChange} placeholder="Fecha" />
+
+							<CalendarInput
+								name="date"
+								value={saldo.date}
+								onChange={onChange}
+							/>
+
 						</div>
 						<div className={style.layout__content__group__two}>
 							<TextBoxField
-								name="obs"
-								value={saldo.obs}
+								name="observation"
+								value={saldo.observation}
 								onChange={onChange}
 								placeholder="Observaciones"
 							/>

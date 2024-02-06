@@ -4,6 +4,7 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
+import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
 	index: number;
@@ -58,18 +59,21 @@ export const RetencionLayout = ({
 								value={saldo.amount}
 								onChange={onChange}
 								placeholder="Monto"
+								type="number"
+
 							/>
-							<TextBoxField
-								name="fecha"
-								value={saldo.fecha}
+
+							<CalendarInput
+								name="date"
+								value={saldo.date}
 								onChange={onChange}
-								placeholder="Fecha"
 							/>
+
 						</div>
 						<div className={style.layout__content__group__two}>
 							<TextBoxField
-								name="obs"
-								value={saldo.obs}
+								name="observation"
+								value={saldo.observation}
 								onChange={onChange}
 								placeholder="Observaciones"
 							/>

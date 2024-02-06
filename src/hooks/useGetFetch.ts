@@ -14,7 +14,7 @@ export const useGetFetch = <T>(endPoint: string): HookData<T> => {
 
 	const getFetchData = async () => {
 		try {
-			const token = localStorage.getItem("rt__grifosBackoffice"); // Obteniendo el token JWT del localStorage
+			const token = localStorage.getItem("rt__importadora"); // Obteniendo el token JWT del localStorage
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};

@@ -39,7 +39,7 @@ export const useDeleteFetch = (
 
 	const deleteFetchData = async (id: string) => {
 		try {
-			const token = localStorage.getItem("rt__grifosBackoffice"); // Obteniendo el token JWT del localStorage
+			const token = localStorage.getItem("rt__importadora"); // Obteniendo el token JWT del localStorage
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
@@ -58,6 +58,5 @@ export const useDeleteFetch = (
 	return {
 		deleteFetchData,
 		isLoadingDelete,
-		errorDelete,
 	};
 };

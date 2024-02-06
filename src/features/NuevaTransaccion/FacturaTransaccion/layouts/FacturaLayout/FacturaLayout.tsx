@@ -4,6 +4,7 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
+import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
 	index: number;
@@ -23,12 +24,12 @@ export const FacturaLayout = ({
 	handleChangeResumen,
 }: Props) => {
 	return (
-		<div className={style.layout__container}>
-			{factura.resumen ? (
+		<div className={style.layout__container} key={index}>
+			{ factura.resumen ? (
 				<div className={style.layout__header}>
 					<div className={style.layout__header__group}>
 						<p className={style.layout__header__title}>{tipo}</p>
-						{subtipo && <ChipText text={subtipo} />}
+						{ subtipo && <ChipText text={subtipo } />}
 					</div>
 					<div className={style.layout__header__group}>
 						<MaximizarButton onClick={() => handleChangeResumen(index, !factura.resumen)} />
@@ -56,23 +57,28 @@ export const FacturaLayout = ({
 								onChange={onChange}
 								placeholder="Número de operación"
 							/>
+
 							<TextBoxField
 								name="amount"
 								value={factura.amount}
 								onChange={onChange}
 								placeholder="Monto"
+								type="number"
+
 							/>
-							<TextBoxField
-								name="fecha"
-								value={factura.fecha}
+							
+							<CalendarInput
+								name="date"
+								value={factura.date}
 								onChange={onChange}
-								placeholder="Fecha"
 							/>
+
+
 						</div>
 						<div className={style.layout__content__group__two}>
 							<TextBoxField
-								name="obs"
-								value={factura.obs}
+								name="observation"
+								value={factura.observation}
 								onChange={onChange}
 								placeholder="Observaciones"
 							/>

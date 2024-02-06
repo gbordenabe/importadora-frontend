@@ -8,20 +8,28 @@ import { CambiarContraseña } from "@/features/CambiarContraseña/CambiarContras
 import { TableroTesorero } from "@/features/tesorero/TableroTesorero/TableroTesorero";
 import { TableroUsuario } from "@/features/TableroUsuario/TableroUsuario";
 import { useAppSelector } from "@/store/hooks";
+import { TableroTesoreroVendedor } from "@/features/TableroUsuario/tableros/TableroTesoreroVendedor/TableroTesoreroVendedor";
+import { TableroCliente } from "@/features/TableroUsuario/tableros/TableroCliente/TableroCliente";
+import { TableroEmpresa } from "@/features/TableroUsuario/tableros/TableroEmpresa/TableroEmpresa";
 
 export function AppRoutes() {
-	const { login } = useAppSelector((state) => state.auth);
+	const { login, loading } = useAppSelector((state) => state.auth);
+
+	if (loading) {
+		return <></>;
+	}
 
 	return (
 		<BrowserRouter>
 			<Routes>
-				{!login.id ? (
+				{!login?.id ? (
 					<>
 						<Route path="/login" element={<Login />} />
 						<Route path="/recuperar-password" element={<RecuperarContraseña />} />
 						<Route path="/cambiar-password" element={<CambiarContraseña />} />
+						<Route path="/*" element={<Navigate to="/login" />} />
 					</>
-				) : login.roles[0] == "vendedor" ? (
+				) : login?.role.name == "SELLER" ? (
 					<>
 						<Route path="/tablero-vendedor" element={<TableroVendedor />} />
 						<Route path="/nueva-transaccion" element={<NuevaTransaccion />} />
@@ -32,7 +40,10 @@ export function AppRoutes() {
 					<>
 						<Route path="/tablero-tesorero" element={<TableroTesorero />} />
 						<Route path="/tablero-usuario" element={<TableroUsuario />} />
-						<Route path="/detalle-transaccion" element={<DetalleTransaccion />} />
+						<Route path="/tablero-usuario/vendendor-tesorero" element={<TableroTesoreroVendedor />} />
+						<Route path="/tablero-usuario/cliente" element={<TableroCliente />} />
+						<Route path="/tablero-usuario/empresa" element={<TableroEmpresa />} />
+						<Route path="/detalle-transaccion/:id" element={<DetalleTransaccion />} />
 						<Route path="/*" element={<Navigate to="/tablero-tesorero" />} />
 					</>
 				)}

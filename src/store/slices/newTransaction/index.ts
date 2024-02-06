@@ -1,2 +1,2 @@
 export * from "./newTransactionSlice";
-// export * from "./thunks";
+export * from "./thunks";

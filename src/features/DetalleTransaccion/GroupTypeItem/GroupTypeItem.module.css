@@ -1,0 +1,6 @@
+.btnContainer{
+    display: flex;
+    width: 50%;
+    gap: 1rem;
+    align-self: flex-end;
+}

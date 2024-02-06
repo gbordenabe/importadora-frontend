@@ -1,4 +1,4 @@
-// import { AppThunk } from "../../store";
+import { AppThunk } from "../../store";
 
 // export const getUser = (payload: string): AppThunk => {
 // 	return async (dispatch) => {

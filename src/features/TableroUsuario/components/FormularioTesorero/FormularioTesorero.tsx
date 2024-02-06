@@ -4,31 +4,42 @@ import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { useState } from "react";
 import { handleChangeInput } from "@/helpers/handleTextBox";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { usePostFetch } from "@/hooks/usePostFetch";
 
 interface Props {
 	setOptionCreateSelect?: any;
+	onHideModal?: any;
 }
 
-export const FormularioTesorero = ({ setOptionCreateSelect }: Props) => {
+export const FormularioTesorero = ({ setOptionCreateSelect, onHideModal }: Props) => {
+	const { postFetchData } = usePostFetch("/user", "Usuario");
 	const [nuevoTesorero, setNuevoTesorero] = useState({
-		usuario: "",
-		nombre: "",
-		apellido: "",
-		contraseña: "",
+		user_name: "",
+		name: "",
+		last_name: "",
+		password: "",
 		email: "",
-		verificarEmail: "",
+		verifyEmail: "",
+		city: "",
+		location: "",
+		province: "",
+		role_id: 2,
 	});
+	// El rol del vendedor es 1, tesorero 2.
 
 	const handleReset = () => {
 		setOptionCreateSelect("");
-		setNuevoTesorero({
-			usuario: "",
-			nombre: "",
-			apellido: "",
-			contraseña: "",
-			email: "",
-			verificarEmail: "",
-		});
+	};
+
+	const handleCreate = async () => {
+		const { verifyEmail, ...restData } = nuevoTesorero;
+
+		try {
+			await postFetchData(restData);
+			onHideModal();
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -36,26 +47,27 @@ export const FormularioTesorero = ({ setOptionCreateSelect }: Props) => {
 			<div className={style.form__group}>
 				<TextBoxField
 					textLabel="Nombre de usuario:"
-					name="usuario"
-					value={nuevoTesorero.usuario}
+					name="user_name"
+					value={nuevoTesorero.user_name}
 					onChange={(e) => handleChangeInput(e, setNuevoTesorero)}
 				/>
 				<TextBoxField
 					textLabel="Nombre:"
-					name="nombre"
-					value={nuevoTesorero.nombre}
+					name="name"
+					value={nuevoTesorero.name}
 					onChange={(e) => handleChangeInput(e, setNuevoTesorero)}
 				/>
 				<TextBoxField
 					textLabel="Apellido:"
-					name="apellido"
-					value={nuevoTesorero.apellido}
+					name="last_name"
+					value={nuevoTesorero.last_name}
 					onChange={(e) => handleChangeInput(e, setNuevoTesorero)}
 				/>
 				<TextBoxField
 					textLabel="Contraseña:"
-					name="contraseña"
-					value={nuevoTesorero.contraseña}
+					name="password"
+					type="password"
+					value={nuevoTesorero.password}
 					onChange={(e) => handleChangeInput(e, setNuevoTesorero)}
 				/>
 				<TextBoxField
@@ -67,9 +79,9 @@ export const FormularioTesorero = ({ setOptionCreateSelect }: Props) => {
 				/>
 				<TextBoxField
 					textLabel="Repetir email:"
-					name="verificarEmail"
+					name="verifyEmail"
 					type="email"
-					value={nuevoTesorero.verificarEmail}
+					value={nuevoTesorero.verifyEmail}
 					onChange={(e) => handleChangeInput(e, setNuevoTesorero)}
 				/>
 			</div>
@@ -77,7 +89,7 @@ export const FormularioTesorero = ({ setOptionCreateSelect }: Props) => {
 			<div className={style.container__buttons}>
 				<SecondaryButton text="Volver" onClick={handleReset} fitWidth />
 
-				<PrimaryButton text="Guardar" onClick={() => console.log(nuevoTesorero)} fitWidth />
+				<PrimaryButton text="Guardar" onClick={handleCreate} fitWidth />
 			</div>
 		</div>
 	);

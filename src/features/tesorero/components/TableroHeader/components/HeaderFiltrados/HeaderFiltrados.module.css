@@ -39,6 +39,7 @@
 	gap: 10px;
 }
 .header__filtrados__content__item {
+	cursor: pointer;
 	background: rgba(215, 215, 215, 0.5);
 	border-radius: 5px;
 	padding: 5px 10px;
@@ -105,7 +106,7 @@
 /* row 2 */
 .header__filtrados__content__item__row2 {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 
 	background: rgba(215, 215, 215, 0.5);
 	border-radius: 5px;

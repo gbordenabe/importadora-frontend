@@ -45,7 +45,7 @@ export const useUpdateFetch = (
 		try {
 			setIsLoadingUpdate(true);
 
-			const token = localStorage.getItem("rt__grifosBackoffice"); // Obteniendo el token JWT del localStorage
+			const token = localStorage.getItem("rt__importadora"); // Obteniendo el token JWT del localStorage
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
@@ -65,6 +65,5 @@ export const useUpdateFetch = (
 	return {
 		updateFetchData,
 		isLoadingUpdate,
-		errorUpdate,
 	};
 };

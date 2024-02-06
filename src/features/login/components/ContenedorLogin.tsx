@@ -12,7 +12,7 @@ export let ContenedorLogin = () => {
 	const navigate = useNavigate();
 
 	const [login, setLogin] = useState<any>({
-		username: "",
+		user_name_or_email: "",
 		password: "",
 	});
 
@@ -41,8 +41,8 @@ export let ContenedorLogin = () => {
 					<input
 						className={style.textInput__input}
 						type="text"
-						name="username"
-						value={login.username}
+						name="user_name_or_email"
+						value={login.user_name_or_email}
 						onChange={(e) => handleChangeInput(e, setLogin)}
 					/>
 				</div>

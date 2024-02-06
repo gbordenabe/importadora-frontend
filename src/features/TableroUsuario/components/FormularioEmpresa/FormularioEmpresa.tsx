@@ -1,33 +1,27 @@
-import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
-import style from "./FormularioEmpresa.module.css";
-import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { useState } from "react";
+import style from "./FormularioEmpresa.module.css";
+import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
+import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { handleChangeInput } from "@/helpers/handleTextBox";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { usePostFetch } from "@/hooks/usePostFetch";
 
 interface Props {
-	setOptionCreateSelect?: any;
 	onHideModal?: any;
 }
 
-export const FormularioEmpresa = ({ setOptionCreateSelect, onHideModal }: Props) => {
-	const { postFetchData } = usePostFetch("/empresa", "Empresa");
+export const FormularioEmpresa = ({ onHideModal }: Props) => {
+	const { postFetchData } = usePostFetch("/company", "Empresa");
 
 	const [nuevaEmpresa, setNuevaEmpresa] = useState({
 		name: "",
 		verifyName: "",
-		number: "",
-		abbreviation: "",
+		acronym: "",
 	});
-
-	const handleReset = () => {
-		setOptionCreateSelect("");
-	};
 
 	const handleCreate = async () => {
 		const { verifyName, ...restData } = nuevaEmpresa;
-		const dataCreate = { ...restData, abbreviation: nuevaEmpresa.name.substring(0, 3) };
+		const dataCreate = { ...restData, acronym: nuevaEmpresa.name.substring(0, 3) };
 		try {
 			await postFetchData(dataCreate);
 			onHideModal();
@@ -54,7 +48,7 @@ export const FormularioEmpresa = ({ setOptionCreateSelect, onHideModal }: Props)
 			</div>
 
 			<div className={style.container__buttons}>
-				<SecondaryButton text="Volver" onClick={handleReset} fitWidth />
+				<SecondaryButton text="Volver" onClick={onHideModal} fitWidth />
 
 				<PrimaryButton text="Guardar" onClick={handleCreate} fitWidth />
 			</div>

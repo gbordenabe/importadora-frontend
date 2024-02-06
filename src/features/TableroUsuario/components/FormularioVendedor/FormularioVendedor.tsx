@@ -4,37 +4,42 @@ import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { useState } from "react";
 import { handleChangeInput } from "@/helpers/handleTextBox";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { usePostFetch } from "@/hooks/usePostFetch";
 
 interface Props {
 	setOptionCreateSelect?: any;
+	onHideModal?: any;
 }
 
-export const FormularioVendedor = ({ setOptionCreateSelect }: Props) => {
+export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props) => {
+	const { postFetchData } = usePostFetch("/user", "Usuario");
 	const [nuevoVendedor, setNuevoVendedor] = useState({
-		usuario: "",
-		nombre: "",
-		apellido: "",
-		contraseña: "",
+		user_name: "",
+		name: "",
+		last_name: "",
+		password: "",
 		email: "",
-		verificarEmail: "",
-		ciudad: "",
-		localidad: "",
-		provincia: "",
+		verifyEmail: "",
+		city: "",
+		location: "",
+		province: "",
+		role_id: 1,
 	});
+	// El rol del vendedor es 1, tesorero 2.
 
 	const handleReset = () => {
 		setOptionCreateSelect("");
-		setNuevoVendedor({
-			usuario: "",
-			nombre: "",
-			apellido: "",
-			contraseña: "",
-			email: "",
-			verificarEmail: "",
-			ciudad: "",
-			localidad: "",
-			provincia: "",
-		});
+	};
+
+	const handleCreate = async () => {
+		const { verifyEmail, ...restData } = nuevoVendedor;
+
+		try {
+			await postFetchData(restData);
+			onHideModal();
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -42,26 +47,27 @@ export const FormularioVendedor = ({ setOptionCreateSelect }: Props) => {
 			<div className={style.form__group}>
 				<TextBoxField
 					textLabel="Nombre de usuario:"
-					name="usuario"
-					value={nuevoVendedor.usuario}
+					name="user_name"
+					value={nuevoVendedor.user_name}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Nombre:"
-					name="nombre"
-					value={nuevoVendedor.nombre}
+					name="name"
+					value={nuevoVendedor.name}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Apellido:"
-					name="apellido"
-					value={nuevoVendedor.apellido}
+					name="last_name"
+					value={nuevoVendedor.last_name}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Contraseña:"
-					name="contraseña"
-					value={nuevoVendedor.contraseña}
+					name="password"
+					type="password"
+					value={nuevoVendedor.password}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
@@ -73,27 +79,27 @@ export const FormularioVendedor = ({ setOptionCreateSelect }: Props) => {
 				/>
 				<TextBoxField
 					textLabel="Repetir email:"
-					name="verificarEmail"
+					name="verifyEmail"
 					type="email"
-					value={nuevoVendedor.verificarEmail}
+					value={nuevoVendedor.verifyEmail}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Ciudad:"
-					name="ciudad"
-					value={nuevoVendedor.ciudad}
+					name="city"
+					value={nuevoVendedor.city}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Localidad:"
-					name="localidad"
-					value={nuevoVendedor.localidad}
+					name="location"
+					value={nuevoVendedor.location}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 				<TextBoxField
 					textLabel="Provincia:"
-					name="provincia"
-					value={nuevoVendedor.provincia}
+					name="province"
+					value={nuevoVendedor.province}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
 			</div>
@@ -101,7 +107,7 @@ export const FormularioVendedor = ({ setOptionCreateSelect }: Props) => {
 			<div className={style.container__buttons}>
 				<SecondaryButton text="Volver" onClick={handleReset} fitWidth />
 
-				<PrimaryButton text="Guardar" onClick={() => console.log(nuevoVendedor)} fitWidth />
+				<PrimaryButton text="Guardar" onClick={handleCreate} fitWidth />
 			</div>
 		</div>
 	);

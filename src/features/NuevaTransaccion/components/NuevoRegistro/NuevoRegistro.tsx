@@ -18,8 +18,12 @@ export const NuevoRegistro = ({
 	listOptions,
 	listTitle,
 }: Props) => {
+
 	// pasos
 	const [stepNewRegister, setStepNewRegister] = useState(1);
+
+
+	
 	
 	const handleStepNewRegister = () => {
 		if (listTitle === "Factura") {
@@ -31,12 +35,15 @@ export const NuevoRegistro = ({
 			setStepNewRegister((prev) => prev + 1);
 		}
 	};
+
+
+
 	// registro de nueva tabla
 	const handleAddNewRegister = (tipo: string | null, subtipo: string | null) => {
 		const editStructure = {
 			...dataStructure,
 			tipo: tipo || null, //se setea el tipo
-			subtipo: subtipo || null, //se setea el subtipo
+			type: subtipo || null, //se setea el subtipo
 		};
 
 		if (addNewRegister) {
@@ -44,6 +51,8 @@ export const NuevoRegistro = ({
 		}
 		setStepNewRegister(1);
 	};
+
+
 
 	return (
 		<div className={style.nuevoRegistro__container}>

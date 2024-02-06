@@ -1,35 +1,22 @@
 export const pagosStructure = {
 	tipo: "",
-	subtipo: "",
-	number: "",
+	document_number: "",
 	amount: "",
-	fecha: "",
-	banco: "",
-	obs: "",
-	adjunto: "",
-	resumen: false,
+	date: "",
+	observation: "",
 };
 
 export const facturasStructure = {
-	tipo: "",
-	subtipo: "",
 	number: "",
 	amount: "",
-	fecha: "",
-	// banco: "",
-	obs: "",
-	adjunto: "",
-	resumen: false,
+	date: "",
+	observation: "",
 };
 
 export const saldosStructure = {
 	tipo: "",
-	subtipo: "",
 	amount: "",
-	fecha: "",
+	date: "",
 	// banco: "",
-	obs: "",
-	adjunto: "",
-	porcentaje: "",
-	resumen: false,
+	observation: "",
 };

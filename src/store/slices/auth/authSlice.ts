@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface AuthState {
-	isLoading: boolean;
+	loading: boolean;
 	login: any;
 }
 
 const initialState: AuthState = {
-	isLoading: true,
+	loading: true,
 	login: {},
 };
 
@@ -15,14 +15,16 @@ export const authSlice = createSlice({
 	initialState,
 	reducers: {
 		isLoading: (state) => {
-			state.isLoading = !state.isLoading;
+			state.loading = !state.loading;
 		},
-
+		setLoadingFalse: (state) => {
+			state.loading = false;
+		},
 		setLogin: (state, action) => {
 			state.login = action.payload;
-			state.isLoading = false;
+			state.loading = false;
 		},
 	},
 });
 
-export const { isLoading, setLogin } = authSlice.actions;
+export const { isLoading, setLogin, setLoadingFalse } = authSlice.actions;

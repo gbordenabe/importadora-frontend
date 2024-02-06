@@ -1,15 +1,21 @@
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import style from "./UsuariosTransaccion.module.css";
 import { SelectField } from "@/components/SelectField/SelectField";
-import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { handleChangeInput } from "@/helpers/handleTextBox";
+import { useGetFetch } from "@/hooks/useGetFetch";
 
 interface Props {
 	usuarios?: any;
 	setUsuarios?: any;
+	sku?: any
 }
 
 export const UsuariosTransaccion = ({ usuarios, setUsuarios }: Props) => {
+	
+	const ClienteFetch = useGetFetch("/client");
+	const UserFetch = useGetFetch("/company");
+
+
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
@@ -25,20 +31,21 @@ export const UsuariosTransaccion = ({ usuarios, setUsuarios }: Props) => {
 						textLabel="Empresa"
 						value={usuarios.empresa}
 						name="empresa"
-						options={[]}
+						options={UserFetch?.data?.data}
 						onChange={(e) => handleChangeInput(e, setUsuarios)}
 					/>
 				</div>
 				<div className={style.box__content__item}>
-					<TextBoxField
+					<SelectField
 						textLabel="Cliente"
 						value={usuarios.cliente}
 						name="cliente"
+						options={ClienteFetch?.data?.data}
 						onChange={(e) => handleChangeInput(e, setUsuarios)}
-						placeholder="Nombre del cliente"
 					/>
 				</div>
 			</div>
 		</div>
 	);
 };
+
