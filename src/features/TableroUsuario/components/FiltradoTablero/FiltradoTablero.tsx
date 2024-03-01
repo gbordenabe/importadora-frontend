@@ -17,6 +17,7 @@ export const FiltradoTablero = () => {
 						name=""
 						onChange={() => {}}
 						direction="row"
+						disabled
 					/>
 					<IconButton icon={<RiArrowUpDownLine size={20} />} />
 				</div>

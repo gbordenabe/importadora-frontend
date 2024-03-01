@@ -1,4 +1,3 @@
-import { useState } from "react";
 import style from "./TableroCliente.module.css";
 import { AppStructure } from "@/components/AppStructure/AppStructure";
 import { BoxContent } from "@/components/BoxContent/BoxContent";
@@ -12,16 +11,35 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { useModal } from "@/hooks/useModal";
 import { useGetFetch } from "@/hooks/useGetFetch";
 import { AddModalCliente } from "../../AddModalCliente/AddModalCliente";
+import { UpdateModalCliente } from "../../UpdateModalCliente/UpdateModalCliente";
+import { useState } from "react";
+import { useDeleteFetch } from "@/hooks/useDeleteFetch";
+import { useUpdateFetch } from "@/hooks/useUpdateFetch";
 
 export const TableroCliente = () => {
 	const navigate = useNavigate();
 	const crearModal = useModal();
+	const updateModal = useModal();
+
+	const [currentUpdateData, setCurrentUpdateData] = useState(null);
 
 	const ClienteFetch = useGetFetch("/client");
 
 	const handleReloadFetch = () => {
 		crearModal.onHideModal();
 		ClienteFetch.reloadFetchData();
+	};
+
+	const { deleteFetchData } = useDeleteFetch("/client", "Cliente", ClienteFetch.reloadFetchData);
+	const { updateFetchData } = useUpdateFetch("/client", "Cliente", ClienteFetch.reloadFetchData);
+
+	const handleDelete = async (id: any) => {
+		deleteFetchData(id);
+	};
+
+	const handleUpdate = (rowData: any) => {
+		setCurrentUpdateData(rowData);
+		updateModal.onVisibleModal();
 	};
 
 	return (
@@ -46,7 +64,13 @@ export const TableroCliente = () => {
 								<div className={style.tableroUsuario__list__items}>
 									{ClienteFetch?.data?.data &&
 										ClienteFetch?.data?.data.map((cliente: any) => (
-											<UsuarioItem key={cliente.id} type={"Cliente"} {...cliente} />
+											<UsuarioItem
+												key={cliente.id}
+												type={"Cliente"}
+												{...cliente}
+												handleDelete={handleDelete}
+												handleUpdate={() => handleUpdate(cliente)}
+											/>
 										))}
 								</div>
 							</div>
@@ -63,6 +87,19 @@ export const TableroCliente = () => {
 				width={450}
 			>
 				<AddModalCliente onHideModal={handleReloadFetch} />
+			</PrimeModal>
+
+			{/* Edit Venedor Modal */}
+			<PrimeModal
+				header="Editar cliente"
+				modalStatus={updateModal.modalStatus}
+				onHideModal={updateModal.onHideModal}
+			>
+				<UpdateModalCliente
+					onHideModal={updateModal.onHideModal}
+					currentUpdateData={currentUpdateData}
+					updateFetchData={updateFetchData}
+				/>
 			</PrimeModal>
 		</>
 	);

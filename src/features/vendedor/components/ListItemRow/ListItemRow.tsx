@@ -1,21 +1,40 @@
 import { useNavigate } from "react-router-dom";
 import style from "./ListItemRow.module.css";
 
-import { FiEye } from "react-icons/fi";
+import { FiEye, FiEdit2 } from "react-icons/fi";
 
-export const ListItemRow = () => {
+import StatusCircle from "@/components/StatusCircle/StatusCircle";
+import { formatDate } from "@/helpers/formatDate";
+
+type ItemWithAmount = {
+	amount: string;
+};
+
+function sumAmounts(items: ItemWithAmount[]): string {
+	return items.reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2);
+}
+
+export const ListItemRow = ({ data }: any) => {
+	const totalAmountChecks: string = sumAmounts(data?.checks);
+	const totalAmountDeposit: string = sumAmounts(data?.deposits);
+	const totalAmountCredit: string = sumAmounts(data?.credits);
+	const totalAmountNoteCredits: string = sumAmounts(data?.credit_notes);
+	const totalAmountRetention: string = sumAmounts(data?.retentions);
+	const totalAmountBills: string = sumAmounts(data?.bills);
+	const totalAmountCash: string = sumAmounts(data?.cash);
+
 	const navigate = useNavigate();
 
 	const onNavigateDetails = () => {
-		navigate("/detalle-transaccion");
+		navigate(`/detalle-transaccion/${data.id}`);
 	};
 
 	return (
 		<div className={style.tableroVendedor__list__row}>
 			<div className={style.tableroVendedor__buttons}>
-				<div className={style.tableroVendedor__color}></div>
+				<StatusCircle status={data?.status} size="25px" />
 				<div className={style.tableroVendedor__icon} onClick={onNavigateDetails}>
-					<FiEye />
+					{data?.status === "OK" ? <FiEye /> : <FiEdit2 size={14} />}
 				</div>
 			</div>
 
@@ -24,75 +43,97 @@ export const ListItemRow = () => {
 			<div className={style.list__itemsBox__container}>
 				<div className={style.tableroVendedor__list__item__box}>
 					<p className={style.itemBox__text}>
-						SKU: <span>123011112023-IMP-C000001</span>
+						SKU: <span>{data?.sku}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Fecha de creación: <span>23-10-2023</span>
+						Fecha de creación: <span>{formatDate(data?.created_at)}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Vendedor: <span>Nombre del vendedor</span>
+						Vendedor: <span>{data?.created_by?.name}</span>
 					</p>
 				</div>
 
 				<div className={style.tableroVendedor__list__item__box}>
 					<p className={style.itemBox__text}>
-						Empresa: <span>Nombre de la empresa</span>
+						Empresa: <span>{data?.company?.name}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Cliente: <span>Nombre del cliente</span>
+						Cliente: <span>{data?.client?.business_name}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Monto de la transacción: <span>$23.123.123</span>
+						Monto de la transacción: <span>${totalAmountBills}</span>
 					</p>
 				</div>
 
 				<div className={style.tableroVendedor__list__item__box}>
 					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
+						<StatusCircle status={data?.bill_status} size="15px" />
 						<p className={style.itemBox__text}>Estado</p>
 					</div>
 					<p className={style.itemBox__text}>
-						N° de facturas o notas de debito: <span>2</span>
+						N° de facturas o notas de debito: <span>{data?.bills.length}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Suma Total: <span>$23.123.123</span>
-					</p>
-					<p className={style.itemBox__text}>
-						Fecha: <span>12-10-2023</span>
+						Suma Total: <span>${totalAmountBills}</span>
 					</p>
 				</div>
 
 				<div className={style.tableroVendedor__list__item__box}>
-					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
-						<p className={style.itemBox__text}>
-							Cheques{"(3)"}: <span>$18.123.123</span>
-						</p>
-					</div>
-					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
-						<p className={style.itemBox__text}>
-							Depositos{"(1)"}: <span>$2.000.000</span>
-						</p>
-					</div>
-					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
-						<p className={style.itemBox__text}>
-							Crédito{"(1)"}: <span>$2.000.000</span>
-						</p>
-					</div>
-					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
-						<p className={style.itemBox__text}>
-							Nota de crédito{"(1)"}: <span>$2.000.000</span>
-						</p>
-					</div>
-					<div className={style.list__item__estado__container}>
-						<div className={style.list__item__color}></div>
-						<p className={style.itemBox__text}>
-							Retención{"(1)"}: <span>$2.000.000</span>
-						</p>
-					</div>
+					{data?.cash.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.cash_status} size="15px" />
+							<p className={style.itemBox__text}>
+								Efectivo/Transferencia{`(${data?.cash.length})`}:{" "}
+								<span>{`$${totalAmountCash}`}</span>
+							</p>
+						</div>
+					) : null}
+					{data?.checks.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.check_status} size="15px" />
+							<p className={style.itemBox__text}>
+								Cheques{`(${data?.checks.length})`}: <span>{`$${totalAmountChecks}`}</span>
+							</p>
+						</div>
+					) : null}
+					{data?.deposits.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.deposit_status} size="15px" />
+							<p className={style.itemBox__text}>
+								Depositos{`(${data?.deposits.length})`}: <span>{`$${totalAmountDeposit}`}</span>
+							</p>
+						</div>
+					) : null}
+
+					{data?.credits.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.credit_status} size="15px" />
+							<p className={style.itemBox__text}>
+								Crédito{`(${data?.credits.length})`}: <span>{`$${totalAmountCredit}`}</span>
+							</p>
+						</div>
+					) : null}
+
+					{data?.credit_notes.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.credit_note_status} size="15px" />
+
+							<p className={style.itemBox__text}>
+								Nota de crédito{`(${data?.credit_notes.length})`}:{" "}
+								<span>{`$${totalAmountNoteCredits}`}</span>
+							</p>
+						</div>
+					) : null}
+
+					{data?.retentions.length ? (
+						<div className={style.list__item__estado__container}>
+							<StatusCircle status={data?.retention_status} size="15px" />
+
+							<p className={style.itemBox__text}>
+								Retención{`(${data?.retentions.length})`}: <span>{`$${totalAmountRetention}`}</span>
+							</p>
+						</div>
+					) : null}
 				</div>
 			</div>
 		</div>

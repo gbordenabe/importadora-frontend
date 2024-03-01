@@ -1,3 +1,4 @@
+import { useState } from "react";
 import style from "./TableroEmpresa.module.css";
 import { AppStructure } from "@/components/AppStructure/AppStructure";
 import { BoxContent } from "@/components/BoxContent/BoxContent";
@@ -11,16 +12,34 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { useModal } from "@/hooks/useModal";
 import { useGetFetch } from "@/hooks/useGetFetch";
 import { AddModalEmpresa } from "../../AddModalEmpresa/AddModalEmpresa";
+import { useDeleteFetch } from "@/hooks/useDeleteFetch";
+import { useUpdateFetch } from "@/hooks/useUpdateFetch";
+import { UpdateModalEmpresa } from "../../UpdateModalEmpresa/UpdateModalEmpresa";
 
 export const TableroEmpresa = () => {
 	const navigate = useNavigate();
 	const crearModal = useModal();
+	const updateModal = useModal();
+
+	const [currentUpdateData, setCurrentUpdateData] = useState(null);
 
 	const EmpresaFetch = useGetFetch("/company");
 
 	const handleReloadFetch = () => {
 		crearModal.onHideModal();
 		EmpresaFetch.reloadFetchData();
+	};
+
+	const { deleteFetchData } = useDeleteFetch("/company", "Empresa", EmpresaFetch.reloadFetchData);
+	const { updateFetchData } = useUpdateFetch("/company", "Empresa", EmpresaFetch.reloadFetchData);
+
+	const handleDelete = async (id: any) => {
+		deleteFetchData(id);
+	};
+
+	const handleUpdate = (rowData: any) => {
+		setCurrentUpdateData(rowData);
+		updateModal.onVisibleModal();
 	};
 
 	return (
@@ -45,7 +64,13 @@ export const TableroEmpresa = () => {
 								<div className={style.tableroUsuario__list__items}>
 									{EmpresaFetch?.data?.data &&
 										EmpresaFetch?.data?.data.map((empresa: any) => (
-											<UsuarioItem key={empresa.id} type={"Empresa"} {...empresa} />
+											<UsuarioItem
+												key={empresa.id}
+												type={"Empresa"}
+												{...empresa}
+												handleDelete={handleDelete}
+												handleUpdate={() => handleUpdate(empresa)}
+											/>
 										))}
 								</div>
 							</div>
@@ -62,6 +87,19 @@ export const TableroEmpresa = () => {
 				width={450}
 			>
 				<AddModalEmpresa onHideModal={handleReloadFetch} />
+			</PrimeModal>
+
+			{/* Edit Venedor Modal */}
+			<PrimeModal
+				header="Editar empresa"
+				modalStatus={updateModal.modalStatus}
+				onHideModal={updateModal.onHideModal}
+			>
+				<UpdateModalEmpresa
+					onHideModal={updateModal.onHideModal}
+					currentUpdateData={currentUpdateData}
+					updateFetchData={updateFetchData}
+				/>
 			</PrimeModal>
 		</>
 	);

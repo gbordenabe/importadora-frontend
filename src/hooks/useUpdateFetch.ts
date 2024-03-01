@@ -65,5 +65,6 @@ export const useUpdateFetch = (
 	return {
 		updateFetchData,
 		isLoadingUpdate,
+		errorUpdate,
 	};
 };

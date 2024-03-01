@@ -13,10 +13,12 @@
 }
 .layout__header__group {
 	display: flex;
+	align-items: center;
 	gap: 10px;
 }
 .layout__header__title {
 	font-weight: 600;
+	font-size: 14px;
 }
 .layout__header__textAdjunto {
 	font-size: 14px;
@@ -31,10 +33,5 @@
 .layout__content__group__one {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	gap: 10px;
-}
-
-.layout__content__group__two {
-	display: grid;
 	gap: 10px;
 }

@@ -2,6 +2,7 @@ import style from "./TableroUsuario.module.css";
 import { AppStructure } from "@/components/AppStructure/AppStructure";
 import { BoxContent } from "@/components/BoxContent/BoxContent";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +32,8 @@ export const TableroUsuario = () => {
 								/>
 							</div>
 						</BoxContent>
+
+						<SecondaryButton text="Volver" onClick={() => navigate("/tablero-tesorero")} />
 					</div>
 				</div>
 			</AppStructure>

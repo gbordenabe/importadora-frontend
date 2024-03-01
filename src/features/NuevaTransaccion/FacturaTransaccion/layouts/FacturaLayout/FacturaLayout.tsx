@@ -5,6 +5,8 @@ import { MaximizarButton } from "@/features/NuevaTransaccion/components/Maximiza
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
 import CalendarInput from "@/components/Calendar/Calendar";
+import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
+import { formatPrice } from "@/helpers/formatPrice";
 
 interface Props {
 	index: number;
@@ -13,39 +15,41 @@ interface Props {
 	onChange?: any;
 	factura?: any;
 	handleChangeResumen?: any;
+	eliminarFactura?: any;
 }
 
 export const FacturaLayout = ({
 	index,
-	tipo,
 	subtipo,
 	onChange,
 	factura,
 	handleChangeResumen,
+	eliminarFactura,
 }: Props) => {
 	return (
 		<div className={style.layout__container} key={index}>
-			{ factura.resumen ? (
+			{factura.resumen ? (
 				<div className={style.layout__header}>
 					<div className={style.layout__header__group}>
-						<p className={style.layout__header__title}>{tipo}</p>
-						{ subtipo && <ChipText text={subtipo } />}
+						<p className={style.layout__header__title}>Factura</p>
+						<ChipText text={`N°: ${factura.number || "-"}`} />
+						<ChipText text={`Monto: ${formatPrice(factura.amount || 0)}`} />
 					</div>
 					<div className={style.layout__header__group}>
 						<MaximizarButton onClick={() => handleChangeResumen(index, !factura.resumen)} />
-						<DeleteButton />
+						<DeleteButton onClick={() => eliminarFactura(index)} />
 					</div>
 				</div>
 			) : (
 				<>
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
-							<p className={style.layout__header__title}>{tipo}</p>
+							<p className={style.layout__header__title}>Factura</p>
 							{subtipo && <ChipText text={subtipo} />}
 						</div>
 						<div className={style.layout__header__group}>
 							<MinimziarButton onClick={() => handleChangeResumen(index, !factura.resumen)} />
-							<DeleteButton />
+							<DeleteButton onClick={() => eliminarFactura(index)} />
 						</div>
 					</div>
 
@@ -55,27 +59,19 @@ export const FacturaLayout = ({
 								name="number"
 								value={factura.number}
 								onChange={onChange}
-								placeholder="Número de operación"
+								placeholder="N° completo"
 							/>
 
-							<TextBoxField
+							<MoneyBoxField
 								name="amount"
 								value={factura.amount}
 								onChange={onChange}
 								placeholder="Monto"
-								type="number"
-
-							/>
-							
-							<CalendarInput
-								name="date"
-								value={factura.date}
-								onChange={onChange}
 							/>
 
-
+							<CalendarInput name="date" value={factura.date} onChange={onChange} />
 						</div>
-						<div className={style.layout__content__group__two}>
+						<div>
 							<TextBoxField
 								name="observation"
 								value={factura.observation}

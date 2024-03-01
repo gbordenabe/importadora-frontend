@@ -2,7 +2,7 @@ import axios from "axios";
 import { url } from "@/connections/mainApi";
 import { authApi } from "@/connections";
 import { AppThunk } from "../../store";
-import { isLoading, setLogin } from "./authSlice";
+import { setLoadingFalse, setLogin } from "./authSlice";
 
 export const getUser = (payload: string): AppThunk => {
 	return async (dispatch) => {
@@ -35,7 +35,7 @@ export const refreshToken = (payload: string): AppThunk => {
 		} catch (error) {
 			console.log(error);
 			localStorage.removeItem("rt__importadora");
-			dispatch(isLoading());
+			dispatch(setLoadingFalse());
 		}
 	};
 };

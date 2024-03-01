@@ -9,7 +9,7 @@ export let postFetch = async (path: string, payload: any) => {
 		};
 
 		console.log(payload);
-		// await axios.post(`${url}${path}`, { headers }, payload);
+		await axios.post(`${url}${path}`, { headers }, payload);
 	} catch (error) {
 		console.error(error);
 	}

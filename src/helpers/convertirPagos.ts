@@ -12,13 +12,18 @@ type PagosAgrupados = {
 
 export function clasificarPagos(pagos: Pago[]): PagosAgrupados {
   return pagos.reduce<PagosAgrupados>((acumulador, pagoActual) => {
-    const { tipo, type, ...pagoSinTipo } = pagoActual;
+    const { tipo, type, resumen, ...pagoSinTipo } = pagoActual;
     let pagoModificado = { ...pagoSinTipo };
 
     if (type) {
       pagoModificado.type = type === 'Propio' ? 'OWN' :
                             type === 'De terceros' ? 'THIRD_PARTY' :
                             type === 'Electrónico' ? 'ELECTRONIC' : type;
+    }
+
+    // Verificar y eliminar la propiedad file_field_name si está vacía
+    if ('file_field_name' in pagoModificado && !pagoModificado.file_field_name) {
+      delete pagoModificado.file_field_name;
     }
 
     switch (tipo) {

@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 interface TextBoxFieldProps {
 	textLabel?: string;
 	value: string | undefined;
-	name: string;
+	name?: string;
 	type?: string;
 	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	direction?: "row" | "column";

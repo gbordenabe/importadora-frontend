@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import style from "./UsuarioItem.module.css";
 
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -11,22 +10,29 @@ interface Props {
 	business_name?: string;
 	last_name?: string;
 	email?: string;
+	client_number?: string;
+	handleDelete?: any;
+	handleUpdate?: any;
 }
 
-export const UsuarioItem = ({ type, id, name, business_name, last_name, email }: Props) => {
-	const navigate = useNavigate();
-
-	const onNavigateDetails = () => {
-		navigate("/detalle-transaccion");
-	};
-
+export const UsuarioItem = ({
+	type,
+	id,
+	name,
+	business_name,
+	last_name,
+	email,
+	client_number,
+	handleDelete,
+	handleUpdate,
+}: Props) => {
 	return (
 		<div className={style.tableroVendedor__list__row}>
 			<div className={style.tableroVendedor__buttons}>
-				<div className={style.tableroVendedor__icon} onClick={onNavigateDetails}>
+				<div className={style.tableroVendedor__icon} onClick={handleUpdate}>
 					<FiEdit2 size={15} />
 				</div>
-				<div className={style.tableroVendedor__icon} onClick={onNavigateDetails}>
+				<div className={style.tableroVendedor__icon} onClick={() => handleDelete(id)}>
 					<RiDeleteBinLine size={15} />
 				</div>
 			</div>
@@ -61,7 +67,7 @@ export const UsuarioItem = ({ type, id, name, business_name, last_name, email }:
 					{type == "Cliente" && (
 						<>
 							<p className={style.itemBox__text}>
-								N del Cliente: <span>{id}</span>
+								N del Cliente: <span>{client_number ? client_number : id}</span>
 							</p>
 							<p className={style.itemBox__text}>
 								Razon Social: <span>{business_name}</span>

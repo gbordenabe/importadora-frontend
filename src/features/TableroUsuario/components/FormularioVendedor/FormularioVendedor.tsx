@@ -1,10 +1,11 @@
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import style from "./FormularioVendedor.module.css";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { handleChangeInput } from "@/helpers/handleTextBox";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { usePostFetch } from "@/hooks/usePostFetch";
+import { SelectField } from "@/components/SelectField/SelectField";
 
 interface Props {
 	setOptionCreateSelect?: any;
@@ -13,6 +14,7 @@ interface Props {
 
 export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props) => {
 	const { postFetchData } = usePostFetch("/user", "Usuario");
+
 	const [nuevoVendedor, setNuevoVendedor] = useState({
 		user_name: "",
 		name: "",
@@ -20,12 +22,64 @@ export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props
 		password: "",
 		email: "",
 		verifyEmail: "",
+		province: "",
 		city: "",
 		location: "",
-		province: "",
 		role_id: 1,
 	});
 	// El rol del vendedor es 1, tesorero 2.
+
+	const [provincias, setProvincias] = useState<any>([]);
+	const [municipios, setMunicipios] = useState<any>([]);
+	const [localidades, setLocalidades] = useState<any>([]);
+
+	useEffect(() => {
+		fetch("https://apis.datos.gob.ar/georef/api/provincias?max=500")
+			.then((res) => res.json())
+			.then((data) => {
+				const respData = data?.provincias.map((item: any) => ({
+					id: item.id,
+					name: item.nombre,
+					value: item.nombre,
+				}));
+
+				setProvincias(respData);
+			});
+	}, []);
+
+	useEffect(() => {
+		if (nuevoVendedor?.province) {
+			setNuevoVendedor((prev) => ({ ...prev, city: "", location: "" }));
+			fetch(`https://apis.datos.gob.ar/georef/api/departamentos?provincia=${nuevoVendedor.province}&max=500`)
+				.then((res) => res.json())
+				.then((data) => {
+					const respData = data?.departamentos.map((item: any) => ({
+						id: item.id,
+						name: item.nombre,
+						value: item.nombre,
+					}));
+
+					setMunicipios(respData);
+				});
+		}
+	}, [nuevoVendedor.province]);
+
+	useEffect(() => {
+		if (nuevoVendedor?.city) {
+			setNuevoVendedor((prev) => ({ ...prev, location: "" }));
+			fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${nuevoVendedor.city}&max=500`)
+				.then((res) => res.json())
+				.then((data) => {
+					const respData = data?.localidades.map((item: any) => ({
+						id: item.id,
+						name: item.nombre,
+						value: item.nombre,
+					}));
+
+					setLocalidades(respData);
+				});
+		}
+	}, [nuevoVendedor.city]);
 
 	const handleReset = () => {
 		setOptionCreateSelect("");
@@ -84,23 +138,27 @@ export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props
 					value={nuevoVendedor.verifyEmail}
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 				/>
-				<TextBoxField
-					textLabel="Ciudad:"
-					name="city"
-					value={nuevoVendedor.city}
-					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
-				/>
-				<TextBoxField
-					textLabel="Localidad:"
-					name="location"
-					value={nuevoVendedor.location}
-					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
-				/>
-				<TextBoxField
+
+				<SelectField
 					textLabel="Provincia:"
-					name="province"
 					value={nuevoVendedor.province}
+					name="province"
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
+					options={provincias}
+				/>
+				<SelectField
+					textLabel="Ciudad:"
+					value={nuevoVendedor.city}
+					name="city"
+					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
+					options={municipios}
+				/>
+				<SelectField
+					textLabel="Localidad:"
+					value={nuevoVendedor.location}
+					name="location"
+					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
+					options={localidades}
 				/>
 			</div>
 

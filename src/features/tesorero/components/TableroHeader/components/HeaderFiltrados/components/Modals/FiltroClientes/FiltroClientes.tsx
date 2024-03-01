@@ -1,56 +1,107 @@
-import React from "react";
 import style from "./FiltroClientes.module.css";
-const FiltroClientes = () => {
-  const data = [
-    { label: "Importadora", id: 1 },
-    { label: "GTM", id: 2 },
-    { label: "TISY", id: 3 },
-  ];
+// import { handleChangeCheckBox } from "@/helpers/handleCheckBox";
+import { useEffect, useState } from "react";
+import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
+import axios from "axios";
+import { url } from "@/connections/mainApi";
 
-  return (
-    <div className={style.container}>
-      <div className={style.headerFilterTag}>
-        <p>Empresa:</p>
-        <div className={style.header__filtrados__documentType__item}>
-          <span>00001</span>
-          <span style={{cursor:"pointer"}}>X</span>
-        </div>
-        <div className={style.header__filtrados__documentType__item}>
-          <span>00002</span>
-          <span style={{cursor:"pointer"}}>X</span>
-        </div>
-        <div className={style.header__filtrados__documentType__item}>
-          <span>00003</span>
-          <span style={{cursor:"pointer"}}>X</span>
-        </div>
-        <div className={style.header__filtrados__documentType__item}>
-          <span>00003</span>
-          <span style={{cursor:"pointer"}}>X</span>
-        </div>
-        <div className={style.header__filtrados__documentType__item}>
-          <span>00003</span>
-          <span style={{cursor:"pointer"}}>X</span>
-        </div>
-      </div>
-      <div className={style.line}></div>
+import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { convertirANumero } from "@/helpers/ConvertirANumero";
 
-      <div className={style.header__filtrados__documentType__item} style={{width:"100%", padding:".4rem"}}>Buscar</div>
+interface Props {
+	optionsFilter?: any;
+	setOptionsFilter?: any;
+	onHideModal?: any
+}
 
-      <div className={style.line}></div>
+const FiltroClientes = ({ optionsFilter, setOptionsFilter, onHideModal }: Props) => {
+	const [selected, setSelected] = useState<{ id: string, name: string } | null>(null);
+	const [clientname, setClientName] = useState("");
+	const [data, setData] = useState([]);
 
+	const token = localStorage.getItem("rt__importadora");
 
-      {data.map((data) => (
-        <div key={data.id}>
-          <div className={style.checkboxContainer}>
-            <input type="checkbox" />
-            <div className={style.btn__filter}>{data.label}</div>
-          </div>
-        </div>
-      ))}
+	const getClient = async () => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			};
+			const response = await axios.get(`${url}/client?order_by=id&order=ASC`, {
+				headers,
+			});
+			setData(response.data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-      <button className={style.buttonConfirm}>Confirmar</button>
-    </div>
-  );
+	const getClientFilter = async () => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+			};
+			const response = await axios.get(
+				`${url}/client?nameFilter=${clientname}&order_by=id&order=ASC`,
+				{
+					headers,
+				}
+			);
+			setData(response.data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		if (selected) {
+			setOptionsFilter({
+				...optionsFilter,
+				clientName: selected.name, // Asegurándose de pasar el nombre del cliente
+				clients: convertirANumero([selected.id]),
+			});
+		}
+	}, [selected]);
+
+	useEffect(() => {
+		getClient();
+	}, []);
+
+	return (
+		<div className={style.container}>
+			<div className={style.headerFilterTag}>
+				<p> Cliente: </p>
+			</div>
+			<div className={style.line}></div>
+
+			<div className={style.container__1}>
+				<TextBoxField
+					name="clientname"
+					onChange={(e) => setClientName(e.target.value)}
+					value={clientname}
+				/>
+
+				<PrimaryButton text="Buscar" fitWidth onClick={getClientFilter} />
+			</div>
+
+			<div className={style.line}></div>
+
+			{data?.map((data: any) => (
+				<div key={data.id}>
+					<div className={style.checkboxContainer}>
+						<input
+							type="checkbox"
+							checked={selected?.id === data.id.toString()}
+							value={data.id}
+							onChange={(e) => setSelected({ id: e.target.value, name: data.name })} // Actualización para manejar objeto
+						/>
+						<label className={style.btn__filter}> {data?.name} </label>
+					</div>
+				</div>
+			))}
+
+			<button className={style.buttonConfirm} onClick={() => onHideModal()}> Confirmar </button>
+		</div>
+	);
 };
 
 export default FiltroClientes;

@@ -7,13 +7,28 @@ import { DepositoLayout } from "./layouts/DepositoLayout/DepositoLayout";
 import { EfectivoTransferenciaLayout } from "./layouts/EfectivoTransferenciaLayout/EfectivoTransferenciaLayout";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { useDocumentStateHook } from "@/hooks/useDocumentState";
+import { BlockUI } from "primereact/blockui";
+import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 
 interface Props {
 	pagos?: any;
 	setPagos?: any;
+	isBlocked?: boolean;
+	onChangeStatusGroup?: any;
+	setTotalAmount?: any;
+	setFilesBlob?: any;
+	eliminarPagos?: any;
 }
 
-export const PagosTransaccion = ({ pagos, setPagos }: Props) => {
+export const PagosTransaccion = ({
+	pagos,
+	setPagos,
+	isBlocked,
+	onChangeStatusGroup,
+	setTotalAmount,
+	setFilesBlob,
+	eliminarPagos,
+}: Props) => {
 	const handleAddRegister = (newData: any) => {
 		setPagos((prev: any) => [...prev, newData]);
 	};
@@ -25,57 +40,79 @@ export const PagosTransaccion = ({ pagos, setPagos }: Props) => {
 			<div className={style.box__head}>
 				<h2>Pagos</h2>
 				<div>
-					<PrimaryButton text="Confirmar" />
+					{isBlocked ? (
+						<SecondaryButton text="Editar" onClick={() => onChangeStatusGroup("pagos")} />
+					) : (
+						<PrimaryButton text="Confirmar" onClick={() => onChangeStatusGroup("pagos")} />
+					)}
 				</div>
 			</div>
 
-			{pagos.length > 0 && (
-				<div className={style.box__content}>
-					{pagos &&
-						pagos.map((pago: any, index: number) => (
-							<div key={pago.tipo + index}>
-								{pago.tipo === "Cheque" && (
-									<ChequeLayout
-										index={index}
-										tipo={pago.tipo}
-										subtipo={pago.subtipo}
-										pago={pago}
-										onChange={(e: any) => handleChangeInput(index, e)}
-										handleChangeResumen={handleChangeResumen}
-									/>
-								)}
-								{pago.tipo === "Depósito" && (
-									<DepositoLayout
-										index={index}
-										tipo={pago.tipo}
-										subtipo={pago.subtipo}
-										pago={pago}
-										onChange={(e: any) => handleChangeInput(index, e)}
-										handleChangeResumen={handleChangeResumen}
-									/>
-								)}
-								{pago.tipo === "Efectivo / Transferencia" && (
-									<EfectivoTransferenciaLayout
-										index={index}
-										tipo={pago.tipo}
-										subtipo={pago.subtipo}
-										pago={pago}
-										onChange={(e: any) => handleChangeInput(index, e)}
-										handleChangeResumen={handleChangeResumen}
-									/>
-								)}
-							</div>
-						))}
-				</div>
-			)}
+			<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
+				<div style={{ display: "grid", gap: "10px" }}>
+					{pagos.length > 0 && (
+						<div className={style.box__content}>
+							{pagos &&
+								pagos.map((pago: any, index: number) => (
+									<div key={pago.tipo + index}>
+										{pago.tipo === "Cheque" && (
+											<ChequeLayout
+												index={index}
+												tipo={pago.tipo}
+												subtipo={pago.type}
+												pago={pago}
+												onChange={(e: any) => handleChangeInput(index, e)}
+												handleChangeResumen={handleChangeResumen}
+												setPagos={setPagos}
+												setFilesBlob={setFilesBlob}
+												eliminarPagos={eliminarPagos}
+												fileName={pago.file_field_name}
+											/>
+										)}
+										{pago.tipo === "Depósito" && (
+											<DepositoLayout
+												index={index}
+												tipo={pago.tipo}
+												subtipo={pago.type}
+												pago={pago}
+												onChange={(e: any) => handleChangeInput(index, e)}
+												handleChangeResumen={handleChangeResumen}
+												setPagos={setPagos}
+												setFilesBlob={setFilesBlob}
+												eliminarPagos={eliminarPagos}
+												fileName={pago.file_field_name}
+											/>
+										)}
+										{pago.tipo === "Efectivo / Transferencia" && (
+											<EfectivoTransferenciaLayout
+												index={index}
+												tipo={pago.tipo}
+												subtipo={pago.type}
+												pago={pago}
+												onChange={(e: any) => handleChangeInput(index, e)}
+												handleChangeResumen={handleChangeResumen}
+												setPagos={setPagos}
+												setFilesBlob={setFilesBlob}
+												eliminarPagos={eliminarPagos}
+												fileName={pago.file_field_name}
+											/>
+										)}
+									</div>
+								))}
+						</div>
+					)}
 
-			<NuevoRegistro
-				addNewRegister={handleAddRegister}
-				dataStructure={pagosStructure}
-				addButtonText="+ Nuevo Pago"
-				listOptions={listOptions}
-				listTitle="Tipo de pago"
-			/>
+					<NuevoRegistro
+						addNewRegister={handleAddRegister}
+						dataStructure={pagosStructure}
+						addButtonText="+ Nuevo Pago"
+						listOptions={listOptions}
+						listTitle="Tipo de pago"
+						data={pagos}
+						setTotalAmount={setTotalAmount}
+					/>
+				</div>
+			</BlockUI>
 		</div>
 	);
 };

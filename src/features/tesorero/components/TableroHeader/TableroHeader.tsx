@@ -4,12 +4,15 @@ import { HeaderFiltrados } from "./components/HeaderFiltrados/HeaderFiltrados";
 
 interface Props {
 	showMenuAyuda?: () => void;
+	optionsFilter?: any; 
+  setOptionsFilter?: (filter: any) => void; 
+	fetchFilterData?: any
 }
 
-export const TableroHeader = ({ showMenuAyuda }: Props) => {
+export const TableroHeader = ({ showMenuAyuda, optionsFilter, setOptionsFilter, fetchFilterData  }: Props) => {
 	return (
 		<div className={style.tableroVendedor__content__header}>
-			<HeaderFiltrados />
+			<HeaderFiltrados optionsFilter={optionsFilter} setOptionsFilter={setOptionsFilter} fetchFilterData={fetchFilterData} />
 			<HeaderConfiguracion showMenuAyuda={showMenuAyuda} />
 		</div>
 	);

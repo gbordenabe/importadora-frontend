@@ -13,7 +13,13 @@
 
 .container__1 {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-content: center;
 	padding: 20px 0 10px 0;
+}
+
+.p {
+	color: #fff; 
+	cursor: pointer;
+	padding: 0 10px
 }

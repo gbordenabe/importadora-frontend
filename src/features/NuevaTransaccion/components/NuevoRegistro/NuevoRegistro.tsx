@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddButton } from "../AddButton/AddButton";
 import { OptionsList } from "../OptionsList/OptionsList";
 import style from "./NuevoRegistro.module.css";
+import { formatPrice } from "@/helpers/formatPrice";
 
 interface Props {
 	addNewRegister?: (data: any) => void;
@@ -9,6 +10,8 @@ interface Props {
 	addButtonText?: string;
 	listOptions?: any;
 	listTitle?: string;
+	data?: any;
+	setTotalAmount?: any;
 }
 
 export const NuevoRegistro = ({
@@ -17,14 +20,13 @@ export const NuevoRegistro = ({
 	addButtonText,
 	listOptions,
 	listTitle,
+	data,
+	setTotalAmount,
 }: Props) => {
-
 	// pasos
 	const [stepNewRegister, setStepNewRegister] = useState(1);
+	const [total, setTotal] = useState(0);
 
-
-	
-	
 	const handleStepNewRegister = () => {
 		if (listTitle === "Factura") {
 			handleAddNewRegister("Factura o nota de débito", null);
@@ -36,7 +38,21 @@ export const NuevoRegistro = ({
 		}
 	};
 
+	const calculateTotal = () => {
+		let calculatedTotal = 0;
+		if (data && Array.isArray(data)) {
+			data.forEach((item) => {
+				calculatedTotal += Number(item.amount);
+			});
+		}
+		setTotal(calculatedTotal);
 
+		if (setTotalAmount) setTotalAmount(calculatedTotal);
+	};
+
+	useEffect(() => {
+		calculateTotal();
+	}, [data]);
 
 	// registro de nueva tabla
 	const handleAddNewRegister = (tipo: string | null, subtipo: string | null) => {
@@ -51,8 +67,6 @@ export const NuevoRegistro = ({
 		}
 		setStepNewRegister(1);
 	};
-
-
 
 	return (
 		<div className={style.nuevoRegistro__container}>
@@ -69,7 +83,8 @@ export const NuevoRegistro = ({
 
 			<div className={style.nuevoRegistro__total}>
 				<p className={style.nuevoRegistro__total__text}>Total:</p>
-				<p className={style.nuevoRegistro__total__text}>---------</p>
+				{/* <p className={style.nuevoRegistro__total__text}>{`$ ${total}`}</p> */}
+				<p className={style.nuevoRegistro__total__text}>{formatPrice(total)}</p>
 			</div>
 		</div>
 	);

@@ -49,6 +49,13 @@ button {
 	border: none;
 }
 
+.p-dropdown-items {
+	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 /* .tableroVendedor__list::-webkit-scrollbar {
 	-webkit-appearance: none;
 }
@@ -78,4 +85,16 @@ button {
 	border-radius: 10px;
 } */
 
+.p-fileupload-choose {
+	background-color: transparent;
+	color: #333;
+	border: solid 1px #333;
+	transition: background-color 0.2s !important;
+	font-size: 14px;
+}
 
+.p-fileupload-choose:hover {
+	background-color: #333;
+	color: #fff;
+	border: solid 1px #333;
+}

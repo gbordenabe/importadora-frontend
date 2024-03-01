@@ -10,6 +10,9 @@ import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 interface Props {
 	showMenuAyuda?: () => void;
 	showProfileEdit?: () => void;
+	optionsFilter?: any;
+	setOptionsFilter?: any;
+	fetchFilterData?: any;
 }
 
 export const HeaderConfiguracion = ({ showMenuAyuda, showProfileEdit }: Props) => {

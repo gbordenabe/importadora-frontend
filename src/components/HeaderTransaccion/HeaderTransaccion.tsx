@@ -2,26 +2,27 @@ import style from "./HeaderTransaccion.module.css";
 import { BoxContent } from "../BoxContent/BoxContent";
 import { ChipText } from "@/components/ChipText/ChipText";
 import { useAppSelector } from "@/store/hooks";
-import { formatDate } from "@/helpers/formatDate";
+import { generarFechaCorta } from "@/helpers/generateDate";
 
 interface Props {
 	isDetails?: boolean;
-	data?:any
+	data?: any;
 }
 
 export const HeaderTransaccion = ({ isDetails = false, data }: Props) => {
-	const { name, lastname } = useAppSelector((state) => state.auth.login);
+	const { name, last_name } = useAppSelector((state) => state.auth.login);
+
 	return (
 		<BoxContent>
 			<div className={style.headerTransaccion__container}>
-				<ChipText text={`SKU: ${data?.sku}`}/>
-				<ChipText text={`Fecha: ${formatDate(data?.created_at)}`} />
-				<ChipText text={`Vendedor: ${name} ${lastname}`} />
+				<ChipText text={`SKU: ${data?.sku || ""}`} />
+				<ChipText text={generarFechaCorta()} />
+				<ChipText text={`Vendedor: ${name} ${last_name}`} />
 
 				{isDetails && (
 					<>
-						<ChipText text={`Empresa: ${data?.company}`} />
-						<ChipText text={`Cliente: ${data?.client}`} />
+						<ChipText text={`Empresa: ${data?.company?.name || ""}`} />
+						<ChipText text={`Cliente: ${data?.client?.name || ""}`} />
 					</>
 				)}
 			</div>

@@ -33,22 +33,23 @@ export function AppRoutes() {
 					<>
 						<Route path="/tablero-vendedor" element={<TableroVendedor />} />
 						<Route path="/nueva-transaccion" element={<NuevaTransaccion />} />
-						<Route path="/detalle-transaccion" element={<DetalleTransaccion />} />
+						<Route path="/detalle-transaccion/:id" element={<DetalleTransaccion />} />
 						<Route path="/*" element={<Navigate to="/tablero-vendedor" />} />
 					</>
 				) : (
 					<>
 						<Route path="/tablero-tesorero" element={<TableroTesorero />} />
 						<Route path="/tablero-usuario" element={<TableroUsuario />} />
-						<Route path="/tablero-usuario/vendendor-tesorero" element={<TableroTesoreroVendedor />} />
+						<Route
+							path="/tablero-usuario/vendendor-tesorero"
+							element={<TableroTesoreroVendedor />}
+						/>
 						<Route path="/tablero-usuario/cliente" element={<TableroCliente />} />
 						<Route path="/tablero-usuario/empresa" element={<TableroEmpresa />} />
 						<Route path="/detalle-transaccion/:id" element={<DetalleTransaccion />} />
 						<Route path="/*" element={<Navigate to="/tablero-tesorero" />} />
 					</>
 				)}
-
-				<Route path="/*" element={<Navigate to="/login" />} />
 			</Routes>
 		</BrowserRouter>
 	);
