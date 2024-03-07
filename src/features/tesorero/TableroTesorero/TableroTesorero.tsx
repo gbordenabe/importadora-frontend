@@ -40,7 +40,7 @@ export const TableroTesorero = () => {
 	const fetchFilterData = () => {
 		console.log(optionsFilter);
 
-		const { clientName, empresaName,	...restData } = optionsFilter
+		const { clientName, empresaName, ...restData } = optionsFilter;
 
 		axios
 			.post(`${url}/transaction/get-all`, restData, {
@@ -73,6 +73,7 @@ export const TableroTesorero = () => {
 							optionsFilter={optionsFilter}
 							setOptionsFilter={setOptionsFilter}
 							fetchFilterData={fetchFilterData}
+							dataTransaction={dataTransaction}
 						/>
 
 						<div className={style.tableroVendedor__list}>

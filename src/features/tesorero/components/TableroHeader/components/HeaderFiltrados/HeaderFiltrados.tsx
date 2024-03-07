@@ -14,14 +14,23 @@ import FiltroFacturas from "./components/Modals/FiltroFactura/FiltroFacturas";
 import FiltroCheque from "./components/Modals/FiltroCheque/FiltroCheque";
 import FiltroImportes from "./components/Modals/FiltroImporte/FiltroImporte";
 import { formatDate } from "@/helpers/formatDate";
+import { useState } from "react";
 
 interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
 	fetchFilterData?: any;
+	handleResetFilters?: any;
+	dataTransaction?: any;
 }
 
-export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterData }: Props) => {
+export const HeaderFiltrados = ({
+	optionsFilter,
+	setOptionsFilter,
+	fetchFilterData,
+	handleResetFilters,
+	dataTransaction,
+}: Props) => {
 	const { modalStatus, onVisibleModal, onHideModal } = useModal();
 	const {
 		modalStatus: modalStatus2,
@@ -67,15 +76,24 @@ export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterDa
 			[name]: value,
 		});
 	};
+	const [activeFilterButton, setActiveFilterButton] = useState(false);
 
 	return (
 		<>
 			<div className={style.header__filtrados__container}>
 				<div className={style.header__filtrados__buttons}>
-					<div className={style.header__filtrados__icon} onClick={fetchFilterData}>
-						<VscFilter />
+					<div
+						className={style.header__filtrados__icon}
+						onClick={() => setActiveFilterButton(!activeFilterButton)}
+					>
+						<VscFilter size={14} />
+						{activeFilterButton && <p>{dataTransaction?.count || 0}</p>}
 					</div>
-					<div className={style.header__filtrados__icon}>
+					<div
+						className={style.header__filtrados__icon}
+						style={{ transform: "scaleX(-1)" }}
+						onClick={handleResetFilters}
+					>
 						<RxReload />
 					</div>
 					<div className={style.header__filtrados__icon}>
@@ -128,7 +146,9 @@ export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterDa
 								style={{ cursor: "pointer" }}
 							>
 								{/* De: 12/11/2021 A: 12/11/2023 */}
-								{ ` ${formatDate(optionsFilter.created_at_start)} - ${formatDate(optionsFilter.created_at_end)} ` }
+								{` ${formatDate(optionsFilter.created_at_start)} - ${formatDate(
+									optionsFilter.created_at_end
+								)} `}
 							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal3}>
@@ -137,7 +157,7 @@ export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterDa
 								className={style.header__filtrados__documentType__item}
 								style={{ cursor: "pointer" }}
 							>
-								{ optionsFilter.empresaName ?  optionsFilter.empresaName : "Todos"}
+								{optionsFilter.empresaName ? optionsFilter.empresaName : "Todos"}
 							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal4}>
@@ -146,7 +166,7 @@ export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterDa
 								className={style.header__filtrados__documentType__item}
 								style={{ cursor: "pointer" }}
 							>
-								 { optionsFilter.clientName ?  optionsFilter.clientName : "Todos"}
+								{optionsFilter.clientName ? optionsFilter.clientName : "Todos"}
 							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal5}>
@@ -169,12 +189,17 @@ export const HeaderFiltrados = ({ optionsFilter, setOptionsFilter, fetchFilterDa
 								className={style.header__filtrados__documentType__item}
 								style={{ cursor: "pointer" }}
 							>
-								{ optionsFilter.bill_number ?  optionsFilter.bill_number : "Buscar"}
+								{optionsFilter.bill_number ? optionsFilter.bill_number : "Buscar"}
 							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal7}>
 							<p className={style.header__filtrados__content__text}>N° de Cheque:</p>
-							<div className={style.header__filtrados__documentType__item}> { optionsFilter.check_document_number ?  optionsFilter.check_document_number : "Buscar" } </div>
+							<div className={style.header__filtrados__documentType__item}>
+								{" "}
+								{optionsFilter.check_document_number
+									? optionsFilter.check_document_number
+									: "Buscar"}{" "}
+							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal8}>
 							<p className={style.header__filtrados__content__text}>Importe:</p>

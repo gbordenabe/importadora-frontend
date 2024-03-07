@@ -9,6 +9,7 @@ interface Props {
 	setOptionsFilter?: (filter: any) => void;
 	fetchFilterData?: any;
 	handleResetFilters?: any;
+	dataTransaction?: any;
 }
 
 export const TableroHeader = ({
@@ -18,6 +19,7 @@ export const TableroHeader = ({
 	setOptionsFilter,
 	fetchFilterData,
 	handleResetFilters,
+	dataTransaction,
 }: Props) => {
 	return (
 		<div className={style.tableroVendedor__content__header}>
@@ -28,6 +30,7 @@ export const TableroHeader = ({
 				setOptionsFilter={setOptionsFilter}
 				fetchFilterData={fetchFilterData}
 				handleResetFilters={handleResetFilters}
+				dataTransaction={dataTransaction}
 			/>
 		</div>
 	);

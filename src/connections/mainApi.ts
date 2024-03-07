@@ -4,4 +4,4 @@ const testNickUrl = "http://hostnick.ddns.net:6006";
 
 const urls = [serverBaseURL, testBaseURL, testNickUrl];
 
-export const url = urls[2];
+export const url = urls[0];

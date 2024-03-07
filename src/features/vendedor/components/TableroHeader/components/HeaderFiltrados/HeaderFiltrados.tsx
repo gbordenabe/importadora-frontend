@@ -12,12 +12,15 @@ import FiltroFacturas from "@/features/tesorero/components/TableroHeader/compone
 import FiltroCheque from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroCheque/FiltroCheque";
 import FiltroImportes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroImporte/FiltroImporte";
 import { formatDate } from "@/helpers/formatDate";
+import { useState } from "react";
+import { IoSearchSharp } from "react-icons/io5";
 
 interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
 	fetchFilterData?: any;
 	handleResetFilters?: any;
+	dataTransaction?: any;
 }
 
 export const HeaderFiltrados = ({
@@ -25,6 +28,7 @@ export const HeaderFiltrados = ({
 	setOptionsFilter,
 	fetchFilterData,
 	handleResetFilters,
+	dataTransaction,
 }: Props) => {
 	const { modalStatus, onVisibleModal, onHideModal } = useModal();
 
@@ -67,19 +71,48 @@ export const HeaderFiltrados = ({
 		});
 	};
 
+	const [filterFacturas, setFilterFacturas] = useState(null);
+	const [filterCheques, setFilterCheques] = useState(null);
+	const [filterImporte, setFilterImporte] = useState(null);
+
+	const onFilterChangeNumber = (value: any, name: any) => {
+		// Esto es fijo para los filtrados de n factura, n cheque e importe.
+		// bill_number
+		// check_document_number
+		setOptionsFilter((prev: any) => ({
+			...prev,
+			[name]: +value,
+		}));
+	};
+
+	const onResetFilters = () => {
+		setFilterFacturas(null);
+		setFilterCheques(null);
+		setFilterImporte(null);
+		handleResetFilters();
+	};
+
+	const [activeFilterButton, setActiveFilterButton] = useState(false);
+
+	console.log(optionsFilter)
+
 	return (
 		<>
 			<div className={style.header__filtrados__container}>
 				<div className={style.header__filtrados__buttons}>
-					<div className={style.header__filtrados__icon} onClick={fetchFilterData}>
-						<VscFilter />
+					<div
+						className={style.header__filtrados__icon}
+						onClick={() => setActiveFilterButton(!activeFilterButton)}
+					>
+						<VscFilter size={14} />
+						{activeFilterButton && <p>{dataTransaction?.count || 0}</p>}
 					</div>
 					<div
 						className={style.header__filtrados__icon}
 						style={{ transform: "scaleX(-1)" }}
-						onClick={handleResetFilters}
+						onClick={onResetFilters}
 					>
-						<RxReload />
+						<RxReload size={14} />
 					</div>
 				</div>
 
@@ -125,30 +158,59 @@ export const HeaderFiltrados = ({
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal2}>
 							<p className={style.header__filtrados__text}>Fechas:</p>
 							<div className={style.header__filtrados__documentType__item}>
-								{/* De: 12/11/2021 A: 12/11/2023 */}
-								{ ` ${formatDate(optionsFilter.created_at_start)} - ${formatDate(optionsFilter.created_at_end)} ` }
+								{` ${formatDate(optionsFilter.created_at_start)} - ${formatDate(
+									optionsFilter.created_at_end
+								)} `}
 							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal3}>
 							<p className={style.header__filtrados__text}>Empresa:</p>
-							<div className={style.header__filtrados__documentType__item}> { optionsFilter.empresaName ?  optionsFilter.empresaName : "Todos"} </div>
+							<div className={style.header__filtrados__documentType__item}>
+								{optionsFilter.empresaName ? optionsFilter.empresaName : "Todos"}
+							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal4}>
 							<p className={style.header__filtrados__text}>Cliente:</p>
-							<div className={style.header__filtrados__documentType__item}> { optionsFilter.clientName ?  optionsFilter.clientName : "Todos"} </div>
+							<div className={style.header__filtrados__documentType__item}>
+								{optionsFilter.clientName ? optionsFilter.clientName : "Todos"}
+							</div>
 						</div>
 					</div>
 
 					{/* Thrid row */}
 
 					<div className={style.header__filtrados__content__item__row2}>
-						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal6}>
+						<div className={style.header__filtrados__content__itemGroup}>
 							<p className={style.header__filtrados__content__text}>N° de Factura o debito:</p>
-							<div className={style.header__filtrados__documentType__item}> { optionsFilter.bill_number ?  optionsFilter.bill_number : "Buscar"} </div>
+							<div className={style.header__filtrados__documentType__item}>
+								<input
+									type="number"
+									className={style.header__input__filter}
+									placeholder="Buscar"
+									onChange={(e: any) => setFilterFacturas(e.target.value)}
+									value={filterFacturas || ""}
+								/>
+								<IoSearchSharp
+									size={15}
+									onClick={() => onFilterChangeNumber(filterFacturas, "bill_number")}
+								/>
+							</div>
 						</div>
-						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal7}>
+						<div className={style.header__filtrados__content__itemGroup}>
 							<p className={style.header__filtrados__content__text}>N° de Cheque:</p>
-							<div className={style.header__filtrados__documentType__item}> { optionsFilter.check_document_number ?  optionsFilter.check_document_number : "Buscar"}  </div>
+							<div className={style.header__filtrados__documentType__item}>
+								<input
+									type="number"
+									className={style.header__input__filter}
+									placeholder="Buscar"
+									onChange={(e: any) => setFilterCheques(e.target.value)}
+									value={filterCheques || ""}
+								/>
+								<IoSearchSharp
+									size={15}
+									onClick={() => onFilterChangeNumber(filterCheques, "check_document_number")}
+								/>
+							</div>
 						</div>
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal8}>
 							<p className={style.header__filtrados__content__text}>Importe:</p>

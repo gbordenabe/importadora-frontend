@@ -1,6 +1,6 @@
 .mainHeader__container {
 	width: 100%;
-	padding: 10px 0;
+	padding: 20px 0;
 }
 
 .logo__container {
@@ -8,7 +8,6 @@
 	height: 50px;
 }
 .logoImg {
-	background-size: cover;
-	width: auto;
-	height: 100%;
+	width: 282px;
+	height: auto;
 }

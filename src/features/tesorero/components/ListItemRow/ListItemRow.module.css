@@ -24,6 +24,13 @@
 	gap: 3px;
 }
 
+.tableroVendedor__list__item__box:nth-child(1), .tableroVendedor__list__item__box:nth-child(2) {
+	width: 260px;
+}
+.tableroVendedor__list__item__box:nth-child(3) {
+	width: 220px;
+}
+
 .tableroVendedor__buttons {
 	min-height: 100%;
 	display: flex;
@@ -58,7 +65,7 @@
 }
 
 .itemBox__text {
-	font-size: 13px;
+	font-size: 12px;
 }
 
 .itemBox__text span {

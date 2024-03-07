@@ -22,8 +22,7 @@ export const TableroVendedor = () => {
 	const token = localStorage.getItem("rt__importadora");
 
 	const fetchFilterData = () => {
-
-		const { clientName, empresaName,	...restData } = optionsFilter
+		const { clientName, empresaName, ...restData } = optionsFilter;
 
 		axios
 			.post(`${url}/transaction/get-all/mine`, restData, {
@@ -45,8 +44,6 @@ export const TableroVendedor = () => {
 		setOptionsFilter(initialData);
 	};
 
-	console.log(optionsFilter);
-
 	return (
 		<>
 			<AppStructure>
@@ -64,6 +61,7 @@ export const TableroVendedor = () => {
 							setOptionsFilter={setOptionsFilter}
 							fetchFilterData={fetchFilterData}
 							handleResetFilters={handleResetFilters}
+							dataTransaction={dataTransaction}
 						/>
 
 						<div className={style.tableroVendedor__list}>
@@ -89,8 +87,15 @@ export const TableroVendedor = () => {
 	);
 };
 
+const ajustedDateForm = () => {
+	const adjustedDate = new Date();
+	adjustedDate.setHours(23, 59, 59, 999);
+	return adjustedDate;
+};
+
 const initialData = {
 	statuses: ["OK", "PENDING", "TO_CHANGE", "EDITED"],
+	// statuses: ["OK"],
 	// bill_status: "",
 	// cash_status: "",
 	// check_status: "",
@@ -99,11 +104,11 @@ const initialData = {
 	// deposit_status: "",
 	// retention_status: "",
 	created_at_start: fechaSemana(),
-	created_at_end: new Date(),
+	created_at_end: ajustedDateForm(),
 	// companies: [],
 	// clients: [],
-	// check_document_number: "",
-	// bill_number: "",
+	check_document_number: "",
+	bill_number: "",
 	// cash_document_number: "",
 	// deposit_document_number: "",
 	// bill_amount_min: 0,

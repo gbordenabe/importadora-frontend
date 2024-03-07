@@ -9,7 +9,7 @@ import style from "./FiltroConEstado.module.css";
 const FiltroConEstado = () => {
 	return (
 		<div className={style.filtroConEstado}>
-			<div className={style.header__filtrados__content__itemGroup} style={{ marginBottom: 20 }}>
+			{/* <div className={style.header__filtrados__content__itemGroup} style={{ marginBottom: 20 }}>
 				<p className={style.header__filtrados__text}>Seleccion con estado:</p>
 				<div className={style.header__filtrados__selection}>
 					<div
@@ -33,10 +33,18 @@ const FiltroConEstado = () => {
 				<div className={style.header__filtrados__documentType__item}>Créditos</div>
 				<div className={style.header__filtrados__documentType__item}>Nota de créditos</div>
 				<div className={style.header__filtrados__documentType__item}>Retención</div>
-			</div>
-			<hr />
+			</div> */}
+			{/* <hr /> */}
 			<div className={style.containerChecks}>
 				<div className={style.containerMedium}>
+					<div className={style.itemStateColor}>
+						<input type="checkbox" />
+						{/* <div
+							className={`${style.header__filtrados__blue} ${style.header__filtrados__select__color}`}
+						></div> */}
+						<span className={style.titleState}>Todos</span>
+					</div>
+					<br />
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
 						<div
@@ -70,7 +78,16 @@ const FiltroConEstado = () => {
 				<div className={style.containerMedium}>
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
-						<span className={style.titleState}>Factura o debito</span>
+						<span className={style.titleState}>Todos</span>
+					</div>
+					<br />
+					<div className={style.itemStateColor}>
+						<input type="checkbox" />
+						<span className={style.titleState}>Factura o débito</span>
+					</div>
+					<div className={style.itemStateColor}>
+						<input type="checkbox" />
+						<span className={style.titleState}>Efectivo / Transferencia</span>
 					</div>
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
@@ -82,15 +99,15 @@ const FiltroConEstado = () => {
 					</div>
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
-						<span className={style.titleState}>Credito</span>
+						<span className={style.titleState}>Crédito</span>
 					</div>
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
-						<span className={style.titleState}>Nota de credito</span>
+						<span className={style.titleState}>Nota de crédito</span>
 					</div>
 					<div className={style.itemStateColor}>
 						<input type="checkbox" />
-						<span className={style.titleState}>Retencion</span>
+						<span className={style.titleState}>Retención</span>
 					</div>
 				</div>
 			</div>

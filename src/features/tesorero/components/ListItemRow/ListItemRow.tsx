@@ -4,6 +4,7 @@ import style from "./ListItemRow.module.css";
 import { FiEdit2, FiEye } from "react-icons/fi";
 import StatusCircle from "@/components/StatusCircle/StatusCircle";
 import { formatDate } from "@/helpers/formatDate";
+import { formatPrice } from "@/helpers/formatPrice";
 
 type ItemWithAmount = {
 	amount: string;
@@ -60,7 +61,7 @@ export const ListItemRow = ({ data }: any) => {
 						Cliente: <span>{data?.client?.business_name}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Monto de la transacción: <span>${totalAmountBills}</span>
+						Monto de la transacción: <span>{formatPrice(+totalAmountBills)}</span>
 					</p>
 				</div>
 
@@ -73,7 +74,7 @@ export const ListItemRow = ({ data }: any) => {
 						N° de facturas o notas de debito: <span>{data?.bills.length}</span>
 					</p>
 					<p className={style.itemBox__text}>
-						Suma Total: <span>${totalAmountBills}</span>
+						Suma Total: <span>{formatPrice(+totalAmountBills)}</span>
 					</p>
 				</div>
 
@@ -82,8 +83,7 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.cash_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Efectivo/Transferencia{`(${data?.cash.length})`}:{" "}
-								<span>{`$${totalAmountCash}`}</span>
+								Efectivo/Transf.{`(${data?.cash.length})`}: <span>{`${formatPrice(+totalAmountCash)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -91,7 +91,7 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.check_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Cheques{`(${data?.checks.length})`}: <span>{`$${totalAmountChecks}`}</span>
+								Cheques{`(${data?.checks.length})`}: <span>{`${formatPrice(+totalAmountChecks)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -99,7 +99,7 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.deposit_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Depositos{`(${data?.deposits.length})`}: <span>{`$${totalAmountDeposit}`}</span>
+								Depositos{`(${data?.deposits.length})`}: <span>{`${formatPrice(+totalAmountDeposit)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -108,7 +108,8 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.credit_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Crédito{`(${data?.credits.length})`}: <span>{`$${totalAmountCredit}`}</span>
+								Crédito{`(${data?.credits.length})`}:{" "}
+								<span>{`${formatPrice(+totalAmountCredit)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -119,7 +120,7 @@ export const ListItemRow = ({ data }: any) => {
 
 							<p className={style.itemBox__text}>
 								Nota de crédito{`(${data?.credit_notes.length})`}:{" "}
-								<span>{`$${totalAmountNoteCredits}`}</span>
+								<span>{`${formatPrice(+totalAmountNoteCredits)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -129,7 +130,8 @@ export const ListItemRow = ({ data }: any) => {
 							<StatusCircle status={data?.retention_status} size="15px" />
 
 							<p className={style.itemBox__text}>
-								Retención{`(${data?.retentions.length})`}: <span>{`$${totalAmountRetention}`}</span>
+								Retención{`(${data?.retentions.length})`}:{" "}
+								<span>{`${formatPrice(+totalAmountRetention)}`}</span>
 							</p>
 						</div>
 					) : null}
