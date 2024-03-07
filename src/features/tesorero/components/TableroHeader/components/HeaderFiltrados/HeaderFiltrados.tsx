@@ -27,7 +27,7 @@ interface Props {
 export const HeaderFiltrados = ({
 	optionsFilter,
 	setOptionsFilter,
-	fetchFilterData,
+	// fetchFilterData,
 	handleResetFilters,
 	dataTransaction,
 }: Props) => {

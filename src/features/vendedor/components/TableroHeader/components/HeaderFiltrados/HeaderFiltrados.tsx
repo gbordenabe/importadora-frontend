@@ -8,8 +8,8 @@ import FiltroConEstado from "@/features/tesorero/components/TableroHeader/compon
 import FiltroFechas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFechas/FiltroFechas";
 import FiltroEmpresa from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroEmpresa/FiltroEmpresa";
 import FiltroClientes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroClientes/FiltroClientes";
-import FiltroFacturas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFactura/FiltroFacturas";
-import FiltroCheque from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroCheque/FiltroCheque";
+// import FiltroFacturas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFactura/FiltroFacturas";
+// import FiltroCheque from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroCheque/FiltroCheque";
 import FiltroImportes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroImporte/FiltroImporte";
 import { formatDate } from "@/helpers/formatDate";
 import { useState } from "react";
@@ -26,7 +26,7 @@ interface Props {
 export const HeaderFiltrados = ({
 	optionsFilter,
 	setOptionsFilter,
-	fetchFilterData,
+	// fetchFilterData,
 	handleResetFilters,
 	dataTransaction,
 }: Props) => {
@@ -47,16 +47,16 @@ export const HeaderFiltrados = ({
 		onVisibleModal: onVisibleModal4,
 		onHideModal: onHideModal4,
 	} = useModal();
-	const {
-		modalStatus: modalStatus6,
-		onVisibleModal: onVisibleModal6,
-		onHideModal: onHideModal6,
-	} = useModal();
-	const {
-		modalStatus: modalStatus7,
-		onVisibleModal: onVisibleModal7,
-		onHideModal: onHideModal7,
-	} = useModal();
+	// const {
+	// 	modalStatus: modalStatus6,
+	// 	onVisibleModal: onVisibleModal6,
+	// 	onHideModal: onHideModal6,
+	// } = useModal();
+	// const {
+	// 	modalStatus: modalStatus7,
+	// 	onVisibleModal: onVisibleModal7,
+	// 	onHideModal: onHideModal7,
+	// } = useModal();
 	const {
 		modalStatus: modalStatus8,
 		onVisibleModal: onVisibleModal8,
@@ -73,7 +73,7 @@ export const HeaderFiltrados = ({
 
 	const [filterFacturas, setFilterFacturas] = useState(null);
 	const [filterCheques, setFilterCheques] = useState(null);
-	const [filterImporte, setFilterImporte] = useState(null);
+	// const [filterImporte, setFilterImporte] = useState(null);
 
 	const onFilterChangeNumber = (value: any, name: any) => {
 		// Esto es fijo para los filtrados de n factura, n cheque e importe.
@@ -88,13 +88,13 @@ export const HeaderFiltrados = ({
 	const onResetFilters = () => {
 		setFilterFacturas(null);
 		setFilterCheques(null);
-		setFilterImporte(null);
+		// setFilterImporte(null);
 		handleResetFilters();
 	};
 
 	const [activeFilterButton, setActiveFilterButton] = useState(false);
 
-	console.log(optionsFilter)
+	console.log(optionsFilter);
 
 	return (
 		<>
@@ -266,21 +266,21 @@ export const HeaderFiltrados = ({
 
 			{/* 3ra */}
 
-			<CustomModal isVisible={modalStatus6} onHide={onHideModal6} width="40%">
+			{/* <CustomModal isVisible={modalStatus6} onHide={onHideModal6} width="40%">
 				<FiltroFacturas
 					optionsFilter={optionsFilter}
 					handleChange={handleChange}
 					onHideModal={onHideModal6}
 				/>
-			</CustomModal>
+			</CustomModal> */}
 
-			<CustomModal isVisible={modalStatus7} onHide={onHideModal7} width="40%">
+			{/* <CustomModal isVisible={modalStatus7} onHide={onHideModal7} width="40%">
 				<FiltroCheque
 					optionsFilter={optionsFilter}
 					handleChange={handleChange}
 					onHideModal={onHideModal7}
 				/>
-			</CustomModal>
+			</CustomModal> */}
 
 			<CustomModal isVisible={modalStatus8} onHide={onHideModal8} width="40%">
 				<FiltroImportes
