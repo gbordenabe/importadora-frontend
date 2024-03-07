@@ -45,7 +45,9 @@ export const FormularioCliente = ({ onHideModal }: Props) => {
 	useEffect(() => {
 		if (nuevoCliente?.province) {
 			setNuevoCliente((prev) => ({ ...prev, city: "", location: "" }));
-			fetch(`https://apis.datos.gob.ar/georef/api/departamentos?provincia=${nuevoCliente.province}&max=500`)
+			fetch(
+				`https://apis.datos.gob.ar/georef/api/departamentos?provincia=${nuevoCliente.province}&max=500`
+			)
 				.then((res) => res.json())
 				.then((data) => {
 					const respData = data?.departamentos.map((item: any) => ({
@@ -62,7 +64,9 @@ export const FormularioCliente = ({ onHideModal }: Props) => {
 	useEffect(() => {
 		if (nuevoCliente?.city) {
 			setNuevoCliente((prev) => ({ ...prev, location: "" }));
-			fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${nuevoCliente.city}&max=500`)
+			fetch(
+				`https://apis.datos.gob.ar/georef/api/localidades?departamento=${nuevoCliente.city}&max=500`
+			)
 				.then((res) => res.json())
 				.then((data) => {
 					const respData = data?.localidades.map((item: any) => ({

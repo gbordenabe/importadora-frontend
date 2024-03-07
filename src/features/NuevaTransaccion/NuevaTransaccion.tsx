@@ -90,8 +90,6 @@ export const NuevaTransaccion = () => {
 			}
 		}
 
-		// console.log(newTransaction);
-
 		createTransaction(formData);
 	};
 

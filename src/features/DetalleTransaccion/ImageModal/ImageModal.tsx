@@ -7,7 +7,8 @@ interface Props {
 }
 
 export const ImageModal = ({ fileData }: Props) => {
-	const urlAWS = "https://test-bucket-importer-app.s3.sa-east-1.amazonaws.com";
+
+	const urlAWS = "https://importadora-prod.s3.sa-east-1.amazonaws.com";
 
 	const handleDownload = async () => {
 		if (!fileData?.file_name) return;
