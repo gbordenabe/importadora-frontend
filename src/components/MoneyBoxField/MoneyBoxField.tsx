@@ -2,6 +2,7 @@ import React from "react";
 import style from "./MoneyBoxField.module.css";
 
 import { InputNumber } from "primereact/inputnumber";
+import { Message } from "primereact/message";
 
 interface TextBoxFieldProps {
 	textLabel?: string;
@@ -13,6 +14,7 @@ interface TextBoxFieldProps {
 	disabled?: boolean;
 	labelWidth?: string;
 	placeholder?: string;
+	error?: any
 }
 
 export const MoneyBoxField = ({
@@ -24,7 +26,8 @@ export const MoneyBoxField = ({
 	direction = "column",
 	disabled = false,
 	labelWidth = "100%",
-	placeholder = "",
+	placeholder = "Monto",
+	error
 }: TextBoxFieldProps) => {
 	const styles: React.CSSProperties = {
 		width: labelWidth,
@@ -52,6 +55,8 @@ export const MoneyBoxField = ({
 				currency="USD"
 				locale="en-US"
 			/>
+
+		{error}
 		</div>
 	);
 };

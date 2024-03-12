@@ -76,6 +76,8 @@ export const NuevaTransaccion = () => {
 			...saldosClasificados,
 		};
 
+		console.log('newTransaction', newTransaction)
+
 		const formData = new FormData();
 
 		filesBlob.forEach((file: any) => {
@@ -92,6 +94,9 @@ export const NuevaTransaccion = () => {
 
 		createTransaction(formData);
 	};
+
+	console.log('usuarios', usuarios)
+	console.log('facturas', facturas)
 
 	useEffect(() => {
 		if (sku.length === 0) {
@@ -145,8 +150,9 @@ export const NuevaTransaccion = () => {
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
 				if (facturas.length < 1) return;
-				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				// console.log('verifyData', verifyData)
+				// if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -169,7 +175,7 @@ export const NuevaTransaccion = () => {
 			if (!groupStatus.pagosSectionStatus) {
 				let verifyData = verificarYActualizar(
 					pagos,
-					["document_number", "amount", "date"],
+					["document_number_check", "amount_check", "date_check"],
 					setPagos
 				);
 				if (verifyData) return; //Si es true, es porque faltan datos

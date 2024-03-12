@@ -9,6 +9,8 @@ import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { useDocumentStateHook } from "@/hooks/useDocumentState";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
+import { useDocumentStateHookPayments } from "@/hooks/useDocumentStatePayments";
+import { useState } from "react";
 
 interface Props {
 	pagos?: any;
@@ -32,9 +34,8 @@ export const PagosTransaccion = ({
 	const handleAddRegister = (newData: any) => {
 		setPagos((prev: any) => [...prev, newData]);
 	};
-
-	const { handleChangeInput, handleChangeResumen } = useDocumentStateHook(pagos, setPagos);
-
+	const { handleChangeInput, handleChangeResumen, errors } = useDocumentStateHookPayments(pagos, setPagos);
+	console.log('errorsPagod', errors)
 	return (
 		<div className={style.box__container}>
 			<div className={style.box__head}>
@@ -67,6 +68,7 @@ export const PagosTransaccion = ({
 												setFilesBlob={setFilesBlob}
 												eliminarPagos={eliminarPagos}
 												fileName={pago.file_field_name}
+												// errors={errors}
 											/>
 										)}
 										{pago.tipo === "Depósito" && (

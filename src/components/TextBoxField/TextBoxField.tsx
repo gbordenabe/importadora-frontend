@@ -13,6 +13,7 @@ interface TextBoxFieldProps {
 	disabled?: boolean;
 	labelWidth?: string;
 	placeholder?: string;
+	error?: any
 }
 
 export const TextBoxField = ({
@@ -25,6 +26,7 @@ export const TextBoxField = ({
 	disabled = false,
 	labelWidth = "100%",
 	placeholder = "",
+	error
 }: TextBoxFieldProps) => {
 	const styles: React.CSSProperties = {
 		width: labelWidth,
@@ -48,8 +50,9 @@ export const TextBoxField = ({
 				onChange={onChange}
 				autoComplete="off"
 				disabled={disabled}
-				placeholder={placeholder}
+				placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
 			/>
+			{error}
 		</div>
 	);
 };

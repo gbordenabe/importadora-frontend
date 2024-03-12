@@ -1,12 +1,12 @@
 import { useCallback, Dispatch, SetStateAction } from "react";
 
 export const useDocumentStateHook = (
-	documents: any[],
+	documents: any[] | undefined,
 	setDocuments: Dispatch<SetStateAction<any[]>>
 ) => {
 	const handleChangeInput = useCallback(
 		(index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-			const updatedDocuments = documents.map((document, i) => {
+			const updatedDocuments: any = documents && documents.map((document, i) => {
 				if (i === index) {
 					return { ...document, [event.target.name]: event.target.value };
 				}

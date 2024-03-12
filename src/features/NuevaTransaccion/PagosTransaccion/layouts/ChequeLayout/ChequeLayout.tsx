@@ -1,3 +1,5 @@
+
+
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import style from "./ChequeLayout.module.css";
 import { ChipText } from "@/components/ChipText/ChipText";
@@ -11,6 +13,10 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
+import { InputText } from "primereact/inputtext";
+import { Message } from "primereact/message";
+import { useEffect, useState } from "react";
+import useError from "@/hooks/useError";
 
 interface Props {
 	index: number;
@@ -24,6 +30,7 @@ interface Props {
 	setFilesBlob?: any;
 	eliminarPagos?: any;
 	fileName?: any;
+	errors?: any
 }
 
 export const ChequeLayout = ({
@@ -37,8 +44,14 @@ export const ChequeLayout = ({
 	setFilesBlob,
 	eliminarPagos,
 	fileName,
+	// errors,
 }: Props) => {
 	const uploadFileModal = useModal();
+	
+
+	const { errors, setErrors } = useError();
+	console.log('errors', errors)
+
 
 	return (
 		<>
@@ -84,21 +97,54 @@ export const ChequeLayout = ({
 						</div>
 						<div className={style.layout__content}>
 							<div className={style.layout__content__group__one}>
-								<TextBoxField
-									name="document_number"
-									value={pago.document_number}
+								{/* <TextBoxField
+									name="document_number_check"
+									value={pago.document_number_check}
 									onChange={onChange}
 									placeholder="N° de cheque"
+								/> */}
+								{/* <div style={{display:'flex', flexDirection:'column'}}> */}
+								<InputText
+									className="p-inputtext-sm"
+									style={{ minWidth: "150px" }}
+									value={pago.document_number_check}
+									name='document_number_check'
+									type='text'
+									onChange={onChange}
+									autoComplete="off"
+									// disabled={disabled}
+									// placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
 								/>
-								<MoneyBoxField
+								<div>
+									{errors && errors.checks!== null ? <p>{`${errors.checks.document_number_check}`}</p> : null}
+								</div>
+								</div>
+								<div>
+								<InputText
+									// className="p-inputtext-sm"
+									style={{ minWidth: "150px" }}
+									value={pago.bank_name_check}
+									name='bank_name_check'
+									type='text'
+									onChange={onChange}
+									autoComplete="off"
+									// disabled={disabled}
+									// placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
+								/>
+									<div>
+									{errors && errors.checks && <Message text={errors.checks.bank_name_check}></Message>}
+									</div>
+								</div>
+
+								{/* <MoneyBoxField
 									name="amount"
 									value={pago.amount}
 									onChange={onChange}
 									placeholder="Monto"
 								/>
-								<CalendarInput name="date" value={pago.date} onChange={onChange} />
-							</div>
-							<div className={style.layout__content__group__two}>
+								<CalendarInput name="date" value={pago.date} onChange={onChange} /> */}
+							{/* </div> */}
+							{/* <div className={style.layout__content__group__two}>
 								<TextBoxField
 									name="bank_name"
 									value={pago.bank_name}
@@ -112,7 +158,7 @@ export const ChequeLayout = ({
 									onChange={onChange}
 									placeholder="Observaciones"
 								/>
-							</div>
+							</div> */}
 						</div>
 					</>
 				)}

@@ -16,3 +16,9 @@
 .nuevoRegistro__total__text{
 	font-size: 14px;
 }
+
+.button_add_bill {
+	padding: 1rem;
+	border-radius: 10px;
+	margin: 5px
+}

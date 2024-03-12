@@ -9,6 +9,7 @@ interface Props {
 	label?: any;
 	onClick?: any;
 	direction?: "row" | "column";
+	error?: any
 }
 
 export default function CalendarInput({
@@ -18,6 +19,7 @@ export default function CalendarInput({
 	label,
 	onClick,
 	direction = "column",
+	error
 }: Props) {
 	return (
 		<div
@@ -30,12 +32,14 @@ export default function CalendarInput({
 
 			<Calendar
 				name={name}
+				inputStyle={{ minWidth: "150px", width: "100%" }}
 				value={value}
 				onChange={onChange}
 				dateFormat="dd/mm/yy" // Aquí estableces el formato de fecha
 				placeholder={"Fecha"}
 				className="p-inputtext-sm"
 			/>
+			{error}
 		</div>
 	);
 }

@@ -1,63 +1,133 @@
-import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
-import style from "./UsuariosTransaccion.module.css";
-import { SelectField } from "@/components/SelectField/SelectField";
-import { handleChangeInput } from "@/helpers/handleTextBox";
-import { useGetFetch } from "@/hooks/useGetFetch";
+import { useState } from "react";
+import { Formik, Form, Field } from "formik";
 import { BlockUI } from "primereact/blockui";
+import { SelectField } from "@/components/SelectField/SelectField";
+import style from "./UsuariosTransaccion.module.css";
+import * as Yup from "yup";
+import { useGetFetch } from "@/hooks/useGetFetch";
+import { handleChangeInput } from "@/helpers/handleTextBox";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
+import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
+import { Message } from "primereact/message";
 
 interface Props {
-	usuarios?: any;
-	setUsuarios?: any;
-	sku?: any;
-	isBlocked?: boolean;
-	onChangeStatusGroup?: any;
+  usuarios?: any;
+  setUsuarios?: any;
+  sku?: any;
+  isBlocked?: boolean;
+  onChangeStatusGroup?: any;
 }
 
+const UsuariosTransaccionSchema = Yup.object().shape({
+  empresa: Yup.object().required("La empresa es requerida"),
+  cliente: Yup.object().required("El cliente es requerido"),
+});
+
 export const UsuariosTransaccion = ({
-	usuarios,
-	setUsuarios,
-	isBlocked,
-	onChangeStatusGroup,
+  usuarios,
+  setUsuarios,
+  isBlocked,
+  onChangeStatusGroup,
 }: Props) => {
-	const ClienteFetch = useGetFetch("/client");
-	const UserFetch = useGetFetch("/company");
+  const [submitting, setSubmitting] = useState(false);
+  const ClienteFetch = useGetFetch("/client");
+  const UserFetch = useGetFetch("/company");
 
-	return (
-		<div className={style.box__container}>
-			<div className={style.box__head}>
-				<h2>Usuarios</h2>
-				<div>
-					{isBlocked ? (
-						<SecondaryButton text="Editar" onClick={() => onChangeStatusGroup("user")} />
-					) : (
-						<PrimaryButton text="Confirmar" onClick={() => onChangeStatusGroup("user")} />
-					)}
-				</div>
-			</div>
+  return (
+    <div className={style.box__container}>
+      <Formik
+        initialValues={{
+          empresa: usuarios?.empresa || "",
+          cliente: usuarios?.cliente || "",
+        }}
+        validationSchema={UsuariosTransaccionSchema}
+        onSubmit={async (values, { setErrors, setSubmitting }) => {
+          setSubmitting(true);
+          console.log("values", values);
+          try {
+            // setSubmitting(true);
+            // const { empresa, cliente } = values;
+            // const { data } = await ClienteFetch.get(`/client/${cliente}`);
+            // const { data: user } = await UserFetch.get(`/company/${empresa}`);
+            // setUsuarios({
+            //     ...usuarios,
+            //     cliente: data,
+            //     empresa: user,
+            // });
+            // setSubmitting(false);
+            onChangeStatusGroup("user");
+            setUsuarios(values)
+          } catch (error: any) {
+            console.log(error);
+            setErrors({ empresa: error.message, cliente: error.message });
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({ errors, isSubmitting, handleSubmit }) => (
+          <Form onSubmit={handleSubmit}>
+            <div className={style.box__head}>
+              <h2>Usuarios</h2>
+              <div>
+                {isBlocked ? (
+                  <SecondaryButton type="submit" text="Editar" />
+                ) : (
+                  <PrimaryButton type="submit" text="Confirmar" />
+                )}
+              </div>
+            </div>
 
-			<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-				<div className={style.box__content}>
-					<div className={style.box__content__item}>
-						<SelectField
-							textLabel="Empresa"
-							value={usuarios.empresa}
-							name="empresa"
-							options={UserFetch?.data?.data}
-							onChange={(e) => handleChangeInput(e, setUsuarios)}
-						/>
-					</div>
-					<div className={style.box__content__item}>
-						<SelectField
-							textLabel="Cliente"
-							value={usuarios.cliente}
-							name="cliente"
-							options={ClienteFetch?.data?.data}
-							onChange={(e) => handleChangeInput(e, setUsuarios)}
-						/>
-					</div>
-				</div>
-			</BlockUI>
-		</div>
-	);
+            <BlockUI
+              blocked={isBlocked || submitting}
+              style={{ borderRadius: "5px" }}
+            >
+              <div className={style.box__content}>
+                <div className={style.box__content__item}>
+                  <Field name="empresa">
+                    {({ field }: { field: any }) => (
+                      <SelectField
+                        textLabel="Empresa"
+                        value={field.value}
+                        name={field.name}
+                        options={UserFetch?.data?.data}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleChangeInput(e, setUsuarios);
+                        }}
+                      />
+                    )}
+                  </Field>
+                  {errors.empresa && (
+                    <Message severity="error" text={`${errors.empresa}`} />
+                  )}
+                </div>
+                <div className={style.box__content__item}>
+                  <Field name="cliente">
+                    {({ field }: { field: any }) => (
+                      <SelectField
+                        textLabel="Cliente"
+                        value={field.value}
+                        name={field.name}
+                        options={ClienteFetch?.data?.data}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleChangeInput(e, setUsuarios);
+                        }}
+                      />
+                    )}
+                  </Field>
+                  {errors.cliente && (
+                    //<span style={{ fontSize: '1px' }}>
+                    <Message severity="error" text={`${errors.cliente}`} />
+                    //</span>
+                  )}
+                </div>
+              </div>
+            </BlockUI>
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
 };

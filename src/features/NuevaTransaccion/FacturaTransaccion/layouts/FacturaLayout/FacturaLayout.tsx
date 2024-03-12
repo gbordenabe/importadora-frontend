@@ -16,6 +16,7 @@ interface Props {
 	factura?: any;
 	handleChangeResumen?: any;
 	eliminarFactura?: any;
+	error?: any
 }
 
 export const FacturaLayout = ({
@@ -25,6 +26,7 @@ export const FacturaLayout = ({
 	factura,
 	handleChangeResumen,
 	eliminarFactura,
+	error
 }: Props) => {
 	return (
 		<div className={style.layout__container} key={index}>
@@ -60,6 +62,7 @@ export const FacturaLayout = ({
 								value={factura.number}
 								onChange={onChange}
 								placeholder="N° completo"
+								error={error}
 							/>
 
 							<MoneyBoxField
@@ -67,9 +70,10 @@ export const FacturaLayout = ({
 								value={factura.amount}
 								onChange={onChange}
 								placeholder="Monto"
+								error= {error}
 							/>
 
-							<CalendarInput name="date" value={factura.date} onChange={onChange} />
+							<CalendarInput name="date" value={factura.date} onChange={onChange} error={error} />
 						</div>
 						<div>
 							<TextBoxField
@@ -77,6 +81,7 @@ export const FacturaLayout = ({
 								value={factura.observation}
 								onChange={onChange}
 								placeholder="Observaciones"
+								error={error}
 							/>
 						</div>
 					</div>

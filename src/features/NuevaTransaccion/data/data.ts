@@ -7,11 +7,11 @@ export const facturasStructure = {
 
 export const pagosStructure = {
 	tipo: "",
-	document_number: "",
-	amount: "",
-	date: "",
-	observation: "",
-	file_field_name: "",
+	document_number_check: "",
+	amount_check: "",
+	date_check: "",
+	observation_check: "",
+	file_field_name_check: "",
 };
 
 export const saldosStructure = {

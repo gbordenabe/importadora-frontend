@@ -6,14 +6,16 @@ interface Props {
 	icon?: React.ReactNode;
 	fitWidth?: boolean;
 	disabled?: boolean;
+	type?: any
 }
 
-export const SecondaryButton = ({ text, onClick, icon, fitWidth, disabled }: Props) => {
+export const SecondaryButton = ({ text, onClick, icon, fitWidth, disabled, type }: Props) => {
 	return (
 		<button
 			className={`${style.mainButton__container} ${fitWidth && style.mainButton__fitWidth}`}
 			onClick={onClick}
 			disabled={disabled}
+			type={type}
 		>
 			{text && text} {icon && icon}
 		</button>

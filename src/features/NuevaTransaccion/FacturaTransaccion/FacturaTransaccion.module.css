@@ -37,3 +37,14 @@
 .box__content__item {
 	width: 250px;
 }
+
+.inline_fields {
+	display: flex; /* Usa Flexbox para alinear los campos en línea */
+	gap: 10px; /* Espacio entre los campos */
+	align-items: center; /* Centra verticalmente los elementos */
+	padding: 0.5rem 0;
+}
+
+.field {
+	flex: 1; /* Hace que cada campo ocupe todo el espacio disponible */
+  }

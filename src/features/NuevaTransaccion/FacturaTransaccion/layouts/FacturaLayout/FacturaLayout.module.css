@@ -35,3 +35,9 @@
 	grid-template-columns: repeat(3, 1fr);
 	gap: 10px;
 }
+
+.container_input {
+	display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
