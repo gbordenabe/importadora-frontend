@@ -30,7 +30,7 @@ export let ContenedorLogin = () => {
 			password: "",
 		},
 		validationSchema: validationSchema,
-		onSubmit: async (values) => {
+		onSubmit: async (values: any) => {
 			try {
 				setLoading(true);
 				await dispatch(getUser(values));
@@ -73,7 +73,7 @@ export let ContenedorLogin = () => {
 					onBlur={formik.handleBlur}
 				  />
 				  {formik.touched.user_name_or_email && formik.errors.user_name_or_email ? (
-					<div className={style.error}>{formik.errors.user_name_or_email}</div>
+					<div className={style.error}>{formik.errors.user_name_or_email as any}</div>
 				  ) : null}
 				</div>
 	
@@ -88,7 +88,7 @@ export let ContenedorLogin = () => {
 					onBlur={formik.handleBlur}
 				  />
 				  {formik.touched.password && formik.errors.password ? (
-					<div className={style.error}>{formik.errors.password}</div>
+					<div className={style.error}>{formik.errors.password as any}</div>
 				  ) : null}
 				</div>
 	
