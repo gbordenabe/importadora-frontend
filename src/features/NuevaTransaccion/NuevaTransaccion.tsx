@@ -27,6 +27,7 @@ import Loading from "@/components/Loading/Loading";
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
 	const errorTransaction = useModal();
+	const errorConfirmTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ empresa: undefined, cliente: undefined });
@@ -54,7 +55,13 @@ export const NuevaTransaccion = () => {
 				headers,
 			});
 			navigate("/tablero-vendedor");
-		} catch (error) {
+		} catch (error: any) {
+			const statusCode = error.request.statusCode;
+			if( statusCode !== 200) {
+				errorConfirmTransaction.onVisibleModal();
+			setLoading(false)
+			}
+			
 			console.log(error);
 		}
 	};
@@ -75,7 +82,7 @@ export const NuevaTransaccion = () => {
 		let newTransaction = {
 			sku,
 			companyId: usuarios.empresa?.id,
-			clientId: usuarios.cliente?.id,
+			clientId: usuarios.cliente?.id,	
 			bills: [...facturasClasificadas],
 			...pagosClasificados,
 			...saldosClasificados,
@@ -315,7 +322,7 @@ export const NuevaTransaccion = () => {
 			>
 				<ValidationModal
 					onHideModal={errorTransaction.onHideModal}
-					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" :"El monto de facturación no coincide con la suma de pagos y saldos"}
+					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos" }
 					textButton= 'Volver'
 				/>
 			</PrimeModal>
@@ -328,6 +335,20 @@ export const NuevaTransaccion = () => {
 				titleCenter
 			>
 				<CancelarTransaccionModal onHideModal={cancelarTransaccionModal.onHideModal} />
+			</PrimeModal>
+			
+			{/* Error Transaction Modal */}
+			<PrimeModal
+				header="Error en confirmar transacción"
+				modalStatus={errorConfirmTransaction.modalStatus}
+				onHideModal={errorConfirmTransaction.onHideModal}
+				titleCenter
+			>
+				<ValidationModal
+					onHideModal={errorConfirmTransaction.onHideModal}
+					description={"Por favor intente nuevamente" }
+					textButton= 'Volver'
+				/>
 			</PrimeModal>
 		</>
 		)
