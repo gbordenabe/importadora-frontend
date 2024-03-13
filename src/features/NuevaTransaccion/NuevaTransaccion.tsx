@@ -26,7 +26,7 @@ import Loading from "@/components/Loading/Loading";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
-	const errorSumModal = useModal();
+	const errorTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ empresa: undefined, cliente: undefined });
@@ -60,9 +60,12 @@ export const NuevaTransaccion = () => {
 	};
 
 	const handleCreateTransaction = () => {
-		if (facturas.length < 1) return;
+		if (facturas.length < 1) {
+			errorTransaction.onVisibleModal();
+			return
+		};
 		if (totalFacturas != totalPagos + totalSaldos) {
-			errorSumModal.onVisibleModal();
+			errorTransaction.onVisibleModal();
 			return;
 		}
 		const pagosClasificados = clasificarPagos(pagos);
@@ -305,14 +308,14 @@ export const NuevaTransaccion = () => {
 
 			{/* ErrorSum Modal */}
 			<PrimeModal
-				header="Error en la suma"
-				modalStatus={errorSumModal.modalStatus}
-				onHideModal={errorSumModal.onHideModal}
+				header={facturas.length < 1 ? "Error al confirmar transacción" :"Error en la suma"}
+				modalStatus={errorTransaction.modalStatus}
+				onHideModal={errorTransaction.onHideModal}
 				titleCenter
 			>
 				<ValidationModal
-					onHideModal={errorSumModal.onHideModal}
-					description="El monto de facturación no coincide con la suma de pagos y saldos"
+					onHideModal={errorTransaction.onHideModal}
+					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" :"El monto de facturación no coincide con la suma de pagos y saldos"}
 					textButton= 'Volver'
 				/>
 			</PrimeModal>
