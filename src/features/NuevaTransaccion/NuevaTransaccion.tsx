@@ -22,10 +22,12 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ValidationModal } from "./ValidationModal/ValidationModal";
 import verificarYActualizar from "@/helpers/verificarYActualizar";
 import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTransaccionModal";
+import Loading from "@/components/Loading/Loading";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
-	const errorSumModal = useModal();
+	const errorTransaction = useModal();
+	const errorConfirmTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ empresa: undefined, cliente: undefined });
@@ -35,6 +37,7 @@ export const NuevaTransaccion = () => {
 	const [saldos, setSaldos] = useState<any>([]);
 
 	const [filesBlob, setFilesBlob] = useState([]);
+	const [loading, setLoading] = useState<boolean>(false)
 
 	// Total status
 	const [totalFacturas, setTotalFacturas] = useState(0);
@@ -52,15 +55,24 @@ export const NuevaTransaccion = () => {
 				headers,
 			});
 			navigate("/tablero-vendedor");
-		} catch (error) {
+		} catch (error: any) {
+			const statusCode = error.request.statusCode;
+			if( statusCode !== 200) {
+				errorConfirmTransaction.onVisibleModal();
+			setLoading(false)
+			}
+			
 			console.log(error);
 		}
 	};
 
 	const handleCreateTransaction = () => {
-		if (facturas.length < 1) return;
+		if (facturas.length < 1) {
+			errorTransaction.onVisibleModal();
+			return
+		};
 		if (totalFacturas != totalPagos + totalSaldos) {
-			errorSumModal.onVisibleModal();
+			errorTransaction.onVisibleModal();
 			return;
 		}
 		const pagosClasificados = clasificarPagos(pagos);
@@ -70,7 +82,7 @@ export const NuevaTransaccion = () => {
 		let newTransaction = {
 			sku,
 			companyId: usuarios.empresa?.id,
-			clientId: usuarios.cliente?.id,
+			clientId: usuarios.cliente?.id,	
 			bills: [...facturasClasificadas],
 			...pagosClasificados,
 			...saldosClasificados,
@@ -91,8 +103,9 @@ export const NuevaTransaccion = () => {
 				formData.append(key, value);
 			}
 		}
-
+		
 		createTransaction(formData);
+		setLoading(true)
 	};
 
 	console.log('usuarios', usuarios)
@@ -239,9 +252,12 @@ export const NuevaTransaccion = () => {
 	};
 
 	return (
-		<>
+		
+			<>
 			<AppStructure>
-				<MainHeader />
+			{loading ? (<Loading/>) : (
+				<>
+					<MainHeader />
 				<ContentStructure>
 					<MainTitle
 						title="Nueva Transacción"
@@ -299,18 +315,21 @@ export const NuevaTransaccion = () => {
 						<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
 					</div>
 				</ContentStructure>
+				</>
+			)}	
 			</AppStructure>
 
 			{/* ErrorSum Modal */}
 			<PrimeModal
-				header="Error en la suma"
-				modalStatus={errorSumModal.modalStatus}
-				onHideModal={errorSumModal.onHideModal}
+				header={facturas.length < 1 ? "Error al confirmar transacción" :"Error en la suma"}
+				modalStatus={errorTransaction.modalStatus}
+				onHideModal={errorTransaction.onHideModal}
 				titleCenter
 			>
 				<ValidationModal
-					onHideModal={errorSumModal.onHideModal}
-					description="El monto de facturación no coincide con la suma de pagos y saldos"
+					onHideModal={errorTransaction.onHideModal}
+					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos" }
+					textButton= 'Volver'
 				/>
 			</PrimeModal>
 
@@ -323,6 +342,20 @@ export const NuevaTransaccion = () => {
 			>
 				<CancelarTransaccionModal onHideModal={cancelarTransaccionModal.onHideModal} />
 			</PrimeModal>
+			
+			{/* Error Transaction Modal */}
+			<PrimeModal
+				header="Error en confirmar transacción"
+				modalStatus={errorConfirmTransaction.modalStatus}
+				onHideModal={errorConfirmTransaction.onHideModal}
+				titleCenter
+			>
+				<ValidationModal
+					onHideModal={errorConfirmTransaction.onHideModal}
+					description={"Por favor intente nuevamente" }
+					textButton= 'Volver'
+				/>
+			</PrimeModal>
 		</>
-	);
+		)
 };

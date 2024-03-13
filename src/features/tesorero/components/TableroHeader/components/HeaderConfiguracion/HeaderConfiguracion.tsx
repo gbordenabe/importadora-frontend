@@ -8,9 +8,13 @@ import { logoutUser } from "@/store/slices/auth";
 
 interface Props {
 	showMenuAyuda?: () => void;
+	showProfileEdit?: () => void;
+	optionsFilter?: any;
+	setOptionsFilter?: any;
+	fetchFilterData?: any;
 }
 
-export const HeaderConfiguracion = ({ showMenuAyuda }: Props) => {
+export const HeaderConfiguracion = ({ showMenuAyuda, showProfileEdit }: Props) => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
@@ -24,9 +28,12 @@ export const HeaderConfiguracion = ({ showMenuAyuda }: Props) => {
 			<SecondaryButton text="Cerrar Sesión" onClick={handleLogout} />
 
 			<div className={style.buttons__icons__container}>
-				<SecondaryButton icon={<IoHelpCircleOutline size={25} />} onClick={showMenuAyuda} />
-
-				<SecondaryButton icon={<LuSettings size={20} />} />
+				<button className={style.button__icon} onClick={showMenuAyuda}>
+					<IoHelpCircleOutline size={25} />
+				</button>
+				<button className={style.button__icon} onClick={showProfileEdit}>
+					<LuSettings size={20} />
+				</button>
 			</div>
 		</div>
 	);

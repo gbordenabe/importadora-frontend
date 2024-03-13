@@ -24,14 +24,14 @@ export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props
 		verifyEmail: "",
 		province: "",
 		city: "",
-		location: "",
+		location: ".",
 		role_id: 1,
 	});
 	// El rol del vendedor es 1, tesorero 2.
 
 	const [provincias, setProvincias] = useState<any>([]);
 	const [municipios, setMunicipios] = useState<any>([]);
-	const [localidades, setLocalidades] = useState<any>([]);
+	// const [localidades, setLocalidades] = useState<any>([]);
 
 	useEffect(() => {
 		fetch("https://apis.datos.gob.ar/georef/api/provincias?max=500")
@@ -64,22 +64,22 @@ export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props
 		}
 	}, [nuevoVendedor.province]);
 
-	useEffect(() => {
-		if (nuevoVendedor?.city) {
-			setNuevoVendedor((prev) => ({ ...prev, location: "" }));
-			fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${nuevoVendedor.city}&max=500`)
-				.then((res) => res.json())
-				.then((data) => {
-					const respData = data?.localidades.map((item: any) => ({
-						id: item.id,
-						name: item.nombre,
-						value: item.nombre,
-					}));
+	// useEffect(() => {
+	// 	if (nuevoVendedor?.city) {
+	// 		setNuevoVendedor((prev) => ({ ...prev, location: "" }));
+	// 		fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${nuevoVendedor.city}&max=500`)
+	// 			.then((res) => res.json())
+	// 			.then((data) => {
+	// 				const respData = data?.localidades.map((item: any) => ({
+	// 					id: item.id,
+	// 					name: item.nombre,
+	// 					value: item.nombre,
+	// 				}));
 
-					setLocalidades(respData);
-				});
-		}
-	}, [nuevoVendedor.city]);
+	// 				setLocalidades(respData);
+	// 			});
+	// 	}
+	// }, [nuevoVendedor.city]);
 
 	const handleReset = () => {
 		setOptionCreateSelect("");
@@ -147,19 +147,19 @@ export const FormularioVendedor = ({ setOptionCreateSelect, onHideModal }: Props
 					options={provincias}
 				/>
 				<SelectField
-					textLabel="Ciudad:"
+					textLabel="Departamento:"
 					value={nuevoVendedor.city}
 					name="city"
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 					options={municipios}
 				/>
-				<SelectField
+				{/* <SelectField
 					textLabel="Localidad:"
 					value={nuevoVendedor.location}
 					name="location"
 					onChange={(e) => handleChangeInput(e, setNuevoVendedor)}
 					options={localidades}
-				/>
+				/> */}
 			</div>
 
 			<div className={style.container__buttons}>

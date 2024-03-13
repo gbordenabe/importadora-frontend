@@ -94,8 +94,6 @@ export const HeaderFiltrados = ({
 
 	const [activeFilterButton, setActiveFilterButton] = useState(false);
 
-	console.log(optionsFilter);
-
 	return (
 		<>
 			<div className={style.header__filtrados__container}>

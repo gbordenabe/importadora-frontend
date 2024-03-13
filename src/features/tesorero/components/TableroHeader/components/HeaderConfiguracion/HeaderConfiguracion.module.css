@@ -11,3 +11,14 @@
 	display: flex;
 	gap: 10px;
 }
+.button__icon {
+	width: 100%;
+
+	background-color: #404040;
+	color: #fff;
+	display: grid;
+	place-content: center;
+	cursor: pointer;
+	border-radius: 100px;
+	padding: 5px 0;
+}

@@ -14,7 +14,7 @@ export const PrimeModal = ({
 	onHideModal,
 	children,
 	header,
-	width = 600,
+	width = 500,
 	titleCenter,
 }: Props) => {
 	return (

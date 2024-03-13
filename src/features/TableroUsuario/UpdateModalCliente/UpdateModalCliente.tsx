@@ -20,12 +20,12 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 		cuit_cuil: "",
 		city: "",
 		location: "",
-		province: "",
+		province: ".",
 	});
 
 	const [provincias, setProvincias] = useState<any>([]);
 	const [municipios, setMunicipios] = useState<any>([]);
-	const [localidades, setLocalidades] = useState<any>([]);
+	// const [localidades, setLocalidades] = useState<any>([]);
 
 	useEffect(() => {
 		fetch("https://apis.datos.gob.ar/georef/api/provincias?max=500")
@@ -58,22 +58,22 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 		}
 	}, [cliente.province]);
 
-	useEffect(() => {
-		if (cliente?.city) {
-			// setCliente((prev: any) => ({ ...prev, location: "" }));
-			fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${cliente.city}&max=500`)
-				.then((res) => res.json())
-				.then((data) => {
-					const respData = data?.localidades.map((item: any) => ({
-						id: item.id,
-						name: item.nombre,
-						value: item.nombre,
-					}));
+	// useEffect(() => {
+	// 	if (cliente?.city) {
+	// 		// setCliente((prev: any) => ({ ...prev, location: "" }));
+	// 		fetch(`https://apis.datos.gob.ar/georef/api/localidades?departamento=${cliente.city}&max=500`)
+	// 			.then((res) => res.json())
+	// 			.then((data) => {
+	// 				const respData = data?.localidades.map((item: any) => ({
+	// 					id: item.id,
+	// 					name: item.nombre,
+	// 					value: item.nombre,
+	// 				}));
 
-					setLocalidades(respData);
-				});
-		}
-	}, [cliente.city]);
+	// 				setLocalidades(respData);
+	// 			});
+	// 	}
+	// }, [cliente.city]);
 
 	const handleUpdate = () => {
 		const { id, is_active, ...restData } = cliente;
@@ -122,19 +122,19 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 					options={provincias}
 				/>
 				<SelectField
-					textLabel="Ciudad:"
+					textLabel="Departamento:"
 					value={cliente.city}
 					name="city"
 					onChange={(e) => handleChangeInput(e, setCliente)}
 					options={municipios}
 				/>
-				<SelectField
+				{/* <SelectField
 					textLabel="Localidad:"
 					value={cliente.location}
 					name="location"
 					onChange={(e) => handleChangeInput(e, setCliente)}
 					options={localidades}
-				/>
+				/> */}
 			</div>
 
 			<div className={style.container__buttons}>

@@ -13,33 +13,15 @@ import { url } from "@/connections/mainApi";
 import { fechaSemana } from "@/helpers/fechaSemana";
 
 export const TableroTesorero = () => {
+	const menuAyuda = useModal();
+	// const profileEdit = useModal();
+	const { login } = useAppSelector((state) => state.auth);
 	const [dataTransaction, setdataTransaction] = useState<any>([]);
 	const [optionsFilter, setOptionsFilter] = useState<any>(initialData);
-	const { login } = useAppSelector((state) => state.auth);
-	const menuAyuda = useModal();
 
 	const token = localStorage.getItem("rt__importadora");
 
-	const fetchData = () => {
-		axios
-			.post(
-				`${url}/transaction/get-all`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			)
-			.then((res) => {
-				setdataTransaction(res.data);
-			})
-			.catch((error) => console.error("Hubo un error al obtener los datos", error));
-	};
-
 	const fetchFilterData = () => {
-		console.log(optionsFilter);
-
 		const { clientName, empresaName, ...restData } = optionsFilter;
 
 		axios
@@ -55,8 +37,12 @@ export const TableroTesorero = () => {
 	};
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchFilterData();
+	}, [optionsFilter]);
+
+	const handleResetFilters = () => {
+		setOptionsFilter(initialData);
+	};
 
 	return (
 		<>
@@ -69,11 +55,13 @@ export const TableroTesorero = () => {
 
 					<div className={style.tableroVendedor__content}>
 						<TableroHeader
-							showMenuAyuda={menuAyuda.onVisibleModal}
-							optionsFilter={optionsFilter}
-							setOptionsFilter={setOptionsFilter}
-							fetchFilterData={fetchFilterData}
-							dataTransaction={dataTransaction}
+								showMenuAyuda={menuAyuda.onVisibleModal}
+								// showProfileEdit={profileEdit.onVisibleModal}
+								optionsFilter={optionsFilter}
+								setOptionsFilter={setOptionsFilter}
+								fetchFilterData={fetchFilterData}
+								handleResetFilters={handleResetFilters}
+								dataTransaction={dataTransaction}
 						/>
 
 						<div className={style.tableroVendedor__list}>
@@ -99,8 +87,15 @@ export const TableroTesorero = () => {
 	);
 };
 
+const ajustedDateForm = () => {
+	const adjustedDate = new Date();
+	adjustedDate.setHours(23, 59, 59, 999);
+	return adjustedDate;
+};
+
 const initialData = {
-	statuses: ["PENDING"],
+	statuses: ["OK", "PENDING", "TO_CHANGE", "EDITED"],
+	// statuses: ["OK"],
 	// bill_status: "",
 	// cash_status: "",
 	// check_status: "",
@@ -109,11 +104,11 @@ const initialData = {
 	// deposit_status: "",
 	// retention_status: "",
 	created_at_start: fechaSemana(),
-	created_at_end: new Date(),
+	created_at_end: ajustedDateForm(),
 	// companies: [],
 	// clients: [],
-	// check_document_number: "",
-	// bill_number: "",
+	check_document_number: "",
+	bill_number: "",
 	// cash_document_number: "",
 	// deposit_document_number: "",
 	// bill_amount_min: 0,
@@ -123,7 +118,8 @@ const initialData = {
 	// credit_amount_min: 0,
 	// credit_note_amount_min: 0,
 	// retention_amount_min: 0,
-	// order: "ASC",
-	// order_by: "id",
-	// sellers: [],
+	order: "DESC",
+	order_by: "id",
 };
+
+// ASC o DESC
