@@ -22,6 +22,7 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ValidationModal } from "./ValidationModal/ValidationModal";
 import verificarYActualizar from "@/helpers/verificarYActualizar";
 import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTransaccionModal";
+import Loading from "@/components/Loading/Loading";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
@@ -35,6 +36,7 @@ export const NuevaTransaccion = () => {
 	const [saldos, setSaldos] = useState<any>([]);
 
 	const [filesBlob, setFilesBlob] = useState([]);
+	const [loading, setLoading] = useState<boolean>(false)
 
 	// Total status
 	const [totalFacturas, setTotalFacturas] = useState(0);
@@ -89,8 +91,9 @@ export const NuevaTransaccion = () => {
 				formData.append(key, value);
 			}
 		}
-
+		
 		createTransaction(formData);
+		setLoading(true)
 	};
 
 	useEffect(() => {
@@ -233,9 +236,12 @@ export const NuevaTransaccion = () => {
 	};
 
 	return (
-		<>
+		
+			<>
 			<AppStructure>
-				<MainHeader />
+			{loading ? (<Loading/>) : (
+				<>
+					<MainHeader />
 				<ContentStructure>
 					<MainTitle
 						title="Nueva Transacción"
@@ -293,6 +299,8 @@ export const NuevaTransaccion = () => {
 						<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
 					</div>
 				</ContentStructure>
+				</>
+			)}	
 			</AppStructure>
 
 			{/* ErrorSum Modal */}
@@ -305,6 +313,7 @@ export const NuevaTransaccion = () => {
 				<ValidationModal
 					onHideModal={errorSumModal.onHideModal}
 					description="El monto de facturación no coincide con la suma de pagos y saldos"
+					textButton= 'Volver'
 				/>
 			</PrimeModal>
 
@@ -318,5 +327,5 @@ export const NuevaTransaccion = () => {
 				<CancelarTransaccionModal onHideModal={cancelarTransaccionModal.onHideModal} />
 			</PrimeModal>
 		</>
-	);
+		)
 };
