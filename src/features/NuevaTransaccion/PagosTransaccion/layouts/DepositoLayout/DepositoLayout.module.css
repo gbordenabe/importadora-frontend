@@ -21,6 +21,12 @@
 	font-weight: 600;
 	font-size: 14px;
 }
+
+.container_textAdjunto{
+	display: "flex";
+	flex-direction: row;
+}
+
 .layout__header__textAdjunto {
 	font-size: 14px;
 	color: #888;
@@ -42,3 +48,21 @@
 	grid-template-columns: 1fr 2fr;
 	gap: 10px;
 }
+
+.input_with_error {
+	position: relative;
+}
+
+.input_with_error .error {
+	position: absolute;
+	bottom: 1px;
+	left: 15px;
+	font-size: 10px;
+	color: red;
+}
+
+.error {
+	font-size: 10px;
+	color: red;
+}
+

@@ -5,13 +5,15 @@ import style from "./NuevoRegistro.module.css";
 import { formatPrice } from "@/helpers/formatPrice";
 
 interface Props {
-	addNewRegister?: (data: any) => void;
+	addNewRegister?: (section: any, data: any) => void;
 	dataStructure?: any;
 	addButtonText?: string;
 	listOptions?: any;
 	listTitle?: string;
 	data?: any;
 	setTotalAmount?: any;
+	section?: any;
+	setSection?: any;
 }
 
 export const NuevoRegistro = ({
@@ -20,12 +22,14 @@ export const NuevoRegistro = ({
 	addButtonText,
 	listOptions,
 	listTitle,
-	data,
-	setTotalAmount,
+	data, 
+	setTotalAmount,	
+	setSection
 }: Props) => {
-	// pasos
+	// console.log('data', data)
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
+	
 
 	const handleStepNewRegister = () => {
 		if (listTitle === "Factura") {
@@ -39,16 +43,17 @@ export const NuevoRegistro = ({
 	};
 
 	const calculateTotal = () => {
-		let calculatedTotal = 0;
-		if (data && Array.isArray(data)) {
-			data.forEach((item) => {
-				calculatedTotal += Number(item.amount);
-			});
-		}
-		setTotal(calculatedTotal);
-
-		if (setTotalAmount) setTotalAmount(calculatedTotal);
-	};
+        let calculatedTotal = 0;
+        if (data && typeof data === 'object') {
+            Object.keys(data).forEach((sectionKey) => {
+                if (Array.isArray(data[sectionKey])) {
+                    calculatedTotal += data[sectionKey].reduce((acc: number, item: any) => acc + (Number(item.amount) || 0), 0);
+                }
+            });
+        }
+        setTotal(calculatedTotal);
+        if (setTotalAmount) setTotalAmount(calculatedTotal);
+    };
 
 	useEffect(() => {
 		calculateTotal();
@@ -56,16 +61,27 @@ export const NuevoRegistro = ({
 
 	// registro de nueva tabla
 	const handleAddNewRegister = (tipo: string | null, subtipo: string | null) => {
-		const editStructure = {
-			...dataStructure,
-			tipo: tipo || null, //se setea el tipo
-			type: subtipo || null, //se setea el subtipo
-		};
-
+		let section = "";
+		if(tipo === 'Factura o nota de débito') {
+			section = "bills";
+		} else if (tipo === "Cheque") {
+            section = "checks";
+        } else if (tipo === "Efectivo") {
+            section = "cash";
+        } else if(tipo === "Depósito / Transferencia") {
+            section = "deposits";
+        } else if(tipo === "Crédito"){
+			section = "credits"
+		} else if (tipo === "Nota de crédito") {
+			section = "credit_notes"
+		} else {
+			section = "retentions"
+		}
 		if (addNewRegister) {
-			addNewRegister(editStructure);
+			addNewRegister(section, {...dataStructure, tipo: tipo || null, type: subtipo || null});
 		}
 		setStepNewRegister(1);
+		setSection(section);
 	};
 
 	return (

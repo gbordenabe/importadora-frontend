@@ -161,6 +161,7 @@ export const NuevaTransaccion = () => {
 		}
 
 		if (sectionName === "facturas") {
+			console.log('entra por facturas groupSatus')
 			if (!groupStatus.facturaSectionStatus) {
 				if (facturas.length < 1) return;
 				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
@@ -188,7 +189,7 @@ export const NuevaTransaccion = () => {
 			if (!groupStatus.pagosSectionStatus) {
 				let verifyData = verificarYActualizar(
 					pagos,
-					["document_number_check", "amount_check", "date_check"],
+					["document_number", "amount", "date"],
 					setPagos
 				);
 				if (verifyData) return; //Si es true, es porque faltan datos
@@ -290,23 +291,20 @@ export const NuevaTransaccion = () => {
 
 							<div className={style.tipo__documentos__group}>
 								<PagosTransaccion
-									pagos={pagos}
 									setPagos={setPagos}
 									isBlocked={groupStatus.pagosSectionStatus}
 									onChangeStatusGroup={onChangeStatusGroup}
 									setTotalAmount={setTotalPagos}
 									setFilesBlob={setFilesBlob}
-									eliminarPagos={eliminarPagos}
+								
 								/>
 
 								<SaldosTransaccion
-									saldos={saldos}
 									setSaldos={setSaldos}
 									isBlocked={groupStatus.saldosSectionStatus}
 									onChangeStatusGroup={onChangeStatusGroup}
 									setTotalAmount={setTotalSaldos}
 									setFilesBlob={setFilesBlob}
-									eliminarSaldos={eliminarSaldos}
 								/>
 							</div>
 						</div>

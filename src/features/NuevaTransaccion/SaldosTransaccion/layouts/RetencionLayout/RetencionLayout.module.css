@@ -40,3 +40,21 @@
 .layout__content__group__two {
 	display: grid;
 }
+
+.input_with_error {
+	position: relative;
+}
+
+.input_with_error .error {
+	position: absolute;
+	bottom: 1px;
+	left: 15px;
+	font-size: 10px;
+	color: red;
+}
+
+.error {
+	font-size: 10px;
+	color: red;
+}
+

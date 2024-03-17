@@ -7,39 +7,47 @@ import { MinimziarButton } from "@/features/NuevaTransaccion/components/Minimiza
 import CalendarInput from "@/components/Calendar/Calendar";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
 import { formatPrice } from "@/helpers/formatPrice";
+import { useState } from "react";
 
 interface Props {
 	index: number;
-	tipo?: string;
-	subtipo?: string;
-	onChange?: any;
-	factura?: any;
-	handleChangeResumen?: any;
-	eliminarFactura?: any;
-	error?: any
+	section?: any;
+	values?: any;
+	handleChange?: any;
+	handleRemove?: any;
+	errors?: any
 }
 
 export const FacturaLayout = ({
 	index,
-	subtipo,
-	onChange,
-	factura,
-	handleChangeResumen,
-	eliminarFactura,
-	error
+	section,
+	values,
+	handleChange,
+	handleRemove,
+	errors,
+
 }: Props) => {
+	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
+
+	const toggleExpanded = (index: number) => {
+		setExpandedItems(prev => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
+
 	return (
-		<div className={style.layout__container} key={index}>
-			{factura.resumen ? (
+		<div className={style.layout__container}>
+			{expandedItems[index] ? (
 				<div className={style.layout__header}>
 					<div className={style.layout__header__group}>
 						<p className={style.layout__header__title}>Factura</p>
-						<ChipText text={`N°: ${factura.number || "-"}`} />
-						<ChipText text={`Monto: ${formatPrice(factura.amount || 0)}`} />
+						<ChipText text={`N°: ${values.number || "-"}`} />
+						<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => handleChangeResumen(index, !factura.resumen)} />
-						<DeleteButton onClick={() => eliminarFactura(index)} />
+						<MaximizarButton onClick={() => toggleExpanded(index)} />
+						<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 					</div>
 				</div>
 			) : (
@@ -47,43 +55,59 @@ export const FacturaLayout = ({
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>Factura</p>
-							{subtipo && <ChipText text={subtipo} />}
+							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => handleChangeResumen(index, !factura.resumen)} />
-							<DeleteButton onClick={() => eliminarFactura(index)} />
+							<MinimziarButton onClick={() => toggleExpanded(index)} />
+							<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 						</div>
 					</div>
-
 					<div className={style.layout__content}>
-						<div className={style.layout__content__group__one}>
-							<TextBoxField
-								name="number"
-								value={factura.number}
-								onChange={onChange}
-								placeholder="N° completo"
-								error={error}
-							/>
+						<>
+							<div key={index} className={style.layout__content__group__one}>
+								<div className={`${style.input_with_error}`}>
+									<TextBoxField
+										name={'number'}
+										value={values.number}
+										onChange={(e) => handleChange(e, index, section)}
+										placeholder="N° de factura"
+									/>
+									{errors && errors[index] && (
+										<div className={style.error}>{errors[index].number}</div>
+									)}
+								</div>
+								<div className={style.input_with_error}>
+									<MoneyBoxField
+										name={'amount'}
+										value={values.amount}
+										onChange={(e: any) => handleChange(e, index, section)}
+										placeholder="Monto"
+									/>
+									{errors && errors[index] && (
+										<div className={style.error}>{errors[index].amount}</div>
+									)}
+								</div>
+								<div className={style.input_with_error}>
+									<CalendarInput
+										name={'date'}
+										value={values.date}
+										onChange={(e: any) => handleChange(e, index, section)}
+									/>
+									{errors && errors[index] && (
+										<div className={style.error}>{errors[index].date}</div>
+									)}
+								</div>
+							</div>
+							<div className={style.layout__content__group__two}>
+								<TextBoxField
+									name="observation"
+									value={values.observation}
+									onChange={(e: any) => handleChange(e, index, section)}
+									placeholder="Observaciones"
+								/>
+							</div>
 
-							<MoneyBoxField
-								name="amount"
-								value={factura.amount}
-								onChange={onChange}
-								placeholder="Monto"
-								error= {error}
-							/>
-
-							<CalendarInput name="date" value={factura.date} onChange={onChange} error={error} />
-						</div>
-						<div>
-							<TextBoxField
-								name="observation"
-								value={factura.observation}
-								onChange={onChange}
-								placeholder="Observaciones"
-								error={error}
-							/>
-						</div>
+						</>
 					</div>
 				</>
 			)}

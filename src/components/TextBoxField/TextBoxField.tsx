@@ -25,7 +25,7 @@ export const TextBoxField = ({
 	direction = "column",
 	disabled = false,
 	labelWidth = "100%",
-	placeholder = "",
+	placeholder,
 	error
 }: TextBoxFieldProps) => {
 	const styles: React.CSSProperties = {
@@ -50,7 +50,7 @@ export const TextBoxField = ({
 				onChange={onChange}
 				autoComplete="off"
 				disabled={disabled}
-				placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
+				placeholder={placeholder}
 			/>
 			{error}
 		</div>

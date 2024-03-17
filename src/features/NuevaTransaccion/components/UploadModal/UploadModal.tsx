@@ -4,21 +4,25 @@ import style from "./UploadModal.module.css";
 import { useState } from "react";
 
 interface Props {
-	onChangeFileProp?: any;
+	// onChangeFileProp?: any;
 	index?: any;
-	setChange?: any;
+	onChange?: any;
 	setFilesBlob?: any;
 	onHideModal?: any;
+	section?: any
 }
 
 export const UploadModal = ({
 	// onChangeFileProp,
 	index,
-	setChange,
+	onChange,
 	setFilesBlob,
 	onHideModal,
+	section
 }: Props) => {
 	const [fileToUpload, setFileToUpload] = useState<any>("");
+	console.log('fileToUpload', fileToUpload)
+	console.log('section', section)
 
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];
@@ -27,18 +31,15 @@ export const UploadModal = ({
 
 	const onSaveImg = (fileToUpload: any) => {
 		if (!fileToUpload) return;
-		if (setChange && index !== undefined) {
+		if (onChange && index !== undefined) {
 			// Convirtiendo los blob para la subida adicional
 			const blobConvert = new Blob([fileToUpload], { type: fileToUpload.type });
 			setFilesBlob((prev: any) => [...prev, { fileName: fileToUpload.name, blob: blobConvert }]);
-			// Seteando el file_field_name
-			setChange((prevData: any) => {
-				console.log(prevData);
-				const newData = [...prevData];
-				const updateData = { ...newData[index], file_field_name: fileToUpload.name };
-				newData[index] = updateData;
-				return newData;
-			});
+			onChange(
+				{ target: { name: 'file_field_name', value: fileToUpload.name } },
+				index,
+				section
+			  );
 			onHideModal();
 		}
 	};

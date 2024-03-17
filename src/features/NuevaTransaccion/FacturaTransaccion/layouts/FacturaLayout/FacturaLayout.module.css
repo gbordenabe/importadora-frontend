@@ -36,8 +36,26 @@
 	gap: 10px;
 }
 
+.layout__content__group__two {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 10px;
+}
+
 .container_input {
 	display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
+.input_with_error {
+	position: relative;
+}
+
+.input_with_error .error {
+	position: absolute;
+	bottom: 1px;
+	left: 15px;
+	font-size: 10px;
+	color: red;
+  }

@@ -6,110 +6,147 @@ import { CreditoLayout } from "./layouts/CreditoLayout/CreditoLayout";
 import { NotaCreditoLayout } from "./layouts/NotaCreditoLayout/NotaCreditoLayout";
 import { RetencionLayout } from "./layouts/RetencionLayout/RetencionLayout";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
-import { useDocumentStateHook } from "@/hooks/useDocumentState";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
+import { useState } from "react";
+import { useFormik } from "formik";
+import { validationSchema } from "@/hooks/customFormik";
 
 interface Props {
-	saldos?: any;
 	setSaldos?: any;
 	isBlocked?: boolean;
 	onChangeStatusGroup?: any;
 	setTotalAmount?: any;
 	setFilesBlob?: any;
-	eliminarSaldos?: any;
 }
 
 export const SaldosTransaccion = ({
-	saldos,
 	setSaldos,
 	isBlocked,
 	onChangeStatusGroup,
 	setTotalAmount,
 	setFilesBlob,
-	eliminarSaldos,
 }: Props) => {
-	const handleAddRegister = (newData: any) => {
-		setSaldos((prev: any) => [...prev, newData]);
+
+	const [section, setSection] = useState<string>('');
+
+	const initialValues: any = {
+		credits: [],
+		credit_notes: [],
+		retentions: []
 	};
 
-	const { handleChangeInput, handleChangeResumen } = useDocumentStateHook(saldos, setSaldos);
+	const formik = useFormik({
+		initialValues,
+		validationSchema,
+		onSubmit: (values) => {
+			console.log(values);
+			onChangeStatusGroup("saldos")
+			setSaldos(values)
+		},
+	});
+
+	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
+		const { name, value } = event.target;
+		const sectionValues = formik.values[section];
+		const updatedSectionValues = [...sectionValues];
+		updatedSectionValues[index][name] = value;
+		formik.setFieldValue(section, updatedSectionValues);
+	};
+
+	const handleAdd = (section: string, newData: any) => {
+		console.log('section', section, "newData", newData);
+		const newValues = { ...formik.values };
+		const currentValues = [...formik.values[section]];
+		currentValues.push(newData);
+		newValues[section] = currentValues;
+		formik.setValues(newValues);
+	};
+
+	const handleRemove = (index: number, section: string) => {
+		const updatedValues = [...formik.values[section]];
+		updatedValues.splice(index, 1);
+		formik.setFieldValue(section, updatedValues);
+	};
+
+	console.log('valuesActualizado2', formik.values);
 
 	return (
-		<div className={style.box__container}>
-			<div className={style.box__head}>
-				<h2>Saldos</h2>
-				<div>
-					{isBlocked ? (
-						<SecondaryButton text="Editar" onClick={() => onChangeStatusGroup("saldos")} />
-					) : (
-						<PrimaryButton text="Confirmar" onClick={() => onChangeStatusGroup("saldos")} />
-					)}
+		<form onSubmit={formik.handleSubmit}>
+			<div className={style.box__container}>
+				<div className={style.box__head}>
+					<h2>Saldos</h2>
+					<div>
+						{isBlocked ? (
+							<SecondaryButton text="Editar" type='submit' />
+						) : (
+							<PrimaryButton text="Confirmar" type='submit' />
+						)}
+					</div>
 				</div>
-			</div>
 
-			<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-				<div style={{ display: "grid", gap: "10px" }}>
-					{saldos.length > 0 && (
+				<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
+					<div style={{ display: "grid", gap: "10px" }}>
+
 						<div className={style.box__content}>
-							{saldos &&
-								saldos.map((saldo: any, index: number) => (
-									<div key={saldo.tipo + index}>
+							{Object.keys(formik.values).map((sectionKey) => (
+								formik.values[sectionKey].map((saldo: any, index: number) => (
+									<div key={index}>
 										{saldo.tipo === "Crédito" && (
 											<CreditoLayout
+												section="credits"
+												values={saldo}
+												handleChange={handleChange}
+												handleRemove={handleRemove}
+												errors={formik.errors.credits}
 												index={index}
-												tipo={saldo.tipo}
-												subtipo={saldo.type}
-												saldo={saldo}
-												onChange={(e: any) => handleChangeInput(index, e)}
-												handleChangeResumen={handleChangeResumen}
-												eliminarSaldos={eliminarSaldos}
 											/>
 										)}
-
 										{saldo.tipo === "Nota de crédito" && (
 											<NotaCreditoLayout
+												section="credit_notes"
+												values={saldo}
+												handleChange={handleChange}
+												handleRemove={handleRemove}
+												errors={formik.errors.credit_notes}
 												index={index}
-												tipo={saldo.tipo}
-												subtipo={saldo.type}
-												saldo={saldo}
-												onChange={(e: any) => handleChangeInput(index, e)}
-												handleChangeResumen={handleChangeResumen}
-												eliminarSaldos={eliminarSaldos}
+												setFilesBlob={setFilesBlob}
+												fileName={saldo.file_field_name}
 											/>
 										)}
-
 										{saldo.tipo === "Retención" && (
 											<RetencionLayout
+												section="retentions"
+												values={saldo}
+												handleChange={handleChange}
+												handleRemove={handleRemove}
+												errors={formik.errors.retentions}
 												index={index}
-												tipo={saldo.tipo}
-												subtipo={saldo.type}
-												saldo={saldo}
-												onChange={(e: any) => handleChangeInput(index, e)}
-												handleChangeResumen={handleChangeResumen}
-												setSaldos={setSaldos}
 												setFilesBlob={setFilesBlob}
-												eliminarSaldos={eliminarSaldos}
 												fileName={saldo.file_field_name}
 											/>
 										)}
 									</div>
-								))}
+								))
+							))}
 						</div>
-					)}
 
-					<NuevoRegistro
-						addNewRegister={handleAddRegister}
-						dataStructure={saldosStructure}
-						addButtonText="+ Nuevo Saldo"
-						listOptions={listOptions}
-						listTitle="Tipo de saldo"
-						data={saldos}
-						setTotalAmount={setTotalAmount}
-					/>
-				</div>
-			</BlockUI>
-		</div>
+
+						<NuevoRegistro
+							addNewRegister={handleAdd}
+							dataStructure={saldosStructure}
+							addButtonText="+ Nuevo Saldo"
+							listOptions={listOptions}
+							listTitle="Tipo de saldo"
+							data={formik.values}
+							setTotalAmount={setTotalAmount}
+							section={section}
+							setSection={setSection}
+						/>
+					</div>
+				</BlockUI>
+			</div>
+		</form>
 	);
 };
 
@@ -120,7 +157,6 @@ const listOptions = [
 		subTypeList: [
 			{ id: 1, name: "Financiero" },
 			{ id: 2, name: "Comercial" },
-			{ id: 3, name: "De Logística" },
 		],
 	},
 	{ name: "Nota de crédito", hasSubType: false, subTypeList: [] },

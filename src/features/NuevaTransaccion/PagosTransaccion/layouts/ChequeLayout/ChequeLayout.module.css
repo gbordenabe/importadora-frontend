@@ -41,3 +41,15 @@
 	grid-template-columns: 1fr 2fr;
 	gap: 10px;
 }
+
+.input_with_error {
+	position: relative;
+}
+
+.input_with_error .error {
+	position: absolute;
+	bottom: 1px;
+	left: 15px;
+	font-size: 10px;
+	color: red;
+  }

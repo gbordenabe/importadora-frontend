@@ -1,5 +1,3 @@
-
-
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import style from "./ChequeLayout.module.css";
 import { ChipText } from "@/components/ChipText/ChipText";
@@ -9,156 +7,140 @@ import { MinimziarButton } from "@/features/NuevaTransaccion/components/Minimiza
 import CalendarInput from "@/components/Calendar/Calendar";
 import { FaFileMedical } from "react-icons/fa";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
+import { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { InputText } from "primereact/inputtext";
-import { Message } from "primereact/message";
-import { useEffect, useState } from "react";
-import useError from "@/hooks/useError";
 
 interface Props {
-	index: number;
-	tipo?: string;
-	subtipo?: string;
-	pago?: any;
-	onChange?: any;
-	handleChangeResumen?: any;
-	handleUpdateFile?: any;
-	setPagos?: any;
-	setFilesBlob?: any;
-	eliminarPagos?: any;
-	fileName?: any;
-	errors?: any
+	section: string,
+	values: any,
+	handleChange: any,
+	errors?: any,
+	index?: any,
+	handleRemove?: any,
+	fileName?: any,
+	setFilesBlob?: any,
 }
 
 export const ChequeLayout = ({
 	index,
-	tipo,
-	subtipo,
-	pago,
-	onChange,
-	handleChangeResumen,
-	setPagos,
 	setFilesBlob,
-	eliminarPagos,
 	fileName,
-	// errors,
-}: Props) => {
+	section,
+	values,
+	handleChange,
+	handleRemove,
+	errors
+}:
+	Props) => {
 	const uploadFileModal = useModal();
-	
+	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
 
-	const { errors, setErrors } = useError();
-	console.log('errors', errors)
-
+	const toggleExpanded = (index: number) => {
+		setExpandedItems(prev => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
 
 	return (
 		<>
 			<div className={style.layout__container}>
-				{pago.resumen ? (
+				{expandedItems[index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
-							<p className={style.layout__header__title}>{tipo}</p>
-							{subtipo && <ChipText text={subtipo} />}
+							<p className={style.layout__header__title}>{values.tipo}</p>
+							{values.type && <ChipText text={values.type} />}
 							<div style={{ display: "flex", gap: "5px" }}>
-								<ChipText text={`N°: ${pago.document_number || "-"}`} />
-								<ChipText text={`Monto: ${formatPrice(pago.amount || 0)}`} />
+								<ChipText text={`N°: ${values.document_number || "-"}`} />
+								<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 							</div>
 							<div>
 								<FaFileMedical style={{ color: "gray", cursor: "pointer" }} />
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => handleChangeResumen(index, !pago.resumen)} />
-							<DeleteButton onClick={() => eliminarPagos(index)} />
+							<MaximizarButton
+								onClick={() => toggleExpanded(index)}
+							/>
+							<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 						</div>
 					</div>
 				) : (
 					<>
 						<div className={style.layout__header}>
 							<div className={style.layout__header__group}>
-								<p className={style.layout__header__title}>{tipo}</p>
-								{subtipo && <ChipText text={subtipo} />}
+								<p className={style.layout__header__title}>{values.tipo}</p>
+								{values.type && <ChipText text={values.type} />}
 								<div
 									style={{ display: "flex", gap: "5px", cursor: "pointer" }}
 									onClick={() => uploadFileModal.onVisibleModal()}
 								>
 									<FaFileMedical style={{ color: "gray", cursor: "pointer" }} />
-									<p className={style.layout__header__textAdjunto}>{`${
-										fileName ? `(${fileName})` : "(adjunto)"
-									}`}</p>
+									<p className={style.layout__header__textAdjunto}>{`${fileName ? `(${fileName})` : "(adjunto)"
+										}`}</p>
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => handleChangeResumen(index, !pago.resumen)} />
-								<DeleteButton onClick={() => eliminarPagos(index)} />
+								<MinimziarButton
+									onClick={() => toggleExpanded(index)}
+								/>
+								<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 							</div>
 						</div>
 						<div className={style.layout__content}>
-							<div className={style.layout__content__group__one}>
-								{/* <TextBoxField
-									name="document_number_check"
-									value={pago.document_number_check}
-									onChange={onChange}
-									placeholder="N° de cheque"
-								/> */}
-								{/* <div style={{display:'flex', flexDirection:'column'}}> */}
-								<InputText
-									className="p-inputtext-sm"
-									style={{ minWidth: "150px" }}
-									value={pago.document_number_check}
-									name='document_number_check'
-									type='text'
-									onChange={onChange}
-									autoComplete="off"
-									// disabled={disabled}
-									// placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
-								/>
-								<div>
-									{errors && errors.checks!== null ? <p>{`${errors.checks.document_number_check}`}</p> : null}
-								</div>
-								</div>
-								<div>
-								<InputText
-									// className="p-inputtext-sm"
-									style={{ minWidth: "150px" }}
-									value={pago.bank_name_check}
-									name='bank_name_check'
-									type='text'
-									onChange={onChange}
-									autoComplete="off"
-									// disabled={disabled}
-									// placeholder={name === 'number' ? 'N° Factura' : 'Observación'}
-								/>
-									<div>
-									{errors && errors.checks && <Message text={errors.checks.bank_name_check}></Message>}
+							<>
+								<div key={index} className={style.layout__content__group__one} >
+									<div className={`${style.input_with_error} ${errors && errors[index] && errors[index].document_number ? style.error_active : ''}`}>
+										<TextBoxField
+											name={'document_number'}
+											value={values.document_number}
+											onChange={(e) => handleChange(e, index, section)}
+											placeholder="N°"
+										/>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].document_number}</div>
+										)}
+									</div>
+									<div className={style.input_with_error}>
+										<MoneyBoxField
+											name={'amount'}
+											value={values.amount}
+											onChange={(e: any) => handleChange(e, index, section)}
+											placeholder="Monto"
+										/>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].amount}</div>
+										)}
+									</div>
+									<div className={style.input_with_error}>
+										<CalendarInput
+											name={'date'}
+											value={values.date}
+											onChange={(e: any) => handleChange(e, index, section)}
+										/>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].date}</div>
+										)}
 									</div>
 								</div>
-
-								{/* <MoneyBoxField
-									name="amount"
-									value={pago.amount}
-									onChange={onChange}
-									placeholder="Monto"
-								/>
-								<CalendarInput name="date" value={pago.date} onChange={onChange} /> */}
-							{/* </div> */}
-							{/* <div className={style.layout__content__group__two}>
-								<TextBoxField
-									name="bank_name"
-									value={pago.bank_name}
-									onChange={onChange}
-									placeholder="Banco"
-								/>
-
-								<TextBoxField
-									name="observation"
-									value={pago.observation}
-									onChange={onChange}
-									placeholder="Observaciones"
-								/>
-							</div> */}
+								<div className={style.layout__content__group__two}>
+									<TextBoxField
+										name={'bank_name'}
+										value={values.bank_name}
+										onChange={(e: any) => handleChange(e, index, section)}
+										placeholder="Banco"
+									/>
+									<TextBoxField
+										name={'observation'}
+										value={values.observation}
+										onChange={(e: any) => handleChange(e, index, section)}
+										placeholder="Observaciones"
+									/>
+								</div>
+							</>
 						</div>
 					</>
 				)}
@@ -173,9 +155,9 @@ export const ChequeLayout = ({
 				width={400}
 			>
 				<UploadModal
-					onChangeFileProp={onChange}
+					section={section}
 					index={index}
-					setChange={setPagos}
+					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
 				/>

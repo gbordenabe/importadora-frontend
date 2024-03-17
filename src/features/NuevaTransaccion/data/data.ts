@@ -6,12 +6,12 @@ export const facturasStructure = {
 };
 
 export const pagosStructure = {
-	tipo: "",
-	document_number_check: "",
-	amount_check: "",
-	date_check: "",
-	observation_check: "",
-	file_field_name_check: "",
+	document_number: "",
+	amount: "",
+	date: "",
+	observation: "",
+	file_field_name: "",
+	bank_name: "",
 };
 
 export const saldosStructure = {

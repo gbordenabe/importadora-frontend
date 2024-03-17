@@ -11,6 +11,7 @@ type SaldosAgrupados = {
 };
 
 export function clasificarSaldos(saldos: Saldo[]): SaldosAgrupados {
+	console.log('saldos', saldos)
 	return saldos.reduce<SaldosAgrupados>(
 		(acumulador, saldoActual) => {
 			// Inicialmente quita 'tipo' y opcionalmente 'type' si es null, manteniendo el resto

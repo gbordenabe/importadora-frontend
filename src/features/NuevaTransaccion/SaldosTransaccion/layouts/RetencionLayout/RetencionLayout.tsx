@@ -11,92 +11,119 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
+import { useState } from "react";
 
 interface Props {
-	index: number;
-	tipo?: string;
-	subtipo?: string;
-	saldo?: any;
-	onChange?: any;
-	handleChangeResumen?: any;
-	setSaldos?: any;
-	setFilesBlob?: any;
-	eliminarSaldos?: any;
-	fileName?: any;
+	section: string,
+	values: any,
+	handleChange: any,
+	errors?: any,
+	index?: any,
+	handleRemove?: any,
+	fileName?: any,
+	setFilesBlob?: any,
 }
 
 export const RetencionLayout = ({
 	index,
-	tipo,
-	subtipo,
-	saldo,
-	onChange,
-	handleChangeResumen,
-	setSaldos,
 	setFilesBlob,
-	eliminarSaldos,
 	fileName,
+	section,
+	values,
+	handleChange,
+	handleRemove,
+	errors
 }: Props) => {
 	const uploadFileModal = useModal();
+	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
+
+	const toggleExpanded = (index: number) => {
+		setExpandedItems(prev => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
 
 	return (
 		<>
 			<div className={style.layout__container}>
-				{saldo.resumen ? (
+				{expandedItems[index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
-							<p className={style.layout__header__title}>{tipo}</p>
-							{subtipo && <ChipText text={subtipo} />}
+							<p className={style.layout__header__title}>{values.tipo}</p>
+							{values.type && <ChipText text={values.type} />}
 							<div style={{ display: "flex", gap: "5px" }}>
-								<ChipText text={`Monto: ${formatPrice(saldo.amount || 0)}`} />
+								<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 								<FaFileMedical style={{ color: "gray", cursor: "pointer" }} />
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => handleChangeResumen(index, !saldo.resumen)} />
-							<DeleteButton onClick={() => eliminarSaldos(index)} />
+							<MaximizarButton onClick={() => toggleExpanded(index)} />
+							<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
 						</div>
 					</div>
 				) : (
 					<>
 						<div className={style.layout__header}>
 							<div className={style.layout__header__group}>
-								<p className={style.layout__header__title}>{tipo}</p>
-								{subtipo && <ChipText text={subtipo} />}
+								<p className={style.layout__header__title}>{values.tipo}</p>
+								{values.type && <ChipText text={values.type} />}
 								<div
 									style={{ display: "flex", gap: "5px", cursor: "pointer" }}
 									onClick={() => uploadFileModal.onVisibleModal()}
 								>
 									<FaFileMedical style={{ color: "gray", cursor: "pointer" }} />
-									<p className={style.layout__header__textAdjunto}>{`${
-										fileName ? `(${fileName})` : "(adjunto obligatorio)"
-									}`}</p>
+									<div className={style.container_textAdjunto}>
+										<p className={style.layout__header__textAdjunto}>{`${fileName ? `(${fileName})` : "(adjunto obligatorio)"
+											}`}</p>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].file_field_name}</div>
+										)}
+
+									</div>
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => handleChangeResumen(index, !saldo.resumen)} />
-								<DeleteButton onClick={() => eliminarSaldos(index)} />
+								<MinimziarButton onClick={() => toggleExpanded(index)} />
+								<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
 							</div>
 						</div>
 						<div className={style.layout__content}>
-							<div className={style.layout__content__group__one}>
-								<MoneyBoxField
-									name="amount"
-									value={saldo.amount}
-									onChange={onChange}
-									placeholder="Monto"
-								/>
+							<>
+								<div className={style.layout__content__group__one}>
+									<div className={style.input_with_error}>
+										<MoneyBoxField
+											name={'amount'}
+											value={values.amount}
+											onChange={(e: any) => handleChange(e, index, section)}
+											placeholder="Monto"
+										/>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].amount}</div>
+										)}
+									</div>
 
-								<CalendarInput name="date" value={saldo.date} onChange={onChange} />
-							</div>
-							<div className={style.layout__content__group__two}>
-								<TextBoxField
-									name="observation"
-									value={saldo.observation}
-									onChange={onChange}
-									placeholder="Observaciones"
-								/>
-							</div>
+									<div className={style.input_with_error}>
+										<CalendarInput
+											name={'date'}
+											value={values.date}
+											onChange={(e: any) => handleChange(e, index, section)}
+										/>
+										{errors && errors[index] && (
+											<div className={style.error}>{errors[index].date}</div>
+										)}
+									</div>
+								</div>
+								<div className={style.layout__content__group__two}>
+									<TextBoxField
+										name={'observation'}
+										value={values.observation}
+										onChange={(e: any) => handleChange(e, index, section)}
+										placeholder="Observaciones"
+									/>
+								</div>
+							</>
+
 						</div>
 
 						{/* Upload modal */}
@@ -108,9 +135,9 @@ export const RetencionLayout = ({
 							width={400}
 						>
 							<UploadModal
-								onChangeFileProp={onChange}
+								section={section}
 								index={index}
-								setChange={setSaldos}
+								onChange={handleChange}
 								setFilesBlob={setFilesBlob}
 								onHideModal={uploadFileModal.onHideModal}
 							/>

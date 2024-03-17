@@ -11,9 +11,12 @@ type PagosAgrupados = {
 };
 
 export function clasificarPagos(pagos: Pago[]): PagosAgrupados {
+  console.log('pagos', pagos)
   return pagos.reduce<PagosAgrupados>((acumulador, pagoActual) => {
     const { tipo, type, resumen, ...pagoSinTipo } = pagoActual;
+    console.log('pagos', pagoActual)
     let pagoModificado = { ...pagoSinTipo };
+    console.log('pagoModificado', pagoModificado)
 
     if (type) {
       pagoModificado.type = type === 'Propio' ? 'OWN' :

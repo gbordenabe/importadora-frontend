@@ -7,81 +7,99 @@ import { MinimziarButton } from "@/features/NuevaTransaccion/components/Minimiza
 import CalendarInput from "@/components/Calendar/Calendar";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
 import { formatPrice } from "@/helpers/formatPrice";
+import { useState } from "react";
 
 interface Props {
-	index: number;
-	tipo?: string;
-	subtipo?: string;
-	saldo?: any;
-	onChange?: any;
-	handleChangeResumen?: any;
-	eliminarSaldos?: any;
+	section: string,
+	values: any,
+	handleChange: any,
+	errors?: any,
+	index?: any,
+	handleRemove?: any,
+	fileName?: any,
+	setFilesBlob?: any,
 }
 
 export const NotaCreditoLayout = ({
 	index,
-	tipo,
-	subtipo,
-	saldo,
-	onChange,
-	handleChangeResumen,
-	eliminarSaldos,
+	section,
+	values,
+	handleChange,
+	handleRemove,
+	errors
 }: Props) => {
+
+	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
+
+	const toggleExpanded = (index: number) => {
+		setExpandedItems(prev => ({
+			...prev,
+			[index]: !prev[index],
+		}));
+	};
 	return (
 		<div className={style.layout__container}>
-			{saldo.resumen ? (
+			{expandedItems[index] ? (
 				<div className={style.layout__header}>
 					<div className={style.layout__header__group}>
-						<p className={style.layout__header__title}>{tipo}</p>
-						{subtipo && <ChipText text={subtipo} />}
+						<p className={style.layout__header__title}>{values.tipo}</p>
+						{values.type && <ChipText text={values.type} />}
 						<div style={{ display: "flex", gap: "5px" }}>
-							<ChipText text={`Monto: ${formatPrice(saldo.amount || 0)}`} />
+							<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 						</div>
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => handleChangeResumen(index, !saldo.resumen)} />
-						<DeleteButton onClick={() => eliminarSaldos(index)} />
+						<MaximizarButton onClick={() => toggleExpanded(index)} />
+						<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 					</div>
 				</div>
 			) : (
 				<>
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
-							<p className={style.layout__header__title}>{tipo}</p>
-							{subtipo && <ChipText text={subtipo} />}
+							<p className={style.layout__header__title}>{values.tipo}</p>
+							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => handleChangeResumen(index, !saldo.resumen)} />
-							<DeleteButton onClick={() => eliminarSaldos(index)} />
+							<MinimziarButton onClick={() => toggleExpanded(index)} />
+							<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 						</div>
 					</div>
 					<div className={style.layout__content}>
-						<div className={style.layout__content__group__one}>
-							<MoneyBoxField
-								name="amount"
-								value={saldo.amount}
-								onChange={onChange}
-								placeholder="Monto"
-							/>
+						<>
+							<div className={style.layout__content__group__one}>
+								<div className={style.input_with_error}>
+									<MoneyBoxField
+										name={'amount'}
+										value={values.amount}
+										onChange={(e: any) => handleChange(e, index, section)}
+										placeholder="Monto"
+									/>
+									{errors && errors[index] && (
+										<div className={style.error}>{errors[index].amount}</div>
+									)}
+								</div>
+								<div className={style.input_with_error}>
+									<CalendarInput
+										name={'date'}
+										value={values.date}
+										onChange={(e: any) => handleChange(e, index, section)}
+									/>
+									{errors && errors[index] && (
+										<div className={style.error}>{errors[index].date}</div>
+									)}
+								</div>
+							</div>
+							<div className={style.layout__content__group__two}>
+								<TextBoxField
+									name="observation"
+									value={values.observation}
+									onChange={(e: any) => handleChange(e, index, section)}
+									placeholder="Observaciones"
+								/>
+							</div>
+						</>
 
-							<TextBoxField
-								name="porcentage"
-								value={saldo.porcentage}
-								onChange={onChange}
-								placeholder="Porcentaje"
-								type="number"
-							/>
-
-							<CalendarInput name="date" value={saldo.date} onChange={onChange} />
-						</div>
-						<div className={style.layout__content__group__two}>
-							<TextBoxField
-								name="observation"
-								value={saldo.observation}
-								onChange={onChange}
-								placeholder="Observaciones"
-							/>
-						</div>
 					</div>
 				</>
 			)}
