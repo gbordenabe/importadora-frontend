@@ -21,8 +21,6 @@ export const UploadModal = ({
 	section
 }: Props) => {
 	const [fileToUpload, setFileToUpload] = useState<any>("");
-	console.log('fileToUpload', fileToUpload)
-	console.log('section', section)
 
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];

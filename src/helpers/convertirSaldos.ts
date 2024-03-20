@@ -5,6 +5,7 @@ export function clasificarSaldos(saldos: any): any {
         const saldo = saldos[section][i];
 
         delete saldo.tipo;
+        delete saldo.resumen
 
         if (typeof saldo.file_field_name === 'string' && !saldo.file_field_name.trim()) {
           delete saldo.file_field_name;

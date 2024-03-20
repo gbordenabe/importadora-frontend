@@ -28,7 +28,6 @@ export const NuevoRegistro = ({
 	setSection,
 	errorMessage
 }: Props) => {
-	// console.log('data', data)
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
 	

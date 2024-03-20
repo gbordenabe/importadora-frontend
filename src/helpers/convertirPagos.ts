@@ -7,6 +7,7 @@ export function clasificarPagos(pagos: any): any {
 
         delete pago.tipo
         delete pago.bank_name
+        delete pago.resumen
 
         if (pago.type) {
           pago.type = pago.type === 'Propio' ? 'OWN' :

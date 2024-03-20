@@ -20,7 +20,7 @@ import { HeaderCreateTransaccion } from "./components/HeaderCreateTransaccion/He
 import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ValidationModal } from "./ValidationModal/ValidationModal";
-// import verificarYActualizar from "@/helpers/verificarYActualizar";
+import verificarYActualizar from "@/helpers/verificarYActualizar";
 import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTransaccionModal";
 import Loading from "@/components/Loading/Loading";
 import { clasificarFacturas } from "@/helpers/convertirFacturas";
@@ -45,11 +45,6 @@ export const NuevaTransaccion = () => {
 	const [totalPagos, setTotalPagos] = useState(0);
 	const [totalSaldos, setTotalSaldos] = useState(0);
 
-	console.log('usuarios', usuarios)
-		console.log('facturas', facturas)
-		console.log('pagos', pagos)
-		console.log('saldos', saldos)
-
 	// Crear transacción
 	const createTransaction = async (data: any) => {
 		try {
@@ -72,10 +67,10 @@ export const NuevaTransaccion = () => {
 	};
 
 	const handleCreateTransaction = () => {
-		if (facturas.length < 1) {
-			errorTransaction.onVisibleModal();
-			return
-		};
+		// if (facturas.length < 1) {
+		// 	errorTransaction.onVisibleModal();
+		// 	return
+		// };
 		if (totalFacturas != totalPagos + totalSaldos) {
 			errorTransaction.onVisibleModal();
 			return;
@@ -83,10 +78,6 @@ export const NuevaTransaccion = () => {
 		const pagosClasificados = clasificarPagos(pagos);
 		const saldosClasificados = clasificarSaldos(saldos);
 		const facturasClasificadas = clasificarFacturas(facturas);
-
-		// console.log('pagosClasificados', pagosClasificados)
-		// console.log('saldosClasificados', saldosClasificados)
-		// console.log('facturasClasificadas', facturasClasificadas)
 
 		let newTransaction = {
 			sku,
@@ -96,8 +87,6 @@ export const NuevaTransaccion = () => {
 			...pagosClasificados,
 			...saldosClasificados,
 		};
-
-		console.log('newTransaction', newTransaction)
 
 		const formData = new FormData();
 
@@ -168,9 +157,9 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
-				// if (facturas.bills.length < 1) return;
-				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				// if (facturas && facturas.bills.length < 1) return;
+				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -191,13 +180,12 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "pagos") {
 			if (!groupStatus.pagosSectionStatus) {
-				// console.log('entra por el if')
-				// let verifyData = verificarYActualizar(
-				// 	pagos,
-				// 	["document_number", "amount", "date"],
-				// 	setPagos
-				// );
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				let verifyData = verificarYActualizar(
+					pagos,
+					["document_number", "amount", "date"],
+					setPagos
+				);
+				if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -206,11 +194,11 @@ export const NuevaTransaccion = () => {
 					saldosSectionStatus: false,
 				});
 			} else {
-				// if (!usuarios.clientId || !usuarios.companyId) return;
-				// // Validar si facturas tiene data
-				// if (facturas.length < 1) return;
-				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				if (!usuarios.clientId || !usuarios.companyId) return;
+				// Validar si facturas tiene data
+				// if (facturas && facturas.bills.length < 1) return;
+				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: true,
@@ -222,8 +210,8 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "saldos") {
 			if (!groupStatus.saldosSectionStatus) {
-				// let verifyData = verificarYActualizar(saldos, ["amount", "date"], setSaldos);
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				let verifyData = verificarYActualizar(saldos, ["amount", "date"], setSaldos);
+				if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -232,11 +220,11 @@ export const NuevaTransaccion = () => {
 					saldosSectionStatus: true,
 				});
 			} else {
-				// if (!usuarios.clientId || !usuarios.companyId) return;
+				if (!usuarios.clientId || !usuarios.companyId) return;
 				// // Validar si facturas tiene data
 				// if (facturas.length < 1) return;
-				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: true,

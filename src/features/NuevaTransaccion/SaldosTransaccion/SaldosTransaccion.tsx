@@ -39,8 +39,8 @@ export const SaldosTransaccion = ({
 	const formik = useFormik({
 		initialValues,
 		validationSchema,
-		onSubmit: (values) => {
-			console.log(values);
+		onSubmit: () => {
+			// console.log(values);
 		},
 	});
 
