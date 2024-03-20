@@ -23,6 +23,8 @@ import { ValidationModal } from "./ValidationModal/ValidationModal";
 import verificarYActualizar from "@/helpers/verificarYActualizar";
 import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTransaccionModal";
 import Loading from "@/components/Loading/Loading";
+import { clasificarFacturas } from "@/helpers/convertirFacturas";
+// import { useTransactionContext } from "@/hooks/contexts/errorsContext";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
@@ -30,9 +32,11 @@ export const NuevaTransaccion = () => {
 	const errorConfirmTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
 	const [sku, setSku] = useState("");
-	const [usuarios, setUsuarios] = useState<any>({ empresa: undefined, cliente: undefined });
+	const [usuarios, setUsuarios] = useState<any>({ companyId: undefined, clientId: undefined });
 
 	const [facturas, setFacturas] = useState<any>([]);
+	// const { facturas, setFacturas } = useTransactionContext();
+	console.log('facturas', facturas)
 	const [pagos, setPagos] = useState<any>([]);
 	const [saldos, setSaldos] = useState<any>([]);
 
@@ -57,11 +61,11 @@ export const NuevaTransaccion = () => {
 			navigate("/tablero-vendedor");
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
-			if( statusCode !== 200) {
+			if (statusCode !== 200) {
 				errorConfirmTransaction.onVisibleModal();
-			setLoading(false)
+				setLoading(false)
 			}
-			
+
 			console.log(error);
 		}
 	};
@@ -77,13 +81,17 @@ export const NuevaTransaccion = () => {
 		}
 		const pagosClasificados = clasificarPagos(pagos);
 		const saldosClasificados = clasificarSaldos(saldos);
-		const facturasClasificadas = facturas.map(({ resumen, ...restData }: any) => restData);
+		const facturasClasificadas = clasificarFacturas(facturas);
+
+		// console.log('pagosClasificados', pagosClasificados)
+		// console.log('saldosClasificados', saldosClasificados)
+		console.log('facturasClasificadas', facturasClasificadas)
 
 		let newTransaction = {
 			sku,
-			companyId: usuarios.empresa?.id,
-			clientId: usuarios.cliente?.id,	
-			bills: [...facturasClasificadas],
+			companyId: usuarios.companyId?.id,
+			clientId: usuarios.clientId?.id,
+			bills: facturasClasificadas,
 			...pagosClasificados,
 			...saldosClasificados,
 		};
@@ -100,16 +108,18 @@ export const NuevaTransaccion = () => {
 			if (Array.isArray(value)) {
 				formData.append(key, JSON.stringify(value));
 			} else {
-				formData.append(key, value);
+				formData.append(key, value as string);
 			}
 		}
-		
+
 		createTransaction(formData);
 		setLoading(true)
 	};
 
-	console.log('usuarios', usuarios)
-	console.log('facturas', facturas)
+	// console.log('usuarios', usuarios)
+	
+	// console.log('pagos', pagos)
+	// console.log('saldos', saldos)
 
 	useEffect(() => {
 		if (sku.length === 0) {
@@ -119,15 +129,15 @@ export const NuevaTransaccion = () => {
 	}, []);
 
 	useEffect(() => {
-		if (usuarios.cliente && usuarios.empresa && sku.length > 0) {
+		if (usuarios.clientId && usuarios.companyId && sku.length > 0) {
 			const partes = sku.split("-");
-			const clienteRef = usuarios.cliente.client_number || usuarios.cliente.id;
+			const clienteRef = usuarios.clientId.client_number || usuarios.clientId.id;
 			const clienteRefConCeros = clienteRef.toString().padStart(6, "0");
-			const clienteFinal = `C${clienteRefConCeros}`;
-			const nuevoSku = `${partes[0]}-${usuarios.empresa.acronym}-${clienteFinal}`;
+			const clienteFinal = `${clienteRefConCeros}`;
+			const nuevoSku = `${partes[0]}-${usuarios.companyId.acronym}-${clienteFinal}`;
 			setSku(nuevoSku);
 		}
-	}, [usuarios.empresa, usuarios.cliente]);
+	}, [usuarios.companyId, usuarios.clientId]);
 
 	// Bloquear cuadro
 	const [groupStatus, setGroupStatus] = useState({
@@ -141,7 +151,7 @@ export const NuevaTransaccion = () => {
 		//funcion hecha por dav
 		if (sectionName === "user") {
 			if (!groupStatus.userSectionStatus) {
-				if (!usuarios.cliente || !usuarios.empresa) return;
+				if (!usuarios.clientId || !usuarios.companyId) return;
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: false,
@@ -161,12 +171,10 @@ export const NuevaTransaccion = () => {
 		}
 
 		if (sectionName === "facturas") {
-			console.log('entra por facturas groupSatus')
 			if (!groupStatus.facturaSectionStatus) {
-				if (facturas.length < 1) return;
-				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				// console.log('verifyData', verifyData)
-				// if (verifyData) return; //Si es true, es porque faltan datos
+				if (facturas.bills.length < 1) return;
+				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -175,7 +183,7 @@ export const NuevaTransaccion = () => {
 					saldosSectionStatus: true,
 				});
 			} else {
-				if (!usuarios.cliente || !usuarios.empresa) return;
+				if (!usuarios.clientId || !usuarios.companyId) return;
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: false,
@@ -187,12 +195,13 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "pagos") {
 			if (!groupStatus.pagosSectionStatus) {
-				let verifyData = verificarYActualizar(
-					pagos,
-					["document_number", "amount", "date"],
-					setPagos
-				);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				console.log('entra por el if')
+				// let verifyData = verificarYActualizar(
+				// 	pagos,
+				// 	["document_number", "amount", "date"],
+				// 	setPagos
+				// );
+				// if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -201,11 +210,11 @@ export const NuevaTransaccion = () => {
 					saldosSectionStatus: false,
 				});
 			} else {
-				if (!usuarios.cliente || !usuarios.empresa) return;
-				// Validar si facturas tiene data
-				if (facturas.length < 1) return;
-				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				// if (!usuarios.clientId || !usuarios.companyId) return;
+				// // Validar si facturas tiene data
+				// if (facturas.length < 1) return;
+				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				// if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: true,
@@ -217,8 +226,8 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "saldos") {
 			if (!groupStatus.saldosSectionStatus) {
-				let verifyData = verificarYActualizar(saldos, ["amount", "date"], setSaldos);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				// let verifyData = verificarYActualizar(saldos, ["amount", "date"], setSaldos);
+				// if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -227,11 +236,11 @@ export const NuevaTransaccion = () => {
 					saldosSectionStatus: true,
 				});
 			} else {
-				if (!usuarios.cliente || !usuarios.empresa) return;
-				// Validar si facturas tiene data
-				if (facturas.length < 1) return;
-				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				// if (!usuarios.clientId || !usuarios.companyId) return;
+				// // Validar si facturas tiene data
+				// if (facturas.length < 1) return;
+				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				// if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: true,
@@ -242,92 +251,79 @@ export const NuevaTransaccion = () => {
 		}
 	};
 
-	const eliminarFactura = (indexToRemove: number) => {
-		setFacturas(facturas.filter((_: any, index: any) => index !== indexToRemove));
-	};
-	const eliminarPagos = (indexToRemove: number) => {
-		setPagos(pagos.filter((_: any, index: any) => index !== indexToRemove));
-	};
-	const eliminarSaldos = (indexToRemove: number) => {
-		setSaldos(saldos.filter((_: any, index: any) => index !== indexToRemove));
-	};
-
 	return (
-		
-			<>
+
+		<>
 			<AppStructure>
-			{loading ? (<Loading/>) : (
-				<>
-					<MainHeader />
-				<ContentStructure>
-					<MainTitle
-						title="Nueva Transacción"
-						onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
-						isShowModal={true}
-					/>
+				{loading ? (<Loading />) : (
+					<>
+						<MainHeader />
+						<ContentStructure>
+							<MainTitle
+								title="Nueva Transacción"
+								onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
+								isShowModal={true}
+							/>
 
-					<BoxContent>
-						<HeaderCreateTransaccion sku={sku} />
+							<BoxContent>
+								<HeaderCreateTransaccion sku={sku} />
 
-						<div className={style.tipo__documentos__container}>
-							<div className={style.tipo__documentos__group}>
-								<UsuariosTransaccion
-									usuarios={usuarios}
-									setUsuarios={setUsuarios}
-									sku={setSku}
-									isBlocked={groupStatus.userSectionStatus}
-									onChangeStatusGroup={onChangeStatusGroup}
-								/>
+								<div className={style.tipo__documentos__container}>
+									<div className={style.tipo__documentos__group}>
+										<UsuariosTransaccion
+											setUsuarios={setUsuarios}
+											isBlocked={groupStatus.userSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+										/>
 
-								<FacturaTransaccion
-									facturas={facturas}
-									setFacturas={setFacturas}
-									isBlocked={groupStatus.facturaSectionStatus}
-									onChangeStatusGroup={onChangeStatusGroup}
-									setTotalAmount={setTotalFacturas}
-									eliminarFactura={eliminarFactura}
-								/>
+										<FacturaTransaccion
+											facturas={facturas}
+											setFacturas={setFacturas}
+											isBlocked={groupStatus.facturaSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalFacturas}
+										/>
+									</div>
+
+									<div className={style.tipo__documentos__group}>
+										<PagosTransaccion
+											setPagos={setPagos}
+											isBlocked={groupStatus.pagosSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalPagos}
+											setFilesBlob={setFilesBlob}
+
+										/>
+
+										<SaldosTransaccion
+											setSaldos={setSaldos}
+											isBlocked={groupStatus.saldosSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalSaldos}
+											setFilesBlob={setFilesBlob}
+										/>
+									</div>
+								</div>
+							</BoxContent>
+							<div className={style.container__1}>
+								<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
 							</div>
-
-							<div className={style.tipo__documentos__group}>
-								<PagosTransaccion
-									setPagos={setPagos}
-									isBlocked={groupStatus.pagosSectionStatus}
-									onChangeStatusGroup={onChangeStatusGroup}
-									setTotalAmount={setTotalPagos}
-									setFilesBlob={setFilesBlob}
-								
-								/>
-
-								<SaldosTransaccion
-									setSaldos={setSaldos}
-									isBlocked={groupStatus.saldosSectionStatus}
-									onChangeStatusGroup={onChangeStatusGroup}
-									setTotalAmount={setTotalSaldos}
-									setFilesBlob={setFilesBlob}
-								/>
-							</div>
-						</div>
-					</BoxContent>
-					<div className={style.container__1}>
-						<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
-					</div>
-				</ContentStructure>
-				</>
-			)}	
+						</ContentStructure>
+					</>
+				)}
 			</AppStructure>
 
 			{/* ErrorSum Modal */}
 			<PrimeModal
-				header={facturas.length < 1 ? "Error al confirmar transacción" :"Error en la suma"}
+				header={facturas.length < 1 ? "Error al confirmar transacción" : "Error en la suma"}
 				modalStatus={errorTransaction.modalStatus}
 				onHideModal={errorTransaction.onHideModal}
 				titleCenter
 			>
 				<ValidationModal
 					onHideModal={errorTransaction.onHideModal}
-					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos" }
-					textButton= 'Volver'
+					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos"}
+					textButton='Volver'
 				/>
 			</PrimeModal>
 
@@ -340,7 +336,7 @@ export const NuevaTransaccion = () => {
 			>
 				<CancelarTransaccionModal onHideModal={cancelarTransaccionModal.onHideModal} />
 			</PrimeModal>
-			
+
 			{/* Error Transaction Modal */}
 			<PrimeModal
 				header="Error en confirmar transacción"
@@ -350,10 +346,10 @@ export const NuevaTransaccion = () => {
 			>
 				<ValidationModal
 					onHideModal={errorConfirmTransaction.onHideModal}
-					description={"Por favor intente nuevamente" }
-					textButton= 'Volver'
+					description={"Por favor intente nuevamente"}
+					textButton='Volver'
 				/>
 			</PrimeModal>
 		</>
-		)
+	)
 };

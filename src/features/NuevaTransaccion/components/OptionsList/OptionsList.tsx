@@ -45,7 +45,7 @@ export const OptionsList = ({ addNewRegister, listOptions, listTitle }: Props) =
 				<div className={style.subOptionsList__container}>
 					<SelectField
 						value={subOptionSelect}
-						name=""
+						name="suboptions"
 						options={optionSelect.subTypeList}
 						onChange={(e) => setSubOptionSelect(e.target.value)}
 						textLabel={optionSelect.name}

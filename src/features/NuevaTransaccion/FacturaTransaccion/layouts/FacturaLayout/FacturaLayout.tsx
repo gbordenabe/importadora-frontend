@@ -4,10 +4,11 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
-import CalendarInput from "@/components/Calendar/Calendar";
+// import CalendarInput from "@/components/Calendar/Calendar";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
 import { formatPrice } from "@/helpers/formatPrice";
 import { useState } from "react";
+import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
 	index: number;

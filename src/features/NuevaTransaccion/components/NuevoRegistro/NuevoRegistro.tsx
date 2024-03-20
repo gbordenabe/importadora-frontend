@@ -14,6 +14,7 @@ interface Props {
 	setTotalAmount?: any;
 	section?: any;
 	setSection?: any;
+	errorMessage?: string;
 }
 
 export const NuevoRegistro = ({
@@ -24,7 +25,8 @@ export const NuevoRegistro = ({
 	listTitle,
 	data, 
 	setTotalAmount,	
-	setSection
+	setSection,
+	errorMessage
 }: Props) => {
 	// console.log('data', data)
 	const [stepNewRegister, setStepNewRegister] = useState(1);
@@ -87,7 +89,14 @@ export const NuevoRegistro = ({
 	return (
 		<div className={style.nuevoRegistro__container}>
 			<div>
-				{stepNewRegister == 1 && <AddButton text={addButtonText} onClick={handleStepNewRegister} />}
+				{stepNewRegister == 1 && 
+				<div className={style.container_add_register}>
+					<AddButton text={addButtonText} onClick={handleStepNewRegister} /> 
+					<div style={{ marginTop: '10px' }}>
+    					{errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+					</div>
+				</div>
+ 				}
 				{stepNewRegister == 2 && (
 					<OptionsList
 						addNewRegister={handleAddNewRegister}
@@ -99,7 +108,6 @@ export const NuevoRegistro = ({
 
 			<div className={style.nuevoRegistro__total}>
 				<p className={style.nuevoRegistro__total__text}>Total:</p>
-				{/* <p className={style.nuevoRegistro__total__text}>{`$ ${total}`}</p> */}
 				<p className={style.nuevoRegistro__total__text}>{formatPrice(total)}</p>
 			</div>
 		</div>

@@ -9,7 +9,7 @@ import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useFormik } from "formik";
 import { validationSchema } from "@/hooks/customFormik";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
 	setPagos?: any;
@@ -37,13 +37,19 @@ export const PagosTransaccion = ({
 	const formik = useFormik({
 		initialValues,
 		validationSchema,
-		onSubmit: (values) => {
-			// Aquí puedes enviar los valores del formulario al servidor
-			console.log(values);
-			onChangeStatusGroup("pagos")
-			setPagos(values)
+		onSubmit: () => {
+			// onChangeStatusGroup("pagos")
 		},
 	});
+
+	const formikValuesRef = useRef(formik.values);
+
+	useEffect(()=>{
+		if (formikValuesRef.current !== formik.values) {
+		setPagos(formik.values);
+		formikValuesRef.current = formik.values;
+	}
+	}, [formik.values.checks, formik.values.deposits, formik.values.cash]);
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
@@ -54,10 +60,9 @@ export const PagosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		console.log('section', section, "newData", newData);
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
-		currentValues.push(newData);
+		currentValues.unshift(newData);
 		newValues[section] = currentValues;
 		formik.setValues(newValues);
 	};
@@ -68,7 +73,6 @@ export const PagosTransaccion = ({
 		formik.setFieldValue(section, updatedValues);
 	};
 
-	console.log('valuesActualizado2', formik.values);
 	return (
 		<form onSubmit={formik.handleSubmit}>
 			<div className={style.box__container}>
@@ -76,9 +80,9 @@ export const PagosTransaccion = ({
 					<h2>Pagos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' />
+							<SecondaryButton text="Editar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos")}}/>
 						) : (
-							<PrimaryButton text="Confirmar" type='submit'/>
+							<PrimaryButton text="Confirmar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos")}}/>
 						)}
 					</div>
 				</div>

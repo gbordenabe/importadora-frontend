@@ -1,39 +1,34 @@
 import React, { createContext, useState, useContext } from "react";
 
-// Definir el contexto
-
-
-interface ErrorContextType {
-  errors: any; // Cambia any[] al tipo correcto para el estado de error
-  setErrors: React.Dispatch<React.SetStateAction<any>>; // Cambia any[] al tipo correcto para el estado de error
+interface TransactionContextType {
+  facturas: any; 
+  setFacturas: React.Dispatch<React.SetStateAction<any>>; 
 }
 
-export const ErrorsContext = createContext<ErrorContextType | null>(null);
+export const TransactionContext = createContext<TransactionContextType | null>(null);
 
-export const useErrorContext = () => useContext(ErrorsContext);
+export const useTransactionContext = () => {
+  const context = useContext(TransactionContext);
+  if (!context) {
+    throw new Error("useTransactionContext debe usarse dentro de un TransactionProvider");
+  }
+  return context;
+}
 
 // Definir el proveedor del contexto
-export const DocumentErrorsProvider = ({ children }: { children: React.ReactNode }) => {
-  const [errors, setErrors] = useState<any>({
-    checks: {
-      document_number_check: null,
-      amount_check: null,
-      date_check: null,
-      bank_name_check: null,
-      observation_check: null,
-    }
-  });
+export const TransactionProvider = ({ children }: { children: React.ReactNode }) => {
+  
+  const [facturas, setFacturas] = useState<any>([]);
 
-  console.log('error Contex', errors)
-
-  const contextValue: any = {
-    errors,
-    setErrors,
+  const contextValue: TransactionContextType
+ = {
+    facturas,
+    setFacturas,
 };
 
   return (
-    <ErrorsContext.Provider value={contextValue}>
+    <TransactionContext.Provider value={contextValue}>
       {children}
-    </ErrorsContext.Provider>
+    </TransactionContext.Provider>
   );
 };

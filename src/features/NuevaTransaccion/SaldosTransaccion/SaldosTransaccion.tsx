@@ -8,7 +8,7 @@ import { RetencionLayout } from "./layouts/RetencionLayout/RetencionLayout";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { validationSchema } from "@/hooks/customFormik";
 
@@ -41,10 +41,12 @@ export const SaldosTransaccion = ({
 		validationSchema,
 		onSubmit: (values) => {
 			console.log(values);
-			onChangeStatusGroup("saldos")
-			setSaldos(values)
 		},
 	});
+
+	useEffect(() => {
+		setSaldos(formik.values);
+	}, [formik.values, setSaldos]);
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
@@ -55,10 +57,9 @@ export const SaldosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		console.log('section', section, "newData", newData);
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
-		currentValues.push(newData);
+		currentValues.unshift(newData);
 		newValues[section] = currentValues;
 		formik.setValues(newValues);
 	};
@@ -69,8 +70,6 @@ export const SaldosTransaccion = ({
 		formik.setFieldValue(section, updatedValues);
 	};
 
-	console.log('valuesActualizado2', formik.values);
-
 	return (
 		<form onSubmit={formik.handleSubmit}>
 			<div className={style.box__container}>
@@ -78,9 +77,9 @@ export const SaldosTransaccion = ({
 					<h2>Saldos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' />
+							<SecondaryButton text="Editar" type='submit' onClick={() => onChangeStatusGroup("saldos")} />
 						) : (
-							<PrimaryButton text="Confirmar" type='submit' />
+							<PrimaryButton text="Confirmar" type='submit' onClick={() => onChangeStatusGroup("saldos")} />
 						)}
 					</div>
 				</div>
@@ -102,7 +101,7 @@ export const SaldosTransaccion = ({
 												index={index}
 											/>
 										)}
-										{saldo.tipo === "Nota de crédito" && (
+										{saldo.tipo === "NC o Saldo recibido" && (
 											<NotaCreditoLayout
 												section="credit_notes"
 												values={saldo}
@@ -114,7 +113,7 @@ export const SaldosTransaccion = ({
 												fileName={saldo.file_field_name}
 											/>
 										)}
-										{saldo.tipo === "Retención" && (
+										{saldo.tipo === "Retención impositiva" && (
 											<RetencionLayout
 												section="retentions"
 												values={saldo}
@@ -159,6 +158,6 @@ const listOptions = [
 			{ id: 2, name: "Comercial" },
 		],
 	},
-	{ name: "Nota de crédito", hasSubType: false, subTypeList: [] },
-	{ name: "Retención", hasSubType: false, subTypeList: [] },
+	{ name: "NC o Saldo recibido", hasSubType: false, subTypeList: [] },
+	{ name: "Retención impositiva", hasSubType: false, subTypeList: [] },
 ];

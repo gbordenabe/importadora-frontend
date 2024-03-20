@@ -4,47 +4,34 @@ type Pago = {
   [key: string]: any;
 };
 
-type PagosAgrupados = {
-  checks: Omit<Pago, 'tipo'>[];
-  cash: Omit<Pago, 'tipo'>[];
-  deposits: Omit<Pago, 'tipo'>[];
-};
+export function clasificarPagos(pagos: any): any {
+  for (const section in pagos) {
+    if (Object.prototype.hasOwnProperty.call(pagos, section)) {
+      for (let i = 0; i < pagos[section].length; i++) {
+        const pago = pagos[section][i];
+ 
+         if(pago.tipo){
+          delete pago.tipo
+         }
 
-export function clasificarPagos(pagos: Pago[]): PagosAgrupados {
-  console.log('pagos', pagos)
-  return pagos.reduce<PagosAgrupados>((acumulador, pagoActual) => {
-    const { tipo, type, resumen, ...pagoSinTipo } = pagoActual;
-    console.log('pagos', pagoActual)
-    let pagoModificado = { ...pagoSinTipo };
-    console.log('pagoModificado', pagoModificado)
+         if(pago.bank_name){
+          delete pago.bank_name
+         }
+        
+        if (pago.type) {
+          pago.type = pago.type === 'Propio' ? 'OWN' :
+                      pago.type === 'De terceros' ? 'THIRD_PARTY' :
+                      pago.type === 'Electrónico' ? 'ELECTRONIC' : pago.type;
+        } else {
+          delete pago.type
+        }
 
-    if (type) {
-      pagoModificado.type = type === 'Propio' ? 'OWN' :
-                            type === 'De terceros' ? 'THIRD_PARTY' :
-                            type === 'Electrónico' ? 'ELECTRONIC' : type;
+        if (typeof pago.file_field_name === 'string' && !pago.file_field_name.trim()) {
+          delete pago.file_field_name;
+        }
+      }
     }
+  }
 
-    // Verificar y eliminar la propiedad file_field_name si está vacía
-    if ('file_field_name' in pagoModificado && !pagoModificado.file_field_name) {
-      delete pagoModificado.file_field_name;
-    }
-
-    switch (tipo) {
-      case 'Cheque':
-        acumulador.checks.push(pagoModificado);
-        break;
-      case 'Efectivo / Transferencia':
-        acumulador.cash.push(pagoModificado);
-        break;
-      case 'Depósito':
-        acumulador.deposits.push(pagoModificado);
-        break;
-    }
-
-    return acumulador;
-  }, {
-    checks: [],
-    cash: [],
-    deposits: [],
-  });
+  return pagos;
 }

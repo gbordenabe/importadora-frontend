@@ -1,9 +1,22 @@
 import * as Yup from "yup";
 
 export const validationSchema = Yup.object().shape({
+    companyId: Yup.object().required("La empresa es requerida"),
+    clientId: Yup.object().required("El cliente es requerido"),
     bills: Yup.array().of(
             Yup.object().shape({
-            number: Yup.string().required("El número es requerido"),
+            number: Yup.string()
+                .required("El número es requerido")
+            .test('is-unique', 'El N° de factura ya existe', function(value) {
+                const { path, createError } = this;
+                const formValues: any = this.options.context;
+                const bills: any = formValues.bills || [];
+                const filter = bills.filter((bill: any) => bill.number == value).length;
+                if(filter > 1) {
+                    throw createError({ path, message: 'El N° de factura ya existe' });
+                }
+                return true;
+            }),
             amount: Yup.number().required("El monto es requerido"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
@@ -112,27 +125,3 @@ export interface IPagos {
     deposits: IDeposits[];
     cash: ICash[];
 }
-
-// interface ICustomFormik {
-//     initialValues: IPagos;
-//     validationSchema: typeof ValidationSchema;
-//     handleSubmit: (values: IPagos) => void;
-// }
-
-// export const useCustomFormik = (
-//     initialValues: IPagos,
-//     validationSchema: any,
-//     handleSubmit: (values: IPagos) => void
-// ): ICustomFormik => {
-//     const formikProps = useFormik({
-//         initialValues: initialValues,
-//         validationSchema: validationSchema,
-//         onSubmit: handleSubmit,
-//     });
-
-//     return {
-//         initialValues: formikProps.initialValues,
-//         validationSchema: validationSchema,
-//         handleSubmit: handleSubmit,
-//     };
-// };
