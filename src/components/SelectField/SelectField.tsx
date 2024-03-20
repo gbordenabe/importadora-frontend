@@ -49,7 +49,7 @@ export const SelectField = ({
 	const countryOptionTemplate = (option: any) => {
         return (
             <div >
-                <div>{name ==="suboptions" ? `${option.name}` : `${option.id} - ${option.name}` }</div>
+                <div>{(name ==="suboptions" || name === "companyId") ? `${option.name}` : `${option.client_number} - ${option.name}` }</div>
             </div>
         );
     };
@@ -74,8 +74,8 @@ export const SelectField = ({
 				disabled={disabled}
 				optionLabel={optionLabel}
 				placeholder={placeholder}
-				filter={name !== "suboptions"}
-				filterBy="name,id,client_number" 
+				filter={name !== "suboptions" && name !== "companyId"}
+				filterBy="name,client_number" 
 				valueTemplate={selectedCountryTemplate}
 				itemTemplate={countryOptionTemplate}
 				panelStyle={{width: '100%'}}

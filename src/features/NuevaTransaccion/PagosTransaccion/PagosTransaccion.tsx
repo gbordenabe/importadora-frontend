@@ -8,8 +8,8 @@ import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useFormik } from "formik";
-import { validationSchema } from "@/hooks/customFormik";
-import { useEffect, useRef, useState } from "react";
+import { validationSchema } from "@/helpers/customFormik";
+import { useEffect, useState } from "react";
 
 interface Props {
 	setPagos?: any;
@@ -42,14 +42,9 @@ export const PagosTransaccion = ({
 		},
 	});
 
-	const formikValuesRef = useRef(formik.values);
-
 	useEffect(()=>{
-		if (formikValuesRef.current !== formik.values) {
-		setPagos(formik.values);
-		formikValuesRef.current = formik.values;
-	}
-	}, [formik.values.checks, formik.values.deposits, formik.values.cash]);
+				setPagos(formik.values);
+	}, [formik.values]);
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;

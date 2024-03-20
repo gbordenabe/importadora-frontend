@@ -90,38 +90,4 @@ export const validationSchema = Yup.object().shape({
             ),
         })
     )
-
 })
-
-interface IChecks {
-    document_number: string;
-    amount: number;
-    date: string;
-    observation: string;
-    type: string;
-    bank_name: string;
-    file_field_name: string;
-}
-
-interface IDeposits {
-    document_number: string;
-    amount: number;
-    date: string;
-    observation: string;
-    bank_name: string;
-    file_field_name: string;
-}
-
-interface ICash {
-    document_number: string;
-    amount: number;
-    date: string;
-    observation: string;
-    file_field_name: string;
-}
-
-export interface IPagos {
-    checks: IChecks[];
-    deposits: IDeposits[];
-    cash: ICash[];
-}

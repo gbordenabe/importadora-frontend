@@ -11,15 +11,12 @@ import "primereact/resources/primereact.css";
 import "primereact/resources/primereact.min.css";
 
 import 'primeicons/primeicons.css';
-import { TransactionProvider } from "./hooks/contexts/errorsContext.tsx";
         
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<Provider store={store}>
-		<TransactionProvider>
 			<App />
-		</TransactionProvider>
 		</Provider>
 	</React.StrictMode>
 );

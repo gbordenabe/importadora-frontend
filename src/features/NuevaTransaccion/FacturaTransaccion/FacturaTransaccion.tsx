@@ -3,12 +3,11 @@ import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useFormik } from "formik";
-import { useEffect, useRef, useState } from "react";
-import { validationSchema } from "@/hooks/customFormik";
+import { useEffect, useState } from "react";
+import { validationSchema } from "@/helpers/customFormik";
 import { NuevoRegistro } from "../components/NuevoRegistro/NuevoRegistro";
 import { FacturaLayout } from "./layouts/FacturaLayout/FacturaLayout";
 import { facturasStructure } from "../data/data";
-// import { useTransactionContext } from "@/hooks/contexts/errorsContext";
 
 export interface IFacturas {
 	number: string;
@@ -51,14 +50,10 @@ export const FacturaTransaccion = ({
 		},
 	});
 
-	const formikValuesRef = useRef(formik.values);
 
 	useEffect(() => {
-		if (formikValuesRef.current !== formik.values) {
-			setFacturas(formik.values);
-			formikValuesRef.current = formik.values;
-		}
-	}, [formik.values, setFacturas]);
+		setFacturas(formik.values);
+	}, [formik.values]);
 
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {

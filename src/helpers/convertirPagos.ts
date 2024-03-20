@@ -1,27 +1,17 @@
-type Pago = {
-  tipo: string;
-  type?: string | null;
-  [key: string]: any;
-};
 
 export function clasificarPagos(pagos: any): any {
   for (const section in pagos) {
     if (Object.prototype.hasOwnProperty.call(pagos, section)) {
       for (let i = 0; i < pagos[section].length; i++) {
         const pago = pagos[section][i];
- 
-         if(pago.tipo){
-          delete pago.tipo
-         }
 
-         if(pago.bank_name){
-          delete pago.bank_name
-         }
-        
+        delete pago.tipo
+        delete pago.bank_name
+
         if (pago.type) {
           pago.type = pago.type === 'Propio' ? 'OWN' :
-                      pago.type === 'De terceros' ? 'THIRD_PARTY' :
-                      pago.type === 'Electrónico' ? 'ELECTRONIC' : pago.type;
+            pago.type === 'De terceros' ? 'THIRD_PARTY' :
+              pago.type === 'Electrónico' ? 'ELECTRONIC' : pago.type;
         } else {
           delete pago.type
         }

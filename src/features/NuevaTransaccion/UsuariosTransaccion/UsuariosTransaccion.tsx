@@ -5,7 +5,7 @@ import { SelectField } from "@/components/SelectField/SelectField";
 import { useGetFetch } from "@/hooks/useGetFetch";
 import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
-import { validationSchema } from '@/hooks/customFormik';
+import { validationSchema } from '@/helpers/customFormik';
 import { useEffect, useRef } from 'react';
 
 interface Props {

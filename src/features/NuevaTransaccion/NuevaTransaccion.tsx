@@ -20,11 +20,10 @@ import { HeaderCreateTransaccion } from "./components/HeaderCreateTransaccion/He
 import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ValidationModal } from "./ValidationModal/ValidationModal";
-import verificarYActualizar from "@/helpers/verificarYActualizar";
+// import verificarYActualizar from "@/helpers/verificarYActualizar";
 import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTransaccionModal";
 import Loading from "@/components/Loading/Loading";
 import { clasificarFacturas } from "@/helpers/convertirFacturas";
-// import { useTransactionContext } from "@/hooks/contexts/errorsContext";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
@@ -34,11 +33,9 @@ export const NuevaTransaccion = () => {
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ companyId: undefined, clientId: undefined });
 
-	const [facturas, setFacturas] = useState<any>([]);
-	// const { facturas, setFacturas } = useTransactionContext();
-	console.log('facturas', facturas)
-	const [pagos, setPagos] = useState<any>([]);
-	const [saldos, setSaldos] = useState<any>([]);
+	const [facturas, setFacturas] = useState<any>();
+	const [pagos, setPagos] = useState<any>();
+	const [saldos, setSaldos] = useState<any>();
 
 	const [filesBlob, setFilesBlob] = useState([]);
 	const [loading, setLoading] = useState<boolean>(false)
@@ -47,6 +44,11 @@ export const NuevaTransaccion = () => {
 	const [totalFacturas, setTotalFacturas] = useState(0);
 	const [totalPagos, setTotalPagos] = useState(0);
 	const [totalSaldos, setTotalSaldos] = useState(0);
+
+	console.log('usuarios', usuarios)
+		console.log('facturas', facturas)
+		console.log('pagos', pagos)
+		console.log('saldos', saldos)
 
 	// Crear transacción
 	const createTransaction = async (data: any) => {
@@ -62,10 +64,9 @@ export const NuevaTransaccion = () => {
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
 			if (statusCode !== 200) {
-				errorConfirmTransaction.onVisibleModal();
+				errorTransaction.onVisibleModal();
 				setLoading(false)
 			}
-
 			console.log(error);
 		}
 	};
@@ -85,13 +86,13 @@ export const NuevaTransaccion = () => {
 
 		// console.log('pagosClasificados', pagosClasificados)
 		// console.log('saldosClasificados', saldosClasificados)
-		console.log('facturasClasificadas', facturasClasificadas)
+		// console.log('facturasClasificadas', facturasClasificadas)
 
 		let newTransaction = {
 			sku,
 			companyId: usuarios.companyId?.id,
 			clientId: usuarios.clientId?.id,
-			bills: facturasClasificadas,
+			...facturasClasificadas,
 			...pagosClasificados,
 			...saldosClasificados,
 		};
@@ -115,11 +116,6 @@ export const NuevaTransaccion = () => {
 		createTransaction(formData);
 		setLoading(true)
 	};
-
-	// console.log('usuarios', usuarios)
-	
-	// console.log('pagos', pagos)
-	// console.log('saldos', saldos)
 
 	useEffect(() => {
 		if (sku.length === 0) {
@@ -172,9 +168,9 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
-				if (facturas.bills.length < 1) return;
-				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
-				if (verifyData) return; //Si es true, es porque faltan datos
+				// if (facturas.bills.length < 1) return;
+				// let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
+				// if (verifyData) return; //Si es true, es porque faltan datos
 
 				setGroupStatus({
 					userSectionStatus: true,
@@ -195,7 +191,7 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "pagos") {
 			if (!groupStatus.pagosSectionStatus) {
-				console.log('entra por el if')
+				// console.log('entra por el if')
 				// let verifyData = verificarYActualizar(
 				// 	pagos,
 				// 	["document_number", "amount", "date"],
@@ -315,14 +311,14 @@ export const NuevaTransaccion = () => {
 
 			{/* ErrorSum Modal */}
 			<PrimeModal
-				header={facturas.length < 1 ? "Error al confirmar transacción" : "Error en la suma"}
+				header={facturas && facturas.bills.length < 1 ? "Error al confirmar transacción" : "Error en la suma"}
 				modalStatus={errorTransaction.modalStatus}
 				onHideModal={errorTransaction.onHideModal}
 				titleCenter
 			>
 				<ValidationModal
 					onHideModal={errorTransaction.onHideModal}
-					description={facturas.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos"}
+					description={facturas && facturas.bills.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos"}
 					textButton='Volver'
 				/>
 			</PrimeModal>

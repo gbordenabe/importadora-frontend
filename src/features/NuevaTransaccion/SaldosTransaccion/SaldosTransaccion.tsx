@@ -10,7 +10,7 @@ import { BlockUI } from "primereact/blockui";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { validationSchema } from "@/hooks/customFormik";
+import { validationSchema } from "@/helpers/customFormik";
 
 interface Props {
 	setSaldos?: any;
@@ -44,9 +44,9 @@ export const SaldosTransaccion = ({
 		},
 	});
 
-	useEffect(() => {
+	useEffect(()=>{
 		setSaldos(formik.values);
-	}, [formik.values, setSaldos]);
+	}, [formik.values]);
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;

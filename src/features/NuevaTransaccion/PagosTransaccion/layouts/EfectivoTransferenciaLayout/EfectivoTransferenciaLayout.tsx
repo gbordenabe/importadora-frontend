@@ -43,8 +43,6 @@ export const EfectivoTransferenciaLayout = ({
 			[index]: !prev[index],
 		}));
 	};
-	console.log('values', values)
-	console.log('section', 	section)
 	return (
 		<>
 			<div className={style.layout__container}>
