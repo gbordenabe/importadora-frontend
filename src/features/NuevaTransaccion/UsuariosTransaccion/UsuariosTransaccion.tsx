@@ -70,7 +70,7 @@ export const UsuariosTransaccion = ({
 					</div>
 				</div>
 
-				<BlockUI blocked={isBlocked || formik.isSubmitting} style={{ borderRadius: "5px" }}>
+				<BlockUI blocked={isBlocked || formik.isSubmitting} style={{ borderRadius: "5px"}}>
 					<div className={style.box__content}>
 						<div className={style.box__content__item}>
 							<SelectField

@@ -12,6 +12,7 @@
 .box__head {
 	display: flex;
 	justify-content: space-between;
+	margin: 0.5rem 0.2rem;
 }
 
 .box__button__head {

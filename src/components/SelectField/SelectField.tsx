@@ -66,7 +66,7 @@ export const SelectField = ({
 			<div className={style.input_with_error}>
 			<Dropdown
 				className="p-inputtext-sm"
-				style={{ minWidth: "200px"}}
+				style={{ width:"100%"}}
 				name={name}
 				value={value}
 				onChange={(e) => onChange({ target: { name, value: e.value }})}
@@ -78,7 +78,7 @@ export const SelectField = ({
 				filterBy="name,client_number" 
 				valueTemplate={selectedCountryTemplate}
 				itemTemplate={countryOptionTemplate}
-				panelStyle={{width: '100%'}}
+				panelStyle={{width: '80%'}}
 				emptyMessage={<p className={style.emptyMessage__text}>No hay resultados.</p>}
 			/>
 			{error && (
