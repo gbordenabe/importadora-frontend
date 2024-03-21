@@ -2,7 +2,6 @@ import React from "react";
 import style from "./MoneyBoxField.module.css";
 
 import { InputNumber } from "primereact/inputnumber";
-import { Message } from "primereact/message";
 
 interface TextBoxFieldProps {
 	textLabel?: string;
