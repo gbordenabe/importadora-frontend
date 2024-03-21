@@ -55,15 +55,22 @@ export const NuevaTransaccion = () => {
 			await axios.post(`${url}/transaction`, data, {
 				headers,
 			});
+			setLoading(true)
 			navigate("/tablero-vendedor");
+			setLoading(false)
+			return
+			
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
 			if (statusCode !== 200) {
-				errorTransaction.onVisibleModal();
+				errorConfirmTransaction.onVisibleModal();
 				setLoading(false)
+				return
 			}
-			console.log(error);
-		}
+			 // Si la petición tiene éxito, se limpian los datos y se navega
+			
+			
+		} 
 	};
 
 	const handleCreateTransaction = () => {
@@ -101,9 +108,7 @@ export const NuevaTransaccion = () => {
 				formData.append(key, value as string);
 			}
 		}
-
 		createTransaction(formData);
-		setLoading(true)
 	};
 
 	useEffect(() => {
@@ -133,6 +138,7 @@ export const NuevaTransaccion = () => {
 	});
 
 	const onChangeStatusGroup = (sectionName: string) => {
+		let properties: string[];
 		//funcion hecha por dav
 		if (sectionName === "user") {
 			if (!groupStatus.userSectionStatus) {
@@ -179,10 +185,13 @@ export const NuevaTransaccion = () => {
 		}
 
 		if (sectionName === "pagos") {
+			
+			properties = ["document_number", "amount", "date"];
+			
 			if (!groupStatus.pagosSectionStatus) {
 				let verifyData = verificarYActualizar(
 					pagos,
-					["document_number", "amount", "date"],
+					properties,
 					setPagos
 				);
 				if (verifyData) return; //Si es true, es porque faltan datos
@@ -239,7 +248,8 @@ export const NuevaTransaccion = () => {
 
 		<>
 			<AppStructure>
-				{loading ? (<Loading />) : (
+				{loading ? (<Loading />) :
+				 (
 					<>
 						<MainHeader />
 						<ContentStructure>
@@ -294,7 +304,8 @@ export const NuevaTransaccion = () => {
 							</div>
 						</ContentStructure>
 					</>
-				)}
+				)
+				}
 			</AppStructure>
 
 			{/* ErrorSum Modal */}

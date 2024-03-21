@@ -10,15 +10,14 @@ const verificarYActualizar = (
 	
 		for (const item of section) {
 			for (const propiedad of propiedades) {
+
 			  if (item[propiedad] === "" || item[propiedad] === null) {
 				console.log(`Hay un elemento sin los datos completos en la propiedad ${propiedad}`);
 				return true; // Falta datos
 			  }
 			}
 		  }
-	  } else {
-		return false;
-	  }
+	  } 
   
 	  if (activarResumen) {
 		const updatedItems = section.map((item: any) => ({
