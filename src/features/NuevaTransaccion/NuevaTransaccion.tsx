@@ -163,7 +163,7 @@ export const NuevaTransaccion = () => {
 
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
-				// if (facturas && facturas.bills.length < 1) return;
+				if (facturas && facturas.bills.length < 1) return;
 				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
 				if (verifyData) return; //Si es true, es porque faltan datos
 
@@ -185,7 +185,7 @@ export const NuevaTransaccion = () => {
 		}
 
 		if (sectionName === "pagos") {
-			
+
 			properties = ["document_number", "amount", "date"];
 			
 			if (!groupStatus.pagosSectionStatus) {
@@ -205,7 +205,7 @@ export const NuevaTransaccion = () => {
 			} else {
 				if (!usuarios.clientId || !usuarios.companyId) return;
 				// Validar si facturas tiene data
-				// if (facturas && facturas.bills.length < 1) return;
+				if (facturas && facturas.bills.length < 1) return;
 				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
 				if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
@@ -231,7 +231,7 @@ export const NuevaTransaccion = () => {
 			} else {
 				if (!usuarios.clientId || !usuarios.companyId) return;
 				// // Validar si facturas tiene data
-				// if (facturas.length < 1) return;
+				if (facturas && facturas.bills.length < 1) return;
 				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas);
 				if (verifyData) return; //Si es true, es porque faltan datos
 				setGroupStatus({
