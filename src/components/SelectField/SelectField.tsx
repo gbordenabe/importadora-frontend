@@ -49,14 +49,14 @@ export const SelectField = ({
 	const countryOptionTemplate = (option: any) => {
         return (
             <div >
-                <div>{(name ==="suboptions" || name === "companyId") ? `${option.name}` : `${option.client_number} - ${option.name}` }</div>
+                <div>{`${option.name}`}</div>
             </div>
         );
     };
 
 	const optionsWithIdAsString = options && options.map(option => ({
         ...option,
-        id: option.id.toString()
+        id: option.id
     }));
 
 	return (
