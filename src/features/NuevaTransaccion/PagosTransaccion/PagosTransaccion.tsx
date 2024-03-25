@@ -10,6 +10,7 @@ import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useFormik } from "formik";
 import { validationSchema } from "@/helpers/customFormik";
 import { useEffect, useState } from "react";
+import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
 
 interface Props {
 	setPagos?: any;
@@ -27,6 +28,9 @@ export const PagosTransaccion = ({
 	setFilesBlob,
 }: Props) => {
 	const [section, setSection] = useState<string>('');
+	const [errorMessage, setErrorMessage] = useState('');
+
+	const { expandedItems, toggleExpanded } = useToggleExpandedContext();
 
 	const initialValues: any = {
 		checks: [],
@@ -54,12 +58,63 @@ export const PagosTransaccion = ({
 		formik.setFieldValue(section, updatedSectionValues);
 	};
 
+	// const handleAdd = (section: string, newData: any) => {
+	// 	const newValues = { ...formik.values };
+	// 	const currentValues = [...formik.values[section]];
+	// 	currentValues.unshift(newData);
+	// 	newValues[section] = currentValues;
+	// 	formik.setValues(newValues);
+	// };
+
 	const handleAdd = (section: string, newData: any) => {
-		const newValues = { ...formik.values };
-		const currentValues = [...formik.values[section]];
-		currentValues.unshift(newData);
-		newValues[section] = currentValues;
-		formik.setValues(newValues);
+		if (formik.values[section].length === 0) {
+			const newValues = { ...formik.values };
+			const currentValues = [...formik.values[section]];
+			currentValues.unshift(newData);
+			newValues[section] = currentValues;
+			formik.setValues(newValues);
+			toggleExpanded(formik.values[section].length,"newBill")
+		} else {
+			if (formik.values[section].length === 1) {
+				const lastBill = formik.values[section][0];
+				const isLastBillComplete =
+					lastBill.number !== '' &&
+					lastBill.amount !== '' &&
+					lastBill.date !== ''
+				if (isLastBillComplete) {
+					const newIndex = formik.values[section].length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpanded(newIndex, "MaxOrMin")
+					setErrorMessage('');
+				} else {
+					setErrorMessage('Completa todos los campos antes de agregar otra.');
+				}
+
+			} else {
+				const lastBill = formik.values[section][0];
+				const isLastBillComplete =
+					(lastBill.number !== '' && !(formik.values[section].filter((element: any) => element.number === lastBill.number).length > 1)) &&
+					lastBill.amount !== '' &&
+					lastBill.date !== ''
+				if (isLastBillComplete) {
+					const newIndex = formik.values[section].length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpanded(newIndex, "MaxOrMin")
+					setErrorMessage('');
+				} else {
+					setErrorMessage('Completa todos los campos antes de agregar otra.');
+				}
+			}
+
+		}
 	};
 
 	const handleRemove = (index: number, section: string) => {
@@ -83,7 +138,7 @@ export const PagosTransaccion = ({
 				</div>
 
 				<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-					<div style={{ display: "grid", gap: "10px" }}>
+					<div style={{ display: "grid", gap: "10px",  padding: "0.5rem" }}>
 
 						<div className={style.box__content}>
 							{Object.keys(formik.values).map((sectionKey) => (
@@ -99,6 +154,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
+												expandedItems={expandedItems}
+												toggleExpanded={toggleExpanded}
 											/>
 										)}
 										{pago.tipo === "Depósito / Transferencia" && (
@@ -111,6 +168,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
+												expandedItems={expandedItems}
+												toggleExpanded={toggleExpanded}
 											/>
 										)}
 										{pago.tipo === "Efectivo" && (
@@ -123,6 +182,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
+												expandedItems={expandedItems}
+												toggleExpanded={toggleExpanded}
 											/>
 										)}
 									</div>
@@ -140,6 +201,7 @@ export const PagosTransaccion = ({
 							setTotalAmount={setTotalAmount}
 							section={section}
 							setSection={setSection}
+							errorMessage={errorMessage}
 						/>
 					</div>
 				</BlockUI>

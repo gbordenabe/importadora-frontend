@@ -11,12 +11,15 @@ import "primereact/resources/primereact.css";
 import "primereact/resources/primereact.min.css";
 
 import 'primeicons/primeicons.css';
+import { ToggleExpandedProvider } from "./hooks/toggleExpandedContext.tsx";
         
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<Provider store={store}>
+		<ToggleExpandedProvider>
 			<App />
+		</ToggleExpandedProvider>,
 		</Provider>
 	</React.StrictMode>
 );

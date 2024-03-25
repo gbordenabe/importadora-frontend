@@ -71,7 +71,7 @@ export const NuevoRegistro = ({
             section = "cash";
         } else if(tipo === "Depósito / Transferencia") {
             section = "deposits";
-        } else if(tipo === "Crédito"){
+        } else if(tipo === "Solicitud de Crédito"){
 			section = "credits"
 		} else if (tipo === "NC o Saldo recibido") {
 			section = "credit_notes"

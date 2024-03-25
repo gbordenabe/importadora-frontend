@@ -7,7 +7,6 @@ import { MinimziarButton } from "@/features/NuevaTransaccion/components/Minimiza
 import CalendarInput from "@/components/Calendar/Calendar";
 import { FaFileMedical } from "react-icons/fa";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
-import { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
@@ -22,6 +21,8 @@ interface Props {
 	handleRemove?: any,
 	fileName?: any,
 	setFilesBlob?: any,
+	expandedItems?: any;
+	toggleExpanded?: any
 }
 
 export const ChequeLayout = ({
@@ -32,18 +33,12 @@ export const ChequeLayout = ({
 	values,
 	handleChange,
 	handleRemove,
-	errors
+	errors,
+	expandedItems,
+	toggleExpanded
 }:
 	Props) => {
 	const uploadFileModal = useModal();
-	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-
-	const toggleExpanded = (index: number) => {
-		setExpandedItems(prev => ({
-			...prev,
-			[index]: !prev[index],
-		}));
-	};
 
 	return (
 		<>
@@ -63,7 +58,7 @@ export const ChequeLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton
-								onClick={() => toggleExpanded(index)}
+								onClick={() => toggleExpanded(index, "MaxOrMin")}
 							/>
 							<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 						</div>
@@ -85,7 +80,7 @@ export const ChequeLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton
-									onClick={() => toggleExpanded(index)}
+									onClick={() => toggleExpanded(index, "MaxOrMin")}
 								/>
 								<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 							</div>

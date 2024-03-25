@@ -49,7 +49,7 @@ export const SelectField = ({
 	const countryOptionTemplate = (option: any) => {
         return (
             <div >
-                <div>{`${option.name}`}</div>
+                <div>{name === "clientId" ? `${option.client_number} - ${option.name}` : `${option.name}`}</div>
             </div>
         );
     };

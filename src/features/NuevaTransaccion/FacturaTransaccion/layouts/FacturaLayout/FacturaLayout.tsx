@@ -4,10 +4,8 @@ import { ChipText } from "@/components/ChipText/ChipText";
 import { MaximizarButton } from "@/features/NuevaTransaccion/components/MaximizarButton/MaximizarButton";
 import { DeleteButton } from "@/features/NuevaTransaccion/components/DeleteButton/DeleteButton";
 import { MinimziarButton } from "@/features/NuevaTransaccion/components/MinimizarButton/MinimizarButton";
-// import CalendarInput from "@/components/Calendar/Calendar";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
 import CalendarInput from "@/components/Calendar/Calendar";
 
 interface Props {
@@ -16,7 +14,9 @@ interface Props {
 	values?: any;
 	handleChange?: any;
 	handleRemove?: any;
-	errors?: any
+	errors?: any;
+	expandedItems?: any;
+	toggleExpanded?: any
 }
 
 export const FacturaLayout = ({
@@ -26,16 +26,9 @@ export const FacturaLayout = ({
 	handleChange,
 	handleRemove,
 	errors,
-
+	expandedItems,
+	toggleExpanded
 }: Props) => {
-	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-
-	const toggleExpanded = (index: number) => {
-		setExpandedItems(prev => ({
-			...prev,
-			[index]: !prev[index],
-		}));
-	};
 
 	return (
 		<div className={style.layout__container}>
@@ -47,7 +40,7 @@ export const FacturaLayout = ({
 						<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => toggleExpanded(index)} />
+						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
 						<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 					</div>
 				</div>
@@ -59,7 +52,7 @@ export const FacturaLayout = ({
 							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => toggleExpanded(index)} />
+							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
 							<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 						</div>
 					</div>

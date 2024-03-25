@@ -8,6 +8,7 @@ import { validationSchema } from "@/helpers/customFormik";
 import { NuevoRegistro } from "../components/NuevoRegistro/NuevoRegistro";
 import { FacturaLayout } from "./layouts/FacturaLayout/FacturaLayout";
 import { facturasStructure } from "../data/data";
+import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
 
 export interface IFacturas {
 	number: string;
@@ -32,6 +33,9 @@ export const FacturaTransaccion = ({
 }: Props) => {
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
+	
+	const { expandedItems, toggleExpanded } = useToggleExpandedContext();
+	
 
 	const initialValues: any = {
 		bills: []
@@ -55,13 +59,20 @@ export const FacturaTransaccion = ({
 		setFacturas(formik.values);
 	}, [formik.values]);
 
-
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
 		const sectionValues = formik.values[section];
 		const updatedSectionValues = [...sectionValues];
 		updatedSectionValues[index][name] = value;
 		formik.setFieldValue(section, updatedSectionValues);
+		const lastBill = formik.values.bills[0];
+		const isLastBillComplete =
+				lastBill.number !== '' &&
+				lastBill.amount !== '' &&
+				lastBill.date !== ''
+			if (isLastBillComplete) {
+				setErrorMessage('')
+			}
 	};
 
 	const handleAdd = (section: string, newData: any) => {
@@ -71,22 +82,47 @@ export const FacturaTransaccion = ({
 			currentValues.unshift(newData);
 			newValues[section] = currentValues;
 			formik.setValues(newValues);
+			toggleExpanded(formik.values.bills.length,"newBill")
 		} else {
-			const lastBill = formik.values.bills[0];
-			const isLastBillComplete =
-				lastBill.number !== '' &&
-				lastBill.amount !== '' &&
-				lastBill.date !== '';
-			if (isLastBillComplete) {
-				const newValues = { ...formik.values };
-				const currentValues = [...formik.values[section]];
-				currentValues.unshift(newData);
-				newValues[section] = currentValues;
-				formik.setValues(newValues);
-				setErrorMessage('');
+			if (formik.values.bills.length === 1) {
+				const lastBill = formik.values.bills[0];
+				const isLastBillComplete =
+					lastBill.number !== '' &&
+					lastBill.amount !== '' &&
+					lastBill.date !== ''
+				if (isLastBillComplete) {
+					const newIndex = formik.values.bills.length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpanded(newIndex, "MaxOrMin")
+					setErrorMessage('');
+				} else {
+					setErrorMessage('Completa todos los campos de la factura actual antes de agregar otra.');
+				}
+
 			} else {
-				setErrorMessage('Completa todos los campos de la factura actual antes de agregar otra.');
+				const lastBill = formik.values.bills[0];
+				const isLastBillComplete =
+					(lastBill.number !== '' && !(formik.values.bills.filter((bill: any) => bill.number === lastBill.number).length > 1)) &&
+					lastBill.amount !== '' &&
+					lastBill.date !== ''
+				if (isLastBillComplete) {
+					const newIndex = formik.values.bills.length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpanded(newIndex, "MaxOrMin")
+					setErrorMessage('');
+				} else {
+					setErrorMessage('Completa todos los campos de la factura actual antes de agregar otra.');
+				}
 			}
+
 		}
 	};
 
@@ -106,20 +142,19 @@ export const FacturaTransaccion = ({
 							<SecondaryButton
 								text="Editar"
 								type="submit"
-								onClick={() => { onChangeStatusGroup("facturas") }}
+								onClick={() => { onChangeStatusGroup("facturas", "edicion") }}
 							/>
 						) : (
 							<PrimaryButton
 								text="Confirmar"
 								type="submit"
-								onClick={() => { onChangeStatusGroup("facturas") }}
+								onClick={() => { onChangeStatusGroup("facturas", "creacion") }}
 							/>
 						)}
 					</div>
 				</div>
 				<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-					<div style={{ display: "grid", gap: "10px" }}>
-
+					<div style={{ display: "grid", gap: "10px", padding: "0.5rem" }}>
 						<div className={style.box__content}>
 							{Object.keys(formik.values).map((sectionKey) => (
 								formik.values[sectionKey].map((pago: any, index: number) => (
@@ -131,6 +166,8 @@ export const FacturaTransaccion = ({
 											handleRemove={handleRemove}
 											errors={formik.errors.bills}
 											index={index}
+											expandedItems={expandedItems}
+											toggleExpanded={toggleExpanded}
 										/>
 									</div>
 								))

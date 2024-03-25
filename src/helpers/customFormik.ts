@@ -27,7 +27,7 @@ export const validationSchema = Yup.object().shape({
                 document_number: Yup.string().required("El N° de cheque es requerido"),
                 amount: Yup.number()
                     .required("El monto es requerido")
-                    .positive("El monto debe ser mayor que cero"),
+                    .positive("No puede ser 0"),
                 date: Yup.string().required("La fecha es requerida"),
                 observation: Yup.string(),
                 type: Yup.string(),
