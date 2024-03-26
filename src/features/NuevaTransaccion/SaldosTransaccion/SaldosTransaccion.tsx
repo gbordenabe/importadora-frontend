@@ -85,13 +85,13 @@ export const SaldosTransaccion = ({
 				</div>
 
 				<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-					<div style={{ display: "grid", gap: "10px" }}>
+					<div style={{ display: "grid", gap: "10px", padding: "0.5rem" }}>
 
 						<div className={style.box__content}>
 							{Object.keys(formik.values).map((sectionKey) => (
 								formik.values[sectionKey].map((saldo: any, index: number) => (
 									<div key={index}>
-										{saldo.tipo === "Crédito" && (
+										{saldo.tipo === "Solicitud de Crédito" && (
 											<CreditoLayout
 												section="credits"
 												values={saldo}
@@ -151,7 +151,7 @@ export const SaldosTransaccion = ({
 
 const listOptions = [
 	{
-		name: "Crédito",
+		name: "Solicitud de Crédito",
 		hasSubType: true,
 		subTypeList: [
 			{ id: 1, name: "Financiero" },

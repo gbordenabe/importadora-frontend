@@ -11,7 +11,6 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
 
 interface Props {
 	section: string,
@@ -22,6 +21,8 @@ interface Props {
 	handleRemove?: any,
 	fileName?: any,
 	setFilesBlob?: any,
+	expandedItems?: any;
+	toggleExpanded?: any
 }
 
 
@@ -33,17 +34,11 @@ export const DepositoLayout = ({
 	values,
 	handleChange,
 	handleRemove,
-	errors
+	errors,
+	expandedItems,
+	toggleExpanded
 }: Props) => {
 	const uploadFileModal = useModal();
-	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-
-	const toggleExpanded = (index: number) => {
-		setExpandedItems(prev => ({
-			...prev,
-			[index]: !prev[index],
-		}));
-	};
 
 	return (
 		<>
@@ -63,7 +58,7 @@ export const DepositoLayout = ({
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => toggleExpanded(index)} />
+							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
 							<DeleteButton onClick={() => handleRemove(index, 'deposits')} />
 						</div>
 					</div>
@@ -90,7 +85,7 @@ export const DepositoLayout = ({
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => toggleExpanded(index)} />
+								<MinimziarButton onClick={() => toggleExpanded(index,"MaxOrMin")} />
 								<DeleteButton onClick={() => handleRemove(index, 'deposits')} />
 							</div>
 						</div>

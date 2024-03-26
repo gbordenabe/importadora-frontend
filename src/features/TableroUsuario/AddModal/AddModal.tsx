@@ -24,7 +24,7 @@ export const AddModal = ({ onHideModal, optionCreateSelect, setOptionCreateSelec
 					<SelectField
 						placeholder="Selecciona el tipo de usuario"
 						onChange={(e) => setOptionCreateSelect(e.target.value)}
-						name=""
+						name="userType"
 						value={optionCreateSelect}
 						options={typeUserOptions}
 					/>
