@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import style from "./FiltroConEstado.module.css";
 
 const FiltroConEstado = () => {
 	const [status, setStatus] = useState("ALL");
-	const [typeDocument, setTypeDocument] = useState({
+	const [typeDocument, setTypeDocument] = useState<any>({
 		bill_status: "ALL",
 		cash_status: "ALL",
 		check_status: "ALL",
@@ -29,7 +29,7 @@ const FiltroConEstado = () => {
 		}
 	}, [status]);
 
-	const handleStatusChange = (selectedStatus) => {
+	const handleStatusChange = (selectedStatus: any) => {
 		setStatus(selectedStatus);
 		if (selectedStatus === "ALL") {
 			setAllDocumentsChecked(true);
@@ -53,15 +53,15 @@ const FiltroConEstado = () => {
 		});
 	};
 
-	const handleTypeDocumentChange = (docType) => {
-		setTypeDocument((prev) => ({
+	const handleTypeDocumentChange = (docType: any) => {
+		setTypeDocument((prev: any) => ({
 			...prev,
 			[docType]: prev[docType] === "ALL" ? "" : "ALL",
 		}));
 		setAllDocumentsChecked(false);
 	};
 
-	const renderStatusCheckbox = (stat, label, colorClass) => (
+	const renderStatusCheckbox = (stat: any, label: any, colorClass: any) => (
 		<div key={stat} className={style.itemStateColor}>
 			<input type="checkbox" checked={status === stat} onChange={() => handleStatusChange(stat)} />
 			{stat !== "ALL" && (
@@ -71,7 +71,7 @@ const FiltroConEstado = () => {
 		</div>
 	);
 
-	const renderTypeDocumentCheckbox = (key, label) => (
+	const renderTypeDocumentCheckbox = (key: any, label: any) => (
 		<div key={key} className={style.itemStateColor}>
 			<input
 				type="checkbox"

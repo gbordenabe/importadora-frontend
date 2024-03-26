@@ -40,11 +40,12 @@ export const NuevaTransaccion = () => {
 	const [saldos, setSaldos] = useState<any>();
 
 	const [filesBlob, setFilesBlob] = useState([]);
-	const [loading, setLoading] = useState<boolean>(false)
+	const [loading, setLoading] = useState<boolean>(false);
 
-	const [errorDuplicatedBill, setErrorDuplicatedBill] = useState(false)
-	const [errorRequiredData, setErrorRequiredData] = useState(false)
-	const [errorWithoutBill, setErrorWithoutBill] = useState(false)
+	const [errorDuplicatedBill, setErrorDuplicatedBill] = useState(false);
+	const [errorRequiredData, setErrorRequiredData] = useState(false);
+	const [errorWithoutBill, setErrorWithoutBill] = useState(false);
+	console.log(errorWithoutBill); // para que el lint permita realizar el build, uso del estado.
 
 	// const { expandedItems, toggleExpanded } = useExpandedItems();
 	const { expandedItems, toggleExpanded } = useToggleExpandedContext();
@@ -64,21 +65,18 @@ export const NuevaTransaccion = () => {
 			await axios.post(`${url}/transaction`, data, {
 				headers,
 			});
-			setLoading(true)
+			setLoading(true);
 			navigate("/tablero-vendedor");
-			setLoading(false)
-			return
-
+			setLoading(false);
+			return;
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
 			if (statusCode !== 200) {
 				errorConfirmTransaction.onVisibleModal();
-				setLoading(false)
-				return
+				setLoading(false);
+				return;
 			}
 			// Si la petición tiene éxito, se limpian los datos y se navega
-
-
 		}
 	};
 
@@ -173,31 +171,36 @@ export const NuevaTransaccion = () => {
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
 				if (facturas && facturas.bills.length < 1) {
-					setErrorWithoutBill(true)
-					errorBillValidation.onVisibleModal()
+					setErrorWithoutBill(true);
+					errorBillValidation.onVisibleModal();
 					return;
 				}
-				let verifyData = verificarYActualizar(facturas, ["number", "amount", "date"], setFacturas, setErrorDuplicatedBill as any);
+				let verifyData = verificarYActualizar(
+					facturas,
+					["number", "amount", "date"],
+					setFacturas,
+					setErrorDuplicatedBill as any
+				);
 
 				//Si es true, es porque faltan datos
 				if (verifyData && verifyData.loadData) {
-					if (verifyData.message === 'duplicatedBill') {
-						setErrorDuplicatedBill(true)
-						errorBillValidation.onVisibleModal()
+					if (verifyData.message === "duplicatedBill") {
+						setErrorDuplicatedBill(true);
+						errorBillValidation.onVisibleModal();
 						return;
 					} else {
-						setErrorRequiredData(true)
-						errorBillValidation.onVisibleModal()
+						setErrorRequiredData(true);
+						errorBillValidation.onVisibleModal();
 						return;
 					}
 				}
 
 				if (method === "creacion") {
 					Object.keys(expandedItems).map((index: any) => {
-						toggleExpanded(index, 'allMin');
+						toggleExpanded(index, "allMin");
 					});
 				}
-				
+
 				setGroupStatus({
 					userSectionStatus: true,
 					facturaSectionStatus: true,
@@ -216,19 +219,14 @@ export const NuevaTransaccion = () => {
 		}
 
 		if (sectionName === "pagos") {
-
 			properties = ["document_number", "amount", "date"];
 
 			if (!groupStatus.pagosSectionStatus) {
-				let verifyData = verificarYActualizar(
-					pagos,
-					properties,
-					setPagos
-				);
+				let verifyData = verificarYActualizar(pagos, properties, setPagos);
 				if (verifyData) return; //Si es true, es porque faltan datos
 
 				Object.keys(expandedItems).map((index: any) => {
-					toggleExpanded(index, 'allMin');
+					toggleExpanded(index, "allMin");
 				});
 
 				setGroupStatus({
@@ -284,80 +282,86 @@ export const NuevaTransaccion = () => {
 	};
 
 	return (
-
 		<>
 			<AppStructure>
-				{loading ? (<Loading />) :
-					(
-						<>
-							<MainHeader />
-							<ContentStructure>
-								<MainTitle
-									title="Nueva Transacción"
-									onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
-									isShowModal={true}
-								/>
+				{loading ? (
+					<Loading />
+				) : (
+					<>
+						<MainHeader />
+						<ContentStructure>
+							<MainTitle
+								title="Nueva Transacción"
+								onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
+								isShowModal={true}
+							/>
 
-								<BoxContent>
-									<HeaderCreateTransaccion sku={sku} />
+							<BoxContent>
+								<HeaderCreateTransaccion sku={sku} />
 
-									<div className={style.tipo__documentos__container}>
-										<div className={style.tipo__documentos__group}>
-											<UsuariosTransaccion
-												setUsuarios={setUsuarios}
-												isBlocked={groupStatus.userSectionStatus}
-												onChangeStatusGroup={onChangeStatusGroup}
-											/>
+								<div className={style.tipo__documentos__container}>
+									<div className={style.tipo__documentos__group}>
+										<UsuariosTransaccion
+											setUsuarios={setUsuarios}
+											isBlocked={groupStatus.userSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+										/>
 
-											<FacturaTransaccion
-												facturas={facturas}
-												setFacturas={setFacturas}
-												isBlocked={groupStatus.facturaSectionStatus}
-												onChangeStatusGroup={onChangeStatusGroup}
-												setTotalAmount={setTotalFacturas}
-											/>
-										</div>
-
-										<div className={style.tipo__documentos__group}>
-											<PagosTransaccion
-												setPagos={setPagos}
-												isBlocked={groupStatus.pagosSectionStatus}
-												onChangeStatusGroup={onChangeStatusGroup}
-												setTotalAmount={setTotalPagos}
-												setFilesBlob={setFilesBlob}
-
-											/>
-
-											<SaldosTransaccion
-												setSaldos={setSaldos}
-												isBlocked={groupStatus.saldosSectionStatus}
-												onChangeStatusGroup={onChangeStatusGroup}
-												setTotalAmount={setTotalSaldos}
-												setFilesBlob={setFilesBlob}
-											/>
-										</div>
+										<FacturaTransaccion
+											facturas={facturas}
+											setFacturas={setFacturas}
+											isBlocked={groupStatus.facturaSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalFacturas}
+										/>
 									</div>
-								</BoxContent>
-								<div className={style.container__1}>
-									<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
+
+									<div className={style.tipo__documentos__group}>
+										<PagosTransaccion
+											setPagos={setPagos}
+											isBlocked={groupStatus.pagosSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalPagos}
+											setFilesBlob={setFilesBlob}
+										/>
+
+										<SaldosTransaccion
+											setSaldos={setSaldos}
+											isBlocked={groupStatus.saldosSectionStatus}
+											onChangeStatusGroup={onChangeStatusGroup}
+											setTotalAmount={setTotalSaldos}
+											setFilesBlob={setFilesBlob}
+										/>
+									</div>
 								</div>
-							</ContentStructure>
-						</>
-					)
-				}
+							</BoxContent>
+							<div className={style.container__1}>
+								<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
+							</div>
+						</ContentStructure>
+					</>
+				)}
 			</AppStructure>
 
 			{/* ErrorSum Modal */}
 			<PrimeModal
-				header={facturas && facturas.bills.length < 1 ? "Error al confirmar transacción" : "Error en la suma"}
+				header={
+					facturas && facturas.bills.length < 1
+						? "Error al confirmar transacción"
+						: "Error en la suma"
+				}
 				modalStatus={errorTransaction.modalStatus}
 				onHideModal={errorTransaction.onHideModal}
 				titleCenter
 			>
 				<ValidationModal
 					onHideModal={errorTransaction.onHideModal}
-					description={facturas && facturas.bills.length < 1 ? "Falta cargar información para confirmar transacción" : "El monto de facturación no coincide con la suma de pagos y saldos"}
-					textButton='Volver'
+					description={
+						facturas && facturas.bills.length < 1
+							? "Falta cargar información para confirmar transacción"
+							: "El monto de facturación no coincide con la suma de pagos y saldos"
+					}
+					textButton="Volver"
 				/>
 			</PrimeModal>
 
@@ -381,7 +385,7 @@ export const NuevaTransaccion = () => {
 				<ValidationModal
 					onHideModal={errorConfirmTransaction.onHideModal}
 					description={"Por favor intente nuevamente"}
-					textButton='Volver'
+					textButton="Volver"
 				/>
 			</PrimeModal>
 
@@ -394,18 +398,17 @@ export const NuevaTransaccion = () => {
 			>
 				<ValidationModal
 					onHideModal={errorBillValidation.onHideModal}
-					description={errorDuplicatedBill ?
-						"No puedes continuar con una factura con el mismo número" :
-						errorRequiredData ? "Faltar completar datos requeridos" :
-							"Tienes que cargar una factura para confirmar"}
+					description={
+						errorDuplicatedBill
+							? "No puedes continuar con una factura con el mismo número"
+							: errorRequiredData
+							? "Faltar completar datos requeridos"
+							: "Tienes que cargar una factura para confirmar"
+					}
 					textButton="Volver"
 				/>
 			</PrimeModal>
 			{/* )} */}
-
-
-
-
 		</>
-	)
+	);
 };

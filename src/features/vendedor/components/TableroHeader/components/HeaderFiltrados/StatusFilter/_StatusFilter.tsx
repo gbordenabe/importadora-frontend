@@ -7,7 +7,7 @@ import { useState } from "react";
 export const StatusFilter = () => {
 	const { modalStatus, onVisibleModal, onHideModal } = useModal();
 
-	const [status, setStatus] = useState("ALL");
+	const [status] = useState("ALL");
 	//Tipos de status:
 	// ALL = Todos
 	// OK = Aprobado
@@ -15,8 +15,8 @@ export const StatusFilter = () => {
 	// EDITED = Edición
 	// PENDING = En revisión
 
-	const [allDocuments, setAllDocuments] = useState(true);
-	const [typeDocument, setTypeDocument] = useState({
+	const [allDocuments] = useState(true);
+	const [typeDocument] = useState({
 		bill_status: "",
 		cash_status: "",
 		check_status: "",
