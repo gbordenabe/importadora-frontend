@@ -15,6 +15,7 @@ interface Props {
 	section?: any;
 	setSection?: any;
 	errorMessage?: string;
+	closeDropdown?: any
 }
 
 export const NuevoRegistro = ({
@@ -26,7 +27,8 @@ export const NuevoRegistro = ({
 	data, 
 	setTotalAmount,	
 	setSection,
-	errorMessage
+	errorMessage,
+	closeDropdown
 }: Props) => {
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
@@ -37,6 +39,10 @@ export const NuevoRegistro = ({
 			handleAddNewRegister("Factura o nota de débito", null);
 			return;
 		}
+		// if(listTitle === "Tipo de saldo"){
+		// 	handleAddNewRegister("Saldo", null);
+		// 	return;
+		// }
 
 		if (stepNewRegister === 1) {
 			setStepNewRegister((prev) => prev + 1);
@@ -101,6 +107,7 @@ export const NuevoRegistro = ({
 						addNewRegister={handleAddNewRegister}
 						listOptions={listOptions}
 						listTitle={listTitle}
+						closeDropdown={closeDropdown}
 					/>
 				)}
 			</div>

@@ -41,14 +41,15 @@ export const NuevaTransaccion = () => {
 
 	const [filesBlob, setFilesBlob] = useState([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	console.log('setLoading', setLoading)
 
 	const [errorDuplicatedBill, setErrorDuplicatedBill] = useState(false);
 	const [errorRequiredData, setErrorRequiredData] = useState(false);
 	const [errorWithoutBill, setErrorWithoutBill] = useState(false);
 	console.log(errorWithoutBill); // para que el lint permita realizar el build, uso del estado.
 
-	// const { expandedItems, toggleExpanded } = useExpandedItems();
-	const { expandedItems, toggleExpanded } = useToggleExpandedContext();
+	
+	const { expandedItems, toggleExpanded, expandedSaldos, toggleExpandedSaldos, expandedPagos, toggleExpandedPagos} = useToggleExpandedContext();
 
 	// Total status
 	const [totalFacturas, setTotalFacturas] = useState(0);
@@ -58,6 +59,7 @@ export const NuevaTransaccion = () => {
 	// Crear transacción
 	const createTransaction = async (data: any) => {
 		try {
+			// setLoading(true);
 			const token = localStorage.getItem("rt__importadora");
 			const headers = {
 				Authorization: `Bearer ${token}`,
@@ -65,15 +67,17 @@ export const NuevaTransaccion = () => {
 			await axios.post(`${url}/transaction`, data, {
 				headers,
 			});
-			setLoading(true);
-			navigate("/tablero-vendedor");
-			setLoading(false);
-			return;
+			// await setLoading(false);
+			// setTimeout(() => {
+				
+				navigate("/tablero-vendedor");
+			// }, 1000);
+			
+			// return;
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
 			if (statusCode !== 200) {
 				errorConfirmTransaction.onVisibleModal();
-				setLoading(false);
 				return;
 			}
 			// Si la petición tiene éxito, se limpian los datos y se navega
@@ -225,8 +229,8 @@ export const NuevaTransaccion = () => {
 				let verifyData = verificarYActualizar(pagos, properties, setPagos);
 				if (verifyData) return; //Si es true, es porque faltan datos
 
-				Object.keys(expandedItems).map((index: any) => {
-					toggleExpanded(index, "allMin");
+				Object.keys(expandedPagos).map((index: any) => {
+					toggleExpandedPagos(index, "allMin");
 				});
 
 				setGroupStatus({
@@ -255,9 +259,9 @@ export const NuevaTransaccion = () => {
 				let verifyData = verificarYActualizar(saldos, ["amount", "date"], setSaldos);
 				if (verifyData) return; //Si es true, es porque faltan datos
 
-				// Object.keys(expandedItems).map((index: any) => {
-				// 	toggleExpanded(index, 'allMin');
-				// });
+				Object.keys(expandedSaldos).map((index: any) => {
+					toggleExpandedSaldos(index, 'allMin');
+				});
 
 				setGroupStatus({
 					userSectionStatus: true,

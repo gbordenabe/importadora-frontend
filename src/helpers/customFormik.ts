@@ -40,7 +40,7 @@ export const validationSchema = Yup.object().shape({
             document_number: Yup.string().required("El N° es requerido"),
             amount: Yup.number()
                 .required("El monto es requerido")
-                .positive("El monto debe ser mayor que cero"),
+                .positive("No puede ser 0"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
             bank_name: Yup.string(),
@@ -54,7 +54,7 @@ export const validationSchema = Yup.object().shape({
             document_number: Yup.string().required("El N° es requerido"),
             amount: Yup.number()
                 .required("El monto es requerido")
-                .positive("El monto debe ser mayor que cero"),
+                .positive("No puede ser 0"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
             file_field_name: Yup.string(),
@@ -64,7 +64,7 @@ export const validationSchema = Yup.object().shape({
         Yup.object().shape({
             amount: Yup.number()
                 .required("El monto es requerido")
-                .positive("El monto debe ser mayor que cero"),
+                .positive("No puede ser 0"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
         })
@@ -73,7 +73,7 @@ export const validationSchema = Yup.object().shape({
         Yup.object().shape({
             amount: Yup.number()
                 .required("El monto es requerido")
-                .positive("El monto debe ser mayor que cero"),
+                .positive("No puede ser 0"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
         })
@@ -82,7 +82,7 @@ export const validationSchema = Yup.object().shape({
         Yup.object().shape({
             amount: Yup.number()
                 .required("El monto es requerido")
-                .positive("El monto debe ser mayor que cero"),
+                .positive("No puede ser 0"),
             date: Yup.string().required("La fecha es requerida"),
             observation: Yup.string(),
             file_field_name: Yup.string().required(

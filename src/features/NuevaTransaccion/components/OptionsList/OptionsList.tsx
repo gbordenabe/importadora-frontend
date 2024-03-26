@@ -6,9 +6,11 @@ interface Props {
 	addNewRegister: (tipo: string, subtipo: string) => void;
 	listOptions?: any;
 	listTitle?: string;
+	closeDropdown?: any
 }
 
-export const OptionsList = ({ addNewRegister, listOptions, listTitle }: Props) => {
+export const OptionsList = ({ addNewRegister, listOptions, listTitle, closeDropdown }: Props) => {
+	
 	const [optionSelect, setOptionSelect] = useState<any>({});
 	const [subOptionSelect, setSubOptionSelect] = useState<any>({});
 

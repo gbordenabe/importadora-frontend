@@ -29,8 +29,9 @@ export const PagosTransaccion = ({
 }: Props) => {
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
 
-	const { expandedItems, toggleExpanded } = useToggleExpandedContext();
+	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
 
 	const initialValues: any = {
 		checks: [],
@@ -50,6 +51,11 @@ export const PagosTransaccion = ({
 				setPagos(formik.values);
 	}, [formik.values]);
 
+	
+	const handleCloseDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
 		const sectionValues = formik.values[section];
@@ -58,14 +64,6 @@ export const PagosTransaccion = ({
 		formik.setFieldValue(section, updatedSectionValues);
 	};
 
-	// const handleAdd = (section: string, newData: any) => {
-	// 	const newValues = { ...formik.values };
-	// 	const currentValues = [...formik.values[section]];
-	// 	currentValues.unshift(newData);
-	// 	newValues[section] = currentValues;
-	// 	formik.setValues(newValues);
-	// };
-
 	const handleAdd = (section: string, newData: any) => {
 		if (formik.values[section].length === 0) {
 			const newValues = { ...formik.values };
@@ -73,22 +71,22 @@ export const PagosTransaccion = ({
 			currentValues.unshift(newData);
 			newValues[section] = currentValues;
 			formik.setValues(newValues);
-			toggleExpanded(formik.values[section].length,"newBill")
+			toggleExpandedPagos(formik.values[section].length,"newPago")
 		} else {
 			if (formik.values[section].length === 1) {
-				const lastBill = formik.values[section][0];
-				const isLastBillComplete =
-					lastBill.number !== '' &&
-					lastBill.amount !== '' &&
-					lastBill.date !== ''
-				if (isLastBillComplete) {
+				const lastPay = formik.values[section][0];
+				const isLastPayComplete =
+					lastPay.number !== '' &&
+					lastPay.amount !== '' &&
+					lastPay.date !== ''
+				if (isLastPayComplete) {
 					const newIndex = formik.values[section].length;
 					const newValues = { ...formik.values };
 					const currentValues = [...formik.values[section]];
 					currentValues.unshift(newData);
 					newValues[section] = currentValues;
 					formik.setValues(newValues);
-					toggleExpanded(newIndex, "MaxOrMin")
+					toggleExpandedPagos(newIndex, "MaxOrMin")
 					setErrorMessage('');
 				} else {
 					setErrorMessage('Completa todos los campos antes de agregar otra.');
@@ -107,7 +105,7 @@ export const PagosTransaccion = ({
 					currentValues.unshift(newData);
 					newValues[section] = currentValues;
 					formik.setValues(newValues);
-					toggleExpanded(newIndex, "MaxOrMin")
+					toggleExpandedPagos(newIndex, "MaxOrMin")
 					setErrorMessage('');
 				} else {
 					setErrorMessage('Completa todos los campos antes de agregar otra.');
@@ -130,9 +128,9 @@ export const PagosTransaccion = ({
 					<h2>Pagos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos")}}/>
+							<SecondaryButton text="Editar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos"); handleCloseDropdown();}}/>
 						) : (
-							<PrimaryButton text="Confirmar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos")}}/>
+							<PrimaryButton text="Confirmar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos"); handleCloseDropdown();}}/>
 						)}
 					</div>
 				</div>
@@ -154,8 +152,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
-												expandedItems={expandedItems}
-												toggleExpanded={toggleExpanded}
+												expandedItems={expandedPagos}
+												toggleExpanded={toggleExpandedPagos}
 											/>
 										)}
 										{pago.tipo === "Depósito / Transferencia" && (
@@ -168,8 +166,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
-												expandedItems={expandedItems}
-												toggleExpanded={toggleExpanded}
+												expandedItems={expandedPagos}
+												toggleExpanded={toggleExpandedPagos}
 											/>
 										)}
 										{pago.tipo === "Efectivo" && (
@@ -182,8 +180,8 @@ export const PagosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
-												expandedItems={expandedItems}
-												toggleExpanded={toggleExpanded}
+												expandedItems={expandedPagos}
+												toggleExpanded={toggleExpandedPagos}
 											/>
 										)}
 									</div>
@@ -202,6 +200,7 @@ export const PagosTransaccion = ({
 							section={section}
 							setSection={setSection}
 							errorMessage={errorMessage}
+							closeDropdown={isDropdownOpen}
 						/>
 					</div>
 				</BlockUI>

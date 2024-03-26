@@ -11,6 +11,7 @@ import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { validationSchema } from "@/helpers/customFormik";
+import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
 
 interface Props {
 	setSaldos?: any;
@@ -29,6 +30,8 @@ export const SaldosTransaccion = ({
 }: Props) => {
 
 	const [section, setSection] = useState<string>('');
+	const [errorMessage, setErrorMessage] = useState('');
+	const { expandedSaldos, toggleExpandedSaldos } = useToggleExpandedContext();
 
 	const initialValues: any = {
 		credits: [],
@@ -44,7 +47,7 @@ export const SaldosTransaccion = ({
 		},
 	});
 
-	useEffect(()=>{
+	useEffect(() => {
 		setSaldos(formik.values);
 	}, [formik.values]);
 
@@ -57,12 +60,53 @@ export const SaldosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		const newValues = { ...formik.values };
-		const currentValues = [...formik.values[section]];
-		currentValues.unshift(newData);
-		newValues[section] = currentValues;
-		formik.setValues(newValues);
-	};
+		console.log('dataHandleAdd', section, newData)
+		if (formik.values[section].length === 0) {
+			const newValues = { ...formik.values };
+			const currentValues = [...formik.values[section]];
+			currentValues.unshift(newData);
+			newValues[section] = currentValues;
+			formik.setValues(newValues);
+			toggleExpandedSaldos(formik.values[section].length, "newSaldo")
+		} else {
+			if (formik.values[section].length === 1) {
+				const lastSaldo = formik.values[section][0];
+				const isLastSaldoComplete =
+					lastSaldo.number !== '' &&
+					lastSaldo.amount !== '' &&
+					lastSaldo.date !== ''
+				if (isLastSaldoComplete) {
+					const newIndex = formik.values[section].length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpandedSaldos(newIndex, "MaxOrMin")
+				} else {
+					setErrorMessage('Completa todos los campos antes de agregar otra.');
+				}
+			} else {
+				const lastBill = formik.values[section][0];
+				const isLastBillComplete =
+					(lastBill.number !== '' && !(formik.values[section].filter((element: any) => element.number === lastBill.number).length > 1)) &&
+					lastBill.amount !== '' &&
+					lastBill.date !== ''
+				if (isLastBillComplete) {
+					const newIndex = formik.values[section].length;
+					const newValues = { ...formik.values };
+					const currentValues = [...formik.values[section]];
+					currentValues.unshift(newData);
+					newValues[section] = currentValues;
+					formik.setValues(newValues);
+					toggleExpandedSaldos(newIndex, "MaxOrMin")
+					setErrorMessage('');
+				} else {
+					setErrorMessage('Completa todos los campos antes de agregar otra.');
+				}
+			}
+		};
+	}
 
 	const handleRemove = (index: number, section: string) => {
 		const updatedValues = [...formik.values[section]];
@@ -99,6 +143,8 @@ export const SaldosTransaccion = ({
 												handleRemove={handleRemove}
 												errors={formik.errors.credits}
 												index={index}
+												expandedItems={expandedSaldos}
+												toggleExpanded={toggleExpandedSaldos}
 											/>
 										)}
 										{saldo.tipo === "NC o Saldo recibido" && (
@@ -111,6 +157,8 @@ export const SaldosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={saldo.file_field_name}
+												expandedItems={expandedSaldos}
+												toggleExpanded={toggleExpandedSaldos}
 											/>
 										)}
 										{saldo.tipo === "Retención impositiva" && (
@@ -123,6 +171,8 @@ export const SaldosTransaccion = ({
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={saldo.file_field_name}
+												expandedItems={expandedSaldos}
+												toggleExpanded={toggleExpandedSaldos}
 											/>
 										)}
 									</div>
@@ -141,6 +191,7 @@ export const SaldosTransaccion = ({
 							setTotalAmount={setTotalAmount}
 							section={section}
 							setSection={setSection}
+							errorMessage={errorMessage}
 						/>
 					</div>
 				</BlockUI>

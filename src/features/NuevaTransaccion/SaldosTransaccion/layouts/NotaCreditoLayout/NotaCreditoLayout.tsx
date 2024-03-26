@@ -7,7 +7,6 @@ import { MinimziarButton } from "@/features/NuevaTransaccion/components/Minimiza
 import CalendarInput from "@/components/Calendar/Calendar";
 import { MoneyBoxField } from "@/components/MoneyBoxField/MoneyBoxField";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
 
 interface Props {
 	section: string,
@@ -18,6 +17,8 @@ interface Props {
 	handleRemove?: any,
 	fileName?: any,
 	setFilesBlob?: any,
+	expandedItems?: any;
+	toggleExpanded?: any
 }
 
 export const NotaCreditoLayout = ({
@@ -26,17 +27,10 @@ export const NotaCreditoLayout = ({
 	values,
 	handleChange,
 	handleRemove,
-	errors
+	errors,
+	expandedItems,
+	toggleExpanded
 }: Props) => {
-
-	const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
-
-	const toggleExpanded = (index: number) => {
-		setExpandedItems(prev => ({
-			...prev,
-			[index]: !prev[index],
-		}));
-	};
 	return (
 		<div className={style.layout__container}>
 			{expandedItems[index] ? (
@@ -49,7 +43,7 @@ export const NotaCreditoLayout = ({
 						</div>
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => toggleExpanded(index)} />
+						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
 						<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 					</div>
 				</div>
@@ -61,7 +55,7 @@ export const NotaCreditoLayout = ({
 							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => toggleExpanded(index)} />
+							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
 							<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 						</div>
 					</div>
