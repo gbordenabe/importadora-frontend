@@ -4,16 +4,14 @@ import { VscFilter } from "react-icons/vsc";
 import { RxReload } from "react-icons/rx";
 
 import CustomModal from "@/components/CustomModal/CustomModal";
-import FiltroConEstado from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroConEstados/FiltroConEstado";
 import FiltroFechas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFechas/FiltroFechas";
 import FiltroEmpresa from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroEmpresa/FiltroEmpresa";
 import FiltroClientes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroClientes/FiltroClientes";
-// import FiltroFacturas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFactura/FiltroFacturas";
-// import FiltroCheque from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroCheque/FiltroCheque";
-import FiltroImportes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroImporte/FiltroImporte";
+
 import { formatDate } from "@/helpers/formatDate";
 import { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
+import { StatusFilter } from "./StatusFilter/StatusFilter";
 
 interface Props {
 	optionsFilter?: any;
@@ -26,12 +24,9 @@ interface Props {
 export const HeaderFiltrados = ({
 	optionsFilter,
 	setOptionsFilter,
-	// fetchFilterData,
 	handleResetFilters,
 	dataTransaction,
 }: Props) => {
-	const { modalStatus, onVisibleModal, onHideModal } = useModal();
-
 	const {
 		modalStatus: modalStatus2,
 		onVisibleModal: onVisibleModal2,
@@ -47,21 +42,6 @@ export const HeaderFiltrados = ({
 		onVisibleModal: onVisibleModal4,
 		onHideModal: onHideModal4,
 	} = useModal();
-	// const {
-	// 	modalStatus: modalStatus6,
-	// 	onVisibleModal: onVisibleModal6,
-	// 	onHideModal: onHideModal6,
-	// } = useModal();
-	// const {
-	// 	modalStatus: modalStatus7,
-	// 	onVisibleModal: onVisibleModal7,
-	// 	onHideModal: onHideModal7,
-	// } = useModal();
-	const {
-		modalStatus: modalStatus8,
-		onVisibleModal: onVisibleModal8,
-		onHideModal: onHideModal8,
-	} = useModal();
 
 	const handleChange = (e: any) => {
 		const { name, value } = e.target;
@@ -73,7 +53,7 @@ export const HeaderFiltrados = ({
 
 	const [filterFacturas, setFilterFacturas] = useState(null);
 	const [filterCheques, setFilterCheques] = useState(null);
-	// const [filterImporte, setFilterImporte] = useState(null);
+	const [filterImporte, setFilterImporte] = useState(null);
 
 	const onFilterChangeNumber = (value: any, name: any) => {
 		// Esto es fijo para los filtrados de n factura, n cheque e importe.
@@ -88,7 +68,7 @@ export const HeaderFiltrados = ({
 	const onResetFilters = () => {
 		setFilterFacturas(null);
 		setFilterCheques(null);
-		// setFilterImporte(null);
+		setFilterImporte(null);
 		handleResetFilters();
 	};
 
@@ -119,36 +99,7 @@ export const HeaderFiltrados = ({
 				<div className={style.header__filtrados__content}>
 					{/* First row */}
 
-					<div className={style.header__filtrados__content__item} onClick={onVisibleModal}>
-						<div className={style.header__filtrados__content__itemGroup}>
-							<p className={style.header__filtrados__text}>Filtrado con estado:</p>
-							<div className={style.header__filtrados__selection}>
-								<div
-									className={`${style.header__filtrados__green} ${style.header__filtrados__select__color}`}
-								></div>
-								<div
-									className={`${style.header__filtrados__yellow} ${style.header__filtrados__select__color}`}
-								></div>
-								<div
-									className={`${style.header__filtrados__red} ${style.header__filtrados__select__color}`}
-								></div>
-								<div
-									className={`${style.header__filtrados__blue} ${style.header__filtrados__select__color}`}
-								></div>
-							</div>
-						</div>
-						<div className={style.header__filtrados__content__itemGroup}>
-							<p className={style.header__filtrados__text}>en:</p>
-							<div className={style.header__filtrados__documentType}>
-								<div className={style.header__filtrados__documentType__item}>Factura o Débito</div>
-								<div className={style.header__filtrados__documentType__item}>Cheques</div>
-								<div className={style.header__filtrados__documentType__item}>Depositos</div>
-								<div className={style.header__filtrados__documentType__item}>Créditos</div>
-								<div className={style.header__filtrados__documentType__item}>Nota de créditos</div>
-								<div className={style.header__filtrados__documentType__item}>Retención</div>
-							</div>
-						</div>
-					</div>
+					<StatusFilter />
 
 					{/* Second row */}
 
@@ -179,8 +130,11 @@ export const HeaderFiltrados = ({
 
 					<div className={style.header__filtrados__content__item__row2}>
 						<div className={style.header__filtrados__content__itemGroup}>
-							<p className={style.header__filtrados__content__text}>N° de Factura o debito:</p>
-							<div className={style.header__filtrados__documentType__item}>
+							<p className={style.header__filtrados__content__text}>N° de Factura o deb.:</p>
+							<div
+								className={style.header__filtrados__documentType__item}
+								style={{ justifyContent: "space-between" }}
+							>
 								<input
 									type="number"
 									className={style.header__input__filter}
@@ -196,7 +150,10 @@ export const HeaderFiltrados = ({
 						</div>
 						<div className={style.header__filtrados__content__itemGroup}>
 							<p className={style.header__filtrados__content__text}>N° de Cheque:</p>
-							<div className={style.header__filtrados__documentType__item}>
+							<div
+								className={style.header__filtrados__documentType__item}
+								style={{ justifyContent: "space-between" }}
+							>
 								<input
 									type="number"
 									className={style.header__input__filter}
@@ -210,22 +167,34 @@ export const HeaderFiltrados = ({
 								/>
 							</div>
 						</div>
-						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal8}>
+
+						{/* <div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal8}>
 							<p className={style.header__filtrados__content__text}>Importe:</p>
 							<div className={style.header__filtrados__documentType__item}>Buscar</div>
+						</div> */}
+
+						<div className={style.header__filtrados__content__itemGroup}>
+							<p className={style.header__filtrados__content__text}>Importe:</p>
+							<div
+								className={style.header__filtrados__documentType__item}
+								style={{ justifyContent: "space-between" }}
+							>
+								<input
+									type="number"
+									className={style.header__input__filter}
+									placeholder="Buscar"
+									onChange={(e: any) => setFilterImporte(e.target.value)}
+									value={filterImporte || ""}
+								/>
+								<IoSearchSharp
+									size={15}
+									onClick={() => onFilterChangeNumber(filterImporte, "total_amount")}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<CustomModal isVisible={modalStatus} onHide={onHideModal} width="45%">
-				<FiltroConEstado
-				// optionsFilter={optionsFilter}
-				// setOptionsFilter={setOptionsFilter}
-				// handleChange={handleChange}
-				/>
-			</CustomModal>
-
-			{/* /////////////////// */}
 
 			{/* FILTRO FECHAS */}
 
@@ -238,8 +207,6 @@ export const HeaderFiltrados = ({
 				/>
 			</CustomModal>
 
-			{/* //////////////////////// */}
-
 			{/* FILTRO EMPRESAS */}
 
 			<CustomModal isVisible={modalStatus3} onHide={onHideModal3} width="300px">
@@ -250,8 +217,6 @@ export const HeaderFiltrados = ({
 				/>
 			</CustomModal>
 
-			{/* ////////////// */}
-
 			{/* FILTRO CLIENTES */}
 
 			<CustomModal isVisible={modalStatus4} onHide={onHideModal4} width="40%">
@@ -259,32 +224,6 @@ export const HeaderFiltrados = ({
 					optionsFilter={optionsFilter}
 					setOptionsFilter={setOptionsFilter}
 					onHideModal={onHideModal4}
-				/>
-			</CustomModal>
-
-			{/* 3ra */}
-
-			{/* <CustomModal isVisible={modalStatus6} onHide={onHideModal6} width="40%">
-				<FiltroFacturas
-					optionsFilter={optionsFilter}
-					handleChange={handleChange}
-					onHideModal={onHideModal6}
-				/>
-			</CustomModal> */}
-
-			{/* <CustomModal isVisible={modalStatus7} onHide={onHideModal7} width="40%">
-				<FiltroCheque
-					optionsFilter={optionsFilter}
-					handleChange={handleChange}
-					onHideModal={onHideModal7}
-				/>
-			</CustomModal> */}
-
-			<CustomModal isVisible={modalStatus8} onHide={onHideModal8} width="40%">
-				<FiltroImportes
-					optionsFilter={optionsFilter}
-					setOptionsFilter={setOptionsFilter}
-					onHideModal={onHideModal8}
 				/>
 			</CustomModal>
 		</>

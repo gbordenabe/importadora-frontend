@@ -4,7 +4,7 @@ import { VscFilter } from "react-icons/vsc";
 import { RxReload } from "react-icons/rx";
 
 import CustomModal from "@/components/CustomModal/CustomModal";
-import FiltroConEstado from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroConEstados/FiltroConEstado";
+import FiltroConEstado from "@/features/vendedor/components/TableroHeader/components/HeaderFiltrados/FiltroConEstados/FiltroConEstado";
 import FiltroFechas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFechas/FiltroFechas";
 import FiltroEmpresa from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroEmpresa/FiltroEmpresa";
 import FiltroClientes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroClientes/FiltroClientes";

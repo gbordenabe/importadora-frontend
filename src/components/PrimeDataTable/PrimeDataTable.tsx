@@ -1,8 +1,9 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
-import { Button } from "primereact/button";
 import { useAppSelector } from "@/store/hooks";
+
+import { ActionBodyTemplate } from "./ActionBodyTemplate";
 
 interface Props {
 	data?: any;
@@ -20,73 +21,7 @@ export function PrimeDataTable({ data, columns, onEdit, onRequestChange, onAppro
 		setDataTable(data);
 	}, [data]);
 
-	const actionBodyTemplate = (rowData: any) => {
-		if (login?.role?.name === "SELLER") {
-			return (
-				<div style={{ display: "flex", justifyContent: "center" }}>
-					<Button
-						icon="pi pi-pencil"
-						className="pi pi-text"
-						rounded
-						onClick={() => onEdit?.(rowData)}
-						style={{
-							padding: "8px 8px",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: "#ffe600",
-							color: "black",
-						}}
-					/>
-				</div>
-			);
-		} else {
-			return (
-				<div style={{ display: "flex", gap: 15, justifyContent: "center" }}>
-					<Button
-						icon="pi pi-check"
-						rounded
-						style={{
-							padding: "8px 8px",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: "#89dc7f",
-							color: "black",
-						}}
-						onClick={() => onApprove?.(rowData)}
-					/>
-					<Button
-						icon="pi pi-pencil"
-						className="pi pi-text"
-						rounded
-						onClick={() => onEdit?.(rowData)}
-						style={{
-							padding: "8px 8px",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: "#ffe600",
-							color: "black",
-						}}
-					/>
-					<Button
-						icon="pi pi-exclamation-circle"
-						rounded
-						style={{
-							padding: "8px 8px",
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: "#d72f2f",
-							color: "black",
-						}}
-						onClick={() => onRequestChange?.(rowData)}
-					/>
-				</div>
-			);
-		}
-	};
+	// data.status
 
 	const headerStyle = {
 		backgroundColor: "rgba(0, 0, 0, 0.60)",
@@ -128,7 +63,15 @@ export function PrimeDataTable({ data, columns, onEdit, onRequestChange, onAppro
 					))}
 
 				<Column
-					body={actionBodyTemplate}
+					body={(rowData) => (
+						<ActionBodyTemplate
+							rowData={rowData}
+							onEdit={onEdit}
+							onRequestChange={onRequestChange}
+							onApprove={onApprove}
+							login={login}
+						/>
+					)}
 					style={{ width: "auto" }}
 					headerStyle={headerStyle}
 					bodyStyle={bodyStyle}

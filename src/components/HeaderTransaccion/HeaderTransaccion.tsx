@@ -17,7 +17,13 @@ export const HeaderTransaccion = ({ isDetails = false, data }: Props) => {
 			<div className={style.headerTransaccion__container}>
 				<ChipText text={`SKU: ${data?.sku || ""}`} />
 				<ChipText text={generarFechaCorta()} />
-				<ChipText text={`Vendedor: ${name} ${last_name}`} />
+				<ChipText
+					text={`Vendedor: ${
+						data?.created_by?.name
+							? `${data?.created_by?.name} ${data?.created_by?.last_name}`
+							: `${name} ${last_name}`
+					} `}
+				/>
 
 				{isDetails && (
 					<>

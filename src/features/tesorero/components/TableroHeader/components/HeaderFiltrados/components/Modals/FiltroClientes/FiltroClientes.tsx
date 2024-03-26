@@ -1,5 +1,5 @@
 import style from "./FiltroClientes.module.css";
-// import { handleChangeCheckBox } from "@/helpers/handleCheckBox";
+
 import { useEffect, useState } from "react";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import axios from "axios";
@@ -11,11 +11,11 @@ import { convertirANumero } from "@/helpers/ConvertirANumero";
 interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
-	onHideModal?: any
+	onHideModal?: any;
 }
 
-const FiltroClientes = ({ optionsFilter, setOptionsFilter, onHideModal }: Props) => {
-	const [selected, setSelected] = useState<{ id: string, name: string } | null>(null);
+const FiltroClientes = ({ setOptionsFilter, onHideModal }: Props) => {
+	const [selected, setSelected] = useState<any>(null);
 	const [clientname, setClientName] = useState("");
 	const [data, setData] = useState([]);
 
@@ -53,18 +53,21 @@ const FiltroClientes = ({ optionsFilter, setOptionsFilter, onHideModal }: Props)
 	};
 
 	useEffect(() => {
-		if (selected) {
-			setOptionsFilter({
-				...optionsFilter,
-				clientName: selected.name, // Asegurándose de pasar el nombre del cliente
-				clients: convertirANumero([selected.id]),
-			});
-		}
-	}, [selected]);
-
-	useEffect(() => {
 		getClient();
 	}, []);
+
+	const handleUpdateData = () => {
+		setOptionsFilter((prev: any) => ({
+			...prev,
+			clientName: selected.name,
+			clients: convertirANumero([selected.id]),
+		}));
+	};
+
+	const submit = () => {
+		handleUpdateData();
+		onHideModal();
+	};
 
 	return (
 		<div className={style.container}>
@@ -94,12 +97,16 @@ const FiltroClientes = ({ optionsFilter, setOptionsFilter, onHideModal }: Props)
 							value={data.id}
 							onChange={(e) => setSelected({ id: e.target.value, name: data.name })} // Actualización para manejar objeto
 						/>
-						<label className={style.btn__filter}> {data?.name} </label>
+						<label className={style.btn__filter}>
+							{data?.client_number} - {data?.name}
+						</label>
 					</div>
 				</div>
 			))}
 
-			<button className={style.buttonConfirm} onClick={() => onHideModal()}> Confirmar </button>
+			<button className={style.buttonConfirm} onClick={submit}>
+				Confirmar
+			</button>
 		</div>
 	);
 };

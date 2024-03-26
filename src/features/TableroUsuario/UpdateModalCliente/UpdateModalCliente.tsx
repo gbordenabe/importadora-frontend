@@ -18,9 +18,9 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 		business_name: "",
 		client_number: "",
 		cuit_cuil: "",
+		province: "",
 		city: "",
-		location: "",
-		province: ".",
+		location: ".",
 	});
 
 	const [provincias, setProvincias] = useState<any>([]);

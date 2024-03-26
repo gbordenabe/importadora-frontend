@@ -18,9 +18,9 @@ export const UpdateModalVendedor = ({ onHideModal, currentUpdateData, updateFetc
 		user_name: "",
 		name: "",
 		last_name: "",
+		province: "",
 		city: "",
-		location: "",
-		province: ".",
+		location: ".",
 	});
 
 	const [provincias, setProvincias] = useState<any>([]);

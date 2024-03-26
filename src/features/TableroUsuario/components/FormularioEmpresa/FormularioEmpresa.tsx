@@ -1,10 +1,11 @@
-import { useState } from "react";
 import style from "./FormularioEmpresa.module.css";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
-import { handleChangeInput } from "@/helpers/handleTextBox";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
 import { usePostFetch } from "@/hooks/usePostFetch";
+
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 interface Props {
 	onHideModal?: any;
@@ -13,45 +14,64 @@ interface Props {
 export const FormularioEmpresa = ({ onHideModal }: Props) => {
 	const { postFetchData } = usePostFetch("/company", "Empresa");
 
-	const [nuevaEmpresa, setNuevaEmpresa] = useState({
-		name: "",
-		verifyName: "",
-		acronym: "",
+	const { values, handleSubmit, handleChange, handleBlur, errors, touched } = useFormik({
+		initialValues: {
+			name: "",
+			verifyName: "",
+			acronym: "",
+		},
+		onSubmit: async (values) => {
+			const { verifyName, ...restData } = values;
+			const dataCreate = { ...restData, acronym: values.name.substring(0, 3) };
+			try {
+				await postFetchData(dataCreate);
+				onHideModal();
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		validationSchema: Yup.object({
+			name: Yup.string()
+				.min(3, "El nombre de la empresa debe de tener mínimo 3 dígitos")
+				.required("Este campo es requerido"),
+			verifyName: Yup.string()
+				.oneOf([Yup.ref("name")], "Los nombres ingresados no coinciden")
+				.required("Este campo es requerido"),
+		}),
 	});
 
-	const handleCreate = async () => {
-		const { verifyName, ...restData } = nuevaEmpresa;
-		const dataCreate = { ...restData, acronym: nuevaEmpresa.name.substring(0, 3) };
-		try {
-			await postFetchData(dataCreate);
-			onHideModal();
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	return (
-		<div className={style.form__container}>
+		<form noValidate onSubmit={handleSubmit} className={style.form__container}>
 			<div className={style.form__group}>
-				<TextBoxField
-					textLabel="Nombre de la empresa:"
-					name="name"
-					value={nuevaEmpresa.name}
-					onChange={(e) => handleChangeInput(e, setNuevaEmpresa)}
-				/>
-				<TextBoxField
-					textLabel="Repite el nombre:"
-					name="verifyName"
-					value={nuevaEmpresa.verifyName}
-					onChange={(e) => handleChangeInput(e, setNuevaEmpresa)}
-				/>
+				<div>
+					<TextBoxField
+						textLabel="Nombre de la empresa:"
+						name="name"
+						value={values.name || ""}
+						onChange={handleChange}
+						onBlur={handleBlur}
+					/>
+					{touched.name && errors.name && <span className="msg__form__error">{errors.name}</span>}
+				</div>
+				<div>
+					<TextBoxField
+						textLabel="Repite el nombre:"
+						name="verifyName"
+						value={values.verifyName || ""}
+						onChange={handleChange}
+						onBlur={handleBlur}
+					/>
+					{touched.verifyName && errors.verifyName && (
+						<span className="msg__form__error">{errors.verifyName}</span>
+					)}
+				</div>
 			</div>
 
 			<div className={style.container__buttons}>
 				<SecondaryButton text="Volver" onClick={onHideModal} fitWidth />
 
-				<PrimaryButton text="Guardar" onClick={handleCreate} fitWidth />
+				<PrimaryButton text="Guardar" type="submit" fitWidth />
 			</div>
-		</div>
+		</form>
 	);
 };

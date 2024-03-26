@@ -515,7 +515,7 @@ const renderEstadoBody = (rowData: any) => {
 					data-pr-position="top"
 					style={{ cursor: "pointer" }}
 				>
-					<StatusCircle status={rowData.status} size="25px" />
+					<StatusCircle status={rowData.status} size="25px" icon={true}/>
 				</span>
 			</div>
 		);

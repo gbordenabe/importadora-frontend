@@ -50,6 +50,16 @@ export function AppRoutes() {
 						<Route path="/*" element={<Navigate to="/tablero-tesorero" />} />
 					</>
 				)}
+				{/* Posteriormente borrarlo */}
+				{/* <>
+					<Route path="/tablero-tesorero" element={<TableroTesorero />} />
+					<Route path="/tablero-usuario" element={<TableroUsuario />} />
+					<Route path="/tablero-usuario/vendendor-tesorero" element={<TableroTesoreroVendedor />} />
+					<Route path="/tablero-usuario/cliente" element={<TableroCliente />} />
+					<Route path="/tablero-usuario/empresa" element={<TableroEmpresa />} />
+					<Route path="/detalle-transaccion/:id" element={<DetalleTransaccion />} />
+					
+				</> */}
 			</Routes>
 		</BrowserRouter>
 	);

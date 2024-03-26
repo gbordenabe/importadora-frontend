@@ -13,7 +13,8 @@ interface TextBoxFieldProps {
 	disabled?: boolean;
 	labelWidth?: string;
 	placeholder?: string;
-	error?: any
+	error?: any;
+	onBlur?: any;
 }
 
 export const TextBoxField = ({
@@ -26,7 +27,8 @@ export const TextBoxField = ({
 	disabled = false,
 	labelWidth = "100%",
 	placeholder,
-	error
+	error,
+	onBlur
 }: TextBoxFieldProps) => {
 	const styles: React.CSSProperties = {
 		width: labelWidth,
@@ -51,6 +53,7 @@ export const TextBoxField = ({
 				autoComplete="off"
 				disabled={disabled}
 				placeholder={placeholder}
+				onBlur={onBlur}
 			/>
 			{error}
 		</div>

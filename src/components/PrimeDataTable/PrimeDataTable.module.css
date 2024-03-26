@@ -1,0 +1,46 @@
+.button__action {
+	width: 45px;
+	height: 45px;
+	border-radius: 45px;
+	padding: 8px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 0.3s;
+	cursor: pointer;
+}
+.button__check {
+	border: solid 3px #89dc7f;
+	color: #89dc7f;
+}
+.button__check:hover {
+	background-color: #89dc7f;
+	color: #fff;
+}
+.button__edit {
+	border: solid 3px #ffe600;
+	color: #ffe600;
+}
+.button__edit:hover {
+	background-color: #ffe600;
+	color: #fff;
+}
+.button__tochange {
+	border: solid 3px #d72f2f;
+	color: #d72f2f;
+}
+.button__tochange:hover {
+	background-color: #d72f2f;
+	color: #fff;
+}
+
+.button__action__disabled {
+	border: solid 3px #ccc;
+	background-color: #ccc;
+	color: #fff;
+}
+.button__action__disabled:hover {
+	border: solid 3px #ccc;
+	background-color: #ccc;
+	color: #fff;
+}

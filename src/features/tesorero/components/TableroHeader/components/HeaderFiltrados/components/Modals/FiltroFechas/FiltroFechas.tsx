@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CalendarInput from "@/components/Calendar/Calendar"; // Asegúrate de que la ruta sea correcta
 import style from "./FiltroFechas.module.css";
 
@@ -14,22 +14,31 @@ const FiltroFechas = ({ setOptionsFilter, onHideModal }: Props) => {
 
 	const [startDate, setStartDate] = useState<any>("");
 	const [endDate, setEndDate] = useState<any>("");
+	const [errorText, setErrorText] = useState("");
 
 	const handleTodayClick = () => {
 		const getTodayDate = new Date();
+		getTodayDate.setHours(0, 0, 0, 0);
+
+		const getTodayDateEnd = new Date();
+		getTodayDateEnd.setHours(23, 59, 59, 999);
 
 		setStartDate(getTodayDate);
-		setEndDate(getTodayDate);
+		setEndDate(getTodayDateEnd);
 	};
 
 	const adjustDateToEndOfDay = (date: Date) => {
-    const adjustedDate = new Date(date);
-    adjustedDate.setHours(23, 59, 59, 999);
-    return adjustedDate;
-  };
-
+		const adjustedDate = new Date(date);
+		adjustedDate.setHours(23, 59, 59, 999);
+		return adjustedDate;
+	};
 
 	const handleFilterData = () => {
+		if (!endDate || !startDate) {
+			setErrorText("Es necesario ingresar ambas fechas");
+			return;
+		}
+
 		const getTodayDate = new Date();
 
 		setOptionsFilter((prev: any) => ({
@@ -39,6 +48,14 @@ const FiltroFechas = ({ setOptionsFilter, onHideModal }: Props) => {
 		}));
 		onHideModal();
 	};
+
+	useEffect(() => {
+		if (errorText) {
+			setTimeout(() => {
+				setErrorText("");
+			}, 7000);
+		}
+	}, [errorText]);
 
 	return (
 		<div className={style.container}>
@@ -51,18 +68,19 @@ const FiltroFechas = ({ setOptionsFilter, onHideModal }: Props) => {
 			</div>
 			<div className={style.container__1}>
 				<CalendarInput
-					// name={"created_at_start"}
 					value={startDate}
 					label={"Desde"}
 					onChange={(e: any) => setStartDate(e.target.value)}
 				/>
 				<CalendarInput
-					// name={"created_at_end"}
 					value={endDate}
 					label={"Hasta"}
 					onChange={(e: any) => setEndDate(e.target.value)}
 				/>
 			</div>
+
+			{errorText && <p className="msg__form__error">{errorText}</p>}
+
 			<button className={style.buttonConfirm} onClick={() => handleFilterData()}>
 				Confirmar
 			</button>
