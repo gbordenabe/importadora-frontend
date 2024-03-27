@@ -31,6 +31,8 @@ export const SaldosTransaccion = ({
 
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
+	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+
 	const { expandedSaldos, toggleExpandedSaldos } = useToggleExpandedContext();
 
 	const initialValues: any = {
@@ -51,6 +53,10 @@ export const SaldosTransaccion = ({
 		setSaldos(formik.values);
 	}, [formik.values]);
 
+	const handleCloseDropdown = () => {
+		setIsDropdownOpen(!isDropdownOpen);
+	};
+
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
 		const sectionValues = formik.values[section];
@@ -60,53 +66,49 @@ export const SaldosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		console.log('dataHandleAdd', section, newData)
-		if (formik.values[section].length === 0) {
-			const newValues = { ...formik.values };
-			const currentValues = [...formik.values[section]];
-			currentValues.unshift(newData);
-			newValues[section] = currentValues;
-			formik.setValues(newValues);
-			toggleExpandedSaldos(formik.values[section].length, "newSaldo")
-		} else {
-			if (formik.values[section].length === 1) {
-				const lastSaldo = formik.values[section][0];
-				const isLastSaldoComplete =
-					lastSaldo.number !== '' &&
-					lastSaldo.amount !== '' &&
-					lastSaldo.date !== ''
-				if (isLastSaldoComplete) {
-					const newIndex = formik.values[section].length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpandedSaldos(newIndex, "MaxOrMin")
-				} else {
-					setErrorMessage('Completa todos los campos antes de agregar otra.');
-				}
-			} else {
-				const lastBill = formik.values[section][0];
-				const isLastBillComplete =
-					(lastBill.number !== '' && !(formik.values[section].filter((element: any) => element.number === lastBill.number).length > 1)) &&
-					lastBill.amount !== '' &&
-					lastBill.date !== ''
-				if (isLastBillComplete) {
-					const newIndex = formik.values[section].length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpandedSaldos(newIndex, "MaxOrMin")
-					setErrorMessage('');
-				} else {
-					setErrorMessage('Completa todos los campos antes de agregar otra.');
-				}
+		// Validar si hay algún elemento de alguna sección sin completar
+		const isIncomplete = Object.keys(formik.values).some(key => {
+			const sectionValues = formik.values[key];
+			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
+				const lastItem = sectionValues[0];
+				return (
+					lastItem &&
+					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+				);
 			}
-		};
-	}
+			return false;
+		});
+	
+		if (isIncomplete) {
+			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
+			return;
+		}
+	
+		// Agregar el nuevo registro
+		const newValues = { ...formik.values };
+		const currentValues = [...formik.values[section]];
+		currentValues.unshift(newData);
+		newValues[section] = currentValues;
+		formik.setValues(newValues);
+	
+		// Manejar la expansión del pago
+		if (formik.values[section].length === 0) {
+			toggleExpandedSaldos(formik.values[section].length, "newSaldo");
+		} else {
+			const lastSaldo = formik.values[section][0];
+			const isLastSaldoComplete =
+				lastSaldo.number !== '' &&
+				lastSaldo.amount !== '' &&
+				lastSaldo.date !== '';
+	
+			if (isLastSaldoComplete) {
+				const newIndex = formik.values[section].length;
+				toggleExpandedSaldos(newIndex, "MaxOrMin");
+			}
+		}
+	
+		setErrorMessage('');
+	};
 
 	const handleRemove = (index: number, section: string) => {
 		const updatedValues = [...formik.values[section]];
@@ -121,9 +123,9 @@ export const SaldosTransaccion = ({
 					<h2>Saldos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' onClick={() => onChangeStatusGroup("saldos")} />
+							<SecondaryButton text="Editar" type='submit' onClick={() => {onChangeStatusGroup("saldos"); handleCloseDropdown()}} />
 						) : (
-							<PrimaryButton text="Confirmar" type='submit' onClick={() => onChangeStatusGroup("saldos")} />
+							<PrimaryButton text="Confirmar" type='submit' onClick={() => {onChangeStatusGroup("saldos"); handleCloseDropdown()}} />
 						)}
 					</div>
 				</div>
@@ -192,6 +194,7 @@ export const SaldosTransaccion = ({
 							section={section}
 							setSection={setSection}
 							errorMessage={errorMessage}
+							closeDropdown={isDropdownOpen}
 						/>
 					</div>
 				</BlockUI>

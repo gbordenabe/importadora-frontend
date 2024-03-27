@@ -11,6 +11,7 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
+import { useState } from "react";
 
 interface Props {
 	section: string,
@@ -39,6 +40,7 @@ export const DepositoLayout = ({
 	toggleExpanded
 }: Props) => {
 	const uploadFileModal = useModal();
+	const [fileToUpload, setFileToUpload] = useState<any>("");
 
 	return (
 		<>
@@ -164,6 +166,8 @@ export const DepositoLayout = ({
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
+					setFileToUpload={setFileToUpload}
+					fileToUpload={fileToUpload}
 				/>
 			</PrimeModal>
 		</>

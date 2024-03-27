@@ -27,6 +27,13 @@ const verificarYActualizar = (
                         return {loadData: true, message: "duplicatedBill"}; // Falta datos
                     }
                 }
+
+				if (sectionKey === "deposits" || sectionKey === "retentions") {
+                    if (item.file_field_name === "" || item.file_field_name === null) {
+                        console.log(`Hay un elemento sin el nombre de archivo en la propiedad file_field_name`);
+                        return { loadData: true, message: "requiredFileName" }; // Falta el nombre del archivo
+                    }
+                }
 			}
 			
 		}

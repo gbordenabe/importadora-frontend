@@ -67,20 +67,15 @@ export const NuevaTransaccion = () => {
 			await axios.post(`${url}/transaction`, data, {
 				headers,
 			});
-			// await setLoading(false);
-			// setTimeout(() => {
-				
-				navigate("/tablero-vendedor");
-			// }, 1000);
-			
-			// return;
+		
+			navigate("/tablero-vendedor");
+		
 		} catch (error: any) {
 			const statusCode = error.request.statusCode;
 			if (statusCode !== 200) {
 				errorConfirmTransaction.onVisibleModal();
 				return;
 			}
-			// Si la petición tiene éxito, se limpian los datos y se navega
 		}
 	};
 

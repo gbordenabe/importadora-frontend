@@ -1,29 +1,30 @@
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { FileUpload } from "primereact/fileupload";
 import style from "./UploadModal.module.css";
-import { useState } from "react";
+
 
 interface Props {
-	// onChangeFileProp?: any;
 	index?: any;
 	onChange?: any;
 	setFilesBlob?: any;
 	onHideModal?: any;
-	section?: any
+	section?: any;
+	setFileToUpload?:any;
+	fileToUpload?: any
 }
 
 export const UploadModal = ({
-	// onChangeFileProp,
 	index,
 	onChange,
 	setFilesBlob,
 	onHideModal,
-	section
+	section,
+	setFileToUpload,
+	fileToUpload
 }: Props) => {
-	const [fileToUpload, setFileToUpload] = useState<any>("");
-
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];
+		console.log('fileResp', fileResp)
 		setFileToUpload(fileResp);
 	};
 
@@ -47,18 +48,18 @@ export const UploadModal = ({
 			<div className={style.buttonUpload__container}>
 				<label className={style.label__input}>Subir tu archivo:</label>
 				<FileUpload
-					mode="basic"
+					mode={"basic"}
 					name="file_field_name"
 					accept="image/*"
 					maxFileSize={1000000}
 					// customUpload={true}
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload("")}
-					chooseLabel="Selecciona desde tu dispositivo"
-					className={style.file__button}
+					chooseLabel={fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
+					// className={style.file__button}
 				/>
 				{fileToUpload.objectURL && (
-					<div style={{ maxHeight: "200px" }}>
+					<div style={{ maxHeight: "200px"}}>
 						<img
 							style={{ height: "100%", objectFit: "cover" }}
 							alt={"img preview"}
@@ -78,22 +79,3 @@ export const UploadModal = ({
 		</div>
 	);
 };
-
-// const onFileSelect = (e: any) => {
-// 	const fileToUpload = e.files[0];
-// 	if (!fileToUpload) return;
-
-// 	if (setChange && index !== undefined) {
-// 		// Convirtiendo los blob para la subida adicional
-// 		const blobConvert = new Blob([fileToUpload], { type: fileToUpload.type });
-// 		setFilesBlob((prev: any) => [...prev, { fileName: fileToUpload.name, blob: blobConvert }]);
-// 		// Seteando el file_field_name
-// 		setChange((prevData: any) => {
-// 			console.log(prevData);
-// 			const newData = [...prevData];
-// 			const updateData = { ...newData[index], file_field_name: fileToUpload.name };
-// 			newData[index] = updateData;
-// 			return newData;
-// 		});
-// 	}
-// };

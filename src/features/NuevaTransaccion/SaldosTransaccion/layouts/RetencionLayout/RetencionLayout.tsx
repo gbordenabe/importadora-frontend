@@ -11,6 +11,7 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
+import { useState } from "react";
 
 interface Props {
 	section: string,
@@ -38,6 +39,7 @@ export const RetencionLayout = ({
 	toggleExpanded
 }: Props) => {
 	const uploadFileModal = useModal();
+	const [fileToUpload, setFileToUpload] = useState<any>("");
 
 	return (
 		<>
@@ -135,6 +137,8 @@ export const RetencionLayout = ({
 								onChange={handleChange}
 								setFilesBlob={setFilesBlob}
 								onHideModal={uploadFileModal.onHideModal}
+								setFileToUpload={setFileToUpload}
+								fileToUpload={fileToUpload}
 							/>
 						</PrimeModal>
 					</>

@@ -32,6 +32,10 @@ export const NuevoRegistro = ({
 }: Props) => {
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
+
+	useEffect(()=>{
+		setStepNewRegister(1)
+	},[closeDropdown])
 	
 
 	const handleStepNewRegister = () => {
@@ -39,10 +43,6 @@ export const NuevoRegistro = ({
 			handleAddNewRegister("Factura o nota de débito", null);
 			return;
 		}
-		// if(listTitle === "Tipo de saldo"){
-		// 	handleAddNewRegister("Saldo", null);
-		// 	return;
-		// }
 
 		if (stepNewRegister === 1) {
 			setStepNewRegister((prev) => prev + 1);

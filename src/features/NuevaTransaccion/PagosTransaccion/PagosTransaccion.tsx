@@ -47,14 +47,14 @@ export const PagosTransaccion = ({
 		},
 	});
 
-	useEffect(()=>{
-				setPagos(formik.values);
+	useEffect(() => {
+		setPagos(formik.values);
 	}, [formik.values]);
 
-	
+
 	const handleCloseDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+		setIsDropdownOpen(!isDropdownOpen);
+	};
 
 	const handleChange = (event: { target: { name: any; value: any; }; }, index: any, section: string) => {
 		const { name, value } = event.target;
@@ -65,54 +65,48 @@ export const PagosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		if (formik.values[section].length === 0) {
-			const newValues = { ...formik.values };
-			const currentValues = [...formik.values[section]];
-			currentValues.unshift(newData);
-			newValues[section] = currentValues;
-			formik.setValues(newValues);
-			toggleExpandedPagos(formik.values[section].length,"newPago")
-		} else {
-			if (formik.values[section].length === 1) {
-				const lastPay = formik.values[section][0];
-				const isLastPayComplete =
-					lastPay.number !== '' &&
-					lastPay.amount !== '' &&
-					lastPay.date !== ''
-				if (isLastPayComplete) {
-					const newIndex = formik.values[section].length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpandedPagos(newIndex, "MaxOrMin")
-					setErrorMessage('');
-				} else {
-					setErrorMessage('Completa todos los campos antes de agregar otra.');
-				}
-
-			} else {
-				const lastBill = formik.values[section][0];
-				const isLastBillComplete =
-					(lastBill.number !== '' && !(formik.values[section].filter((element: any) => element.number === lastBill.number).length > 1)) &&
-					lastBill.amount !== '' &&
-					lastBill.date !== ''
-				if (isLastBillComplete) {
-					const newIndex = formik.values[section].length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpandedPagos(newIndex, "MaxOrMin")
-					setErrorMessage('');
-				} else {
-					setErrorMessage('Completa todos los campos antes de agregar otra.');
-				}
+		// Validar si hay algún elemento de alguna sección sin completar
+		const isIncomplete = Object.keys(formik.values).some(key => {
+			const sectionValues = formik.values[key];
+			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
+				const lastItem = sectionValues[0];
+				return (
+					lastItem &&
+					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+				);
 			}
-
+			return false;
+		});
+	
+		if (isIncomplete) {
+			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
+			return;
 		}
+	
+		// Agregar el nuevo registro
+		const newValues = { ...formik.values };
+		const currentValues = [...formik.values[section]];
+		currentValues.unshift(newData);
+		newValues[section] = currentValues;
+		formik.setValues(newValues);
+	
+		// Manejar la expansión del pago
+		if (formik.values[section].length === 0) {
+			toggleExpandedPagos(formik.values[section].length, "newPago");
+		} else {
+			const lastPay = formik.values[section][0];
+			const isLastPayComplete =
+				lastPay.number !== '' &&
+				lastPay.amount !== '' &&
+				lastPay.date !== '';
+	
+			if (isLastPayComplete) {
+				const newIndex = formik.values[section].length;
+				toggleExpandedPagos(newIndex, "MaxOrMin");
+			}
+		}
+	
+		setErrorMessage('');
 	};
 
 	const handleRemove = (index: number, section: string) => {
@@ -128,15 +122,15 @@ export const PagosTransaccion = ({
 					<h2>Pagos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos"); handleCloseDropdown();}}/>
+							<SecondaryButton text="Editar" type='submit' onClick={() => { onChangeStatusGroup("pagos"); handleCloseDropdown(); }} />
 						) : (
-							<PrimaryButton text="Confirmar" type='submit' onClick={()=>{ onChangeStatusGroup("pagos"); handleCloseDropdown();}}/>
+							<PrimaryButton text="Confirmar" type='submit' onClick={() => { onChangeStatusGroup("pagos"); handleCloseDropdown(); }} />
 						)}
 					</div>
 				</div>
 
 				<BlockUI blocked={isBlocked} style={{ borderRadius: "5px" }}>
-					<div style={{ display: "grid", gap: "10px",  padding: "0.5rem" }}>
+					<div style={{ display: "grid", gap: "10px", padding: "0.5rem" }}>
 
 						<div className={style.box__content}>
 							{Object.keys(formik.values).map((sectionKey) => (
