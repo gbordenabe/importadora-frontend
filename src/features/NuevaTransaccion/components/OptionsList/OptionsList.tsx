@@ -9,7 +9,7 @@ interface Props {
 	closeDropdown?: any
 }
 
-export const OptionsList = ({ addNewRegister, listOptions, listTitle, closeDropdown }: Props) => {
+export const OptionsList = ({ addNewRegister, listOptions, listTitle }: Props) => {
 	
 	const [optionSelect, setOptionSelect] = useState<any>({});
 	const [subOptionSelect, setSubOptionSelect] = useState<any>({});

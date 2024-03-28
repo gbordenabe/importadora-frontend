@@ -36,7 +36,7 @@ export const FormularioCliente = ({ onHideModal }: Props) => {
 		},
 		validationSchema: Yup.object({
 			name: Yup.string().required("Este campo es requerido"),
-			business_name: Yup.string(),
+			business_name: Yup.string().required("Este campo es requerido"),
 			client_number: Yup.string().required("Este campo es requerido"),
 			cuit_cuil: Yup.string(),
 			province: Yup.string(),
