@@ -15,7 +15,9 @@ interface Props {
 	section?: any;
 	setSection?: any;
 	errorMessage?: string;
-	closeDropdown?: any
+	closeDropdown?: any;
+	// addRegister?: any;
+	// setAddRegister?: any;
 }
 
 export const NuevoRegistro = ({
@@ -28,7 +30,9 @@ export const NuevoRegistro = ({
 	setTotalAmount,	
 	setSection,
 	errorMessage,
-	closeDropdown
+	closeDropdown,
+	// addRegister,
+    // setAddRegister,
 }: Props) => {
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
@@ -45,6 +49,7 @@ export const NuevoRegistro = ({
 		}
 
 		if (stepNewRegister === 1) {
+			// if(addRegister) 
 			setStepNewRegister((prev) => prev + 1);
 		}
 	};

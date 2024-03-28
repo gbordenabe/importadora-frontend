@@ -103,7 +103,7 @@ export const SaldosTransaccion = ({
 	
 			if (isLastSaldoComplete) {
 				const newIndex = formik.values[section].length;
-				toggleExpandedSaldos(newIndex, "MaxOrMin");
+				toggleExpandedSaldos(newIndex, "newRegister");
 			}
 		}
 	

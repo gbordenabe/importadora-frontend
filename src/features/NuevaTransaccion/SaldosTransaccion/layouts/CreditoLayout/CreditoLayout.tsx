@@ -29,7 +29,6 @@ export const CreditoLayout = ({
 	expandedItems,
 	toggleExpanded
 }: Props) => {
-	console.log('expandedItems', expandedItems)
 	return (
 		<div className={style.layout__container}>
 			{expandedItems[index] ? (

@@ -76,54 +76,50 @@ export const FacturaTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		if (formik.values.bills.length === 0) {
-			const newValues = { ...formik.values };
-			const currentValues = [...formik.values[section]];
-			currentValues.unshift(newData);
-			newValues[section] = currentValues;
-			formik.setValues(newValues);
-			toggleExpanded(formik.values.bills.length,"newBill")
-		} else {
-			if (formik.values.bills.length === 1) {
-				const lastBill = formik.values.bills[0];
-				const isLastBillComplete =
-					lastBill.number !== '' &&
-					lastBill.amount !== '' &&
-					lastBill.date !== ''
-				if (isLastBillComplete) {
-					const newIndex = formik.values.bills.length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpanded(newIndex, "MaxOrMin")
-					setErrorMessage('');
-				} else {
-					setErrorMessage('Completa todos los campos de la factura actual antes de agregar otra.');
-				}
-
-			} else {
-				const lastBill = formik.values.bills[0];
-				const isLastBillComplete =
-					(lastBill.number !== '' && !(formik.values.bills.filter((bill: any) => bill.number === lastBill.number).length > 1)) &&
-					lastBill.amount !== '' &&
-					lastBill.date !== ''
-				if (isLastBillComplete) {
-					const newIndex = formik.values.bills.length;
-					const newValues = { ...formik.values };
-					const currentValues = [...formik.values[section]];
-					currentValues.unshift(newData);
-					newValues[section] = currentValues;
-					formik.setValues(newValues);
-					toggleExpanded(newIndex, "MaxOrMin")
-					setErrorMessage('');
-				} else {
-					setErrorMessage('Completa todos los campos de la factura actual antes de agregar otra.');
-				}
+		// Validar si hay algún elemento de alguna sección sin completar
+		const isIncomplete = Object.keys(formik.values).some(key => {
+			const sectionValues = formik.values[key];
+			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
+				const lastItem = sectionValues[0];
+				return (
+					lastItem &&
+					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+				);
 			}
-
+			return false;
+		});
+	
+		if (isIncomplete) {
+			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
+			return;
 		}
+	
+		// Agregar el nuevo registro
+		const newValues = { ...formik.values };
+		const currentValues = [...formik.values[section]];
+		currentValues.unshift(newData);
+		newValues[section] = currentValues;
+		formik.setValues(newValues);
+	
+		// Manejar la expansión del pago
+		if (formik.values[section].length === 0) {
+			toggleExpanded(formik.values[section].length, "newBill");
+		} else {
+			const lastBill = formik.values[section][0];
+			const isLastBillComplete =
+				lastBill.number !== '' &&
+				lastBill.amount !== '' &&
+				lastBill.date !== '';
+	
+			if (isLastBillComplete) {
+				const newIndex = formik.values[section].length;
+				toggleExpanded(newIndex, "newRegister");
+			}
+		}
+
+		
+	
+		setErrorMessage('');
 	};
 
 	const handleRemove = (index: number, section: string) => {
@@ -142,13 +138,13 @@ export const FacturaTransaccion = ({
 							<SecondaryButton
 								text="Editar"
 								type="submit"
-								onClick={() => { onChangeStatusGroup("facturas", "edicion") }}
+								onClick={() => { onChangeStatusGroup("facturas") }}
 							/>
 						) : (
 							<PrimaryButton
 								text="Confirmar"
 								type="submit"
-								onClick={() => { onChangeStatusGroup("facturas", "creacion") }}
+								onClick={() => { onChangeStatusGroup("facturas") }}
 							/>
 						)}
 					</div>

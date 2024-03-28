@@ -135,7 +135,7 @@ export const NuevaTransaccion = () => {
 		saldosSectionStatus: true,
 	});
 
-	const onChangeStatusGroup = (sectionName: string, method: string) => {
+	const onChangeStatusGroup = (sectionName: string) => {
 		let properties: string[];
 		//funcion hecha por dav
 		if (sectionName === "user") {
@@ -185,11 +185,9 @@ export const NuevaTransaccion = () => {
 					}
 				}
 
-				if (method === "creacion") {
 					Object.keys(expandedItems).map((index: any) => {
 						toggleExpanded(index, "allMin");
 					});
-				}
 
 				setGroupStatus({
 					userSectionStatus: true,

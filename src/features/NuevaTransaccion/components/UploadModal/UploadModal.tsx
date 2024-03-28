@@ -24,7 +24,6 @@ export const UploadModal = ({
 }: Props) => {
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];
-		console.log('fileResp', fileResp)
 		setFileToUpload(fileResp);
 	};
 
@@ -50,15 +49,15 @@ export const UploadModal = ({
 				<FileUpload
 					mode={"basic"}
 					name="file_field_name"
-					accept="image/*"
+					accept=".jpg,.jpeg,.png,.pdf"
 					maxFileSize={1000000}
 					// customUpload={true}
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload("")}
-					chooseLabel={fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
+					chooseLabel={fileToUpload && fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
 					// className={style.file__button}
 				/>
-				{fileToUpload.objectURL && (
+				{fileToUpload && fileToUpload.objectURL && (
 					<div style={{ maxHeight: "200px"}}>
 						<img
 							style={{ height: "100%", objectFit: "cover" }}

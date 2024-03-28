@@ -30,8 +30,10 @@ export const PagosTransaccion = ({
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+	// const [addRegister, setAddRegister] = useState(false);
 
 	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
+	
 
 	const initialValues: any = {
 		checks: [],
@@ -79,10 +81,12 @@ export const PagosTransaccion = ({
 		});
 	
 		if (isIncomplete) {
+			// setAddRegister(true)
 			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
 			return;
-		}
-	
+		} 
+		
+		// setAddRegister(false)
 		// Agregar el nuevo registro
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
@@ -102,7 +106,7 @@ export const PagosTransaccion = ({
 	
 			if (isLastPayComplete) {
 				const newIndex = formik.values[section].length;
-				toggleExpandedPagos(newIndex, "MaxOrMin");
+				toggleExpandedPagos(newIndex, "newRegister");
 			}
 		}
 	
@@ -195,6 +199,8 @@ export const PagosTransaccion = ({
 							setSection={setSection}
 							errorMessage={errorMessage}
 							closeDropdown={isDropdownOpen}
+							// addRegister={addRegister}
+							// setAddRegister={setAddRegister}
 						/>
 					</div>
 				</BlockUI>

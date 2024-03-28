@@ -25,62 +25,82 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
   const [expandedSaldos, setExpandedSaldos] = useState<{ [key: number]: boolean }>({});
   const [expandedPagos, setExpandedPagos] = useState<{ [key: number]: boolean }>({});
-
+  // console.log('expandedItem', expandedPagos)
   const toggleExpanded = (index: number, method: string) => {
-    if (method === "MaxOrMin") { //maximizar y minimizar
-      setExpandedItems(prev => ({
-        ...prev,
-        [index]: !prev[index],
-      }));
-    } else if (method === "newBill") { //abierto
+   
+  
+    if (method === "newBill") { //abierto
       setExpandedItems(prev => ({
         ...prev,
         [index]: false,
       }));
-    } else { //cerrado
+    } else if (method === "allMin") { //cerrado
       setExpandedItems(prev => ({
         ...prev,
         [index]: true,
       }));
-    }
-  };
-
-  const toggleExpandedSaldos = (index: number, method: string) => {
-    if (method === "MaxOrMin") { //maximizar y minimizar
-      setExpandedSaldos(prev => ({
-        ...prev,
-        [index]: !prev[index],
-      }));
-    } else if (method === "newSaldo") { //abierto
-      setExpandedSaldos(prev => ({
-        ...prev,
-        [index]: false,
-      }));
-    } else { //cerrado
-      setExpandedSaldos(prev => ({
-        ...prev,
-        [index]: true,
-      }));
-    }
+    }  else {
+       setExpandedItems(prev => {
+            const newExpandedItems: { [key: number]: boolean } = {};
+            Object.keys(prev).forEach((key) => {
+              const keyElement = parseInt(key);
+              newExpandedItems[keyElement] = true;
+            });
+            newExpandedItems[index] = true;
+            newExpandedItems[0] = false;
+            return newExpandedItems;
+        });
+  }
   };
 
   const toggleExpandedPagos = (index: number, method: string) => {
-    if (method === "MaxOrMin") { //maximizar y minimizar
-      setExpandedPagos(prev => ({
-        ...prev,
-        [index]: !prev[index],
-      }));
-    } else if (method === "newPago") { //abierto
+    if (method === "newPago") { //abierto
       setExpandedPagos(prev => ({
         ...prev,
         [index]: false,
       }));
-    } else { //cerrado
+    } else if (method === "allMin") { //cerrado
       setExpandedPagos(prev => ({
         ...prev,
         [index]: true,
       }));
-    }
+    }  else {
+      setExpandedPagos(prev => {
+            const newExpandedItems: { [key: number]: boolean } = {};
+            Object.keys(prev).forEach((key) => {
+              const keyElement = parseInt(key);
+              newExpandedItems[keyElement] = true;
+            });
+            newExpandedItems[index] = true;
+            newExpandedItems[0] = false;
+            return newExpandedItems;
+        });
+  }
+  };
+
+  const toggleExpandedSaldos = (index: number, method: string) => {
+    if (method === "newSaldo") { //abierto
+      setExpandedSaldos(prev => ({
+        ...prev,
+        [index]: false,
+      }));
+    } else if (method === "allMin") { //cerrado
+      setExpandedSaldos(prev => ({
+        ...prev,
+        [index]: true,
+      }));
+    }  else {
+      setExpandedSaldos(prev => {
+            const newExpandedItems: { [key: number]: boolean } = {};
+            Object.keys(prev).forEach((key) => {
+              const keyElement = parseInt(key);
+              newExpandedItems[keyElement] = true;
+            });
+            newExpandedItems[index] = true;
+            newExpandedItems[0] = false;
+            return newExpandedItems;
+        });
+  }
   };
 
   const contextValue: ToggleExpandedContextType
