@@ -41,14 +41,10 @@ export const NuevaTransaccion = () => {
 
 	const [filesBlob, setFilesBlob] = useState([]);
 	const [loading, setLoading] = useState<boolean>(false);
-	console.log('setLoading', setLoading)
 
 	const [errorDuplicatedBill, setErrorDuplicatedBill] = useState(false);
 	const [errorRequiredData, setErrorRequiredData] = useState(false);
-	const [errorWithoutBill, setErrorWithoutBill] = useState(false);
-	console.log(errorWithoutBill); // para que el lint permita realizar el build, uso del estado.
 
-	
 	const { expandedItems, toggleExpanded, expandedSaldos, toggleExpandedSaldos, expandedPagos, toggleExpandedPagos} = useToggleExpandedContext();
 
 	// Total status
@@ -58,8 +54,9 @@ export const NuevaTransaccion = () => {
 
 	// Crear transacción
 	const createTransaction = async (data: any) => {
+		setLoading(true);
 		try {
-			// setLoading(true);
+
 			const token = localStorage.getItem("rt__importadora");
 			const headers = {
 				Authorization: `Bearer ${token}`,
@@ -67,23 +64,18 @@ export const NuevaTransaccion = () => {
 			await axios.post(`${url}/transaction`, data, {
 				headers,
 			});
-		
+
 			navigate("/tablero-vendedor");
-		
 		} catch (error: any) {
-			const statusCode = error.request.statusCode;
-			if (statusCode !== 200) {
-				errorConfirmTransaction.onVisibleModal();
-				return;
-			}
+			errorConfirmTransaction.onVisibleModal();
+		}
+		finally {
+			setLoading(false);
 		}
 	};
 
 	const handleCreateTransaction = () => {
-		// if (facturas.length < 1) {
-		// 	errorTransaction.onVisibleModal();
-		// 	return
-		// };
+
 		if (totalFacturas != totalPagos + totalSaldos) {
 			errorTransaction.onVisibleModal();
 			return;
@@ -170,7 +162,6 @@ export const NuevaTransaccion = () => {
 		if (sectionName === "facturas") {
 			if (!groupStatus.facturaSectionStatus) {
 				if (facturas && facturas.bills.length < 1) {
-					setErrorWithoutBill(true);
 					errorBillValidation.onVisibleModal();
 					return;
 				}
@@ -283,63 +274,63 @@ export const NuevaTransaccion = () => {
 	return (
 		<>
 			<AppStructure>
-				{loading ? (
-					<Loading />
-				) : (
-					<>
-						<MainHeader />
-						<ContentStructure>
-							<MainTitle
-								title="Nueva Transacción"
-								onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
-								isShowModal={true}
-							/>
 
-							<BoxContent>
-								<HeaderCreateTransaccion sku={sku} />
+				<>
+					<MainHeader />
+					<ContentStructure>
+						<MainTitle
+							title="Nueva Transacción"
+							onShowModal={() => cancelarTransaccionModal.onVisibleModal()}
+							isShowModal={true}
+						/>
 
-								<div className={style.tipo__documentos__container}>
-									<div className={style.tipo__documentos__group}>
-										<UsuariosTransaccion
-											setUsuarios={setUsuarios}
-											isBlocked={groupStatus.userSectionStatus}
-											onChangeStatusGroup={onChangeStatusGroup}
-										/>
+						<BoxContent>
+							<HeaderCreateTransaccion sku={sku} />
 
-										<FacturaTransaccion
-											facturas={facturas}
-											setFacturas={setFacturas}
-											isBlocked={groupStatus.facturaSectionStatus}
-											onChangeStatusGroup={onChangeStatusGroup}
-											setTotalAmount={setTotalFacturas}
-										/>
-									</div>
+							<div className={style.tipo__documentos__container}>
+								<div className={style.tipo__documentos__group}>
+									<UsuariosTransaccion
+										setUsuarios={setUsuarios}
+										isBlocked={groupStatus.userSectionStatus}
+										onChangeStatusGroup={onChangeStatusGroup}
+									/>
 
-									<div className={style.tipo__documentos__group}>
-										<PagosTransaccion
-											setPagos={setPagos}
-											isBlocked={groupStatus.pagosSectionStatus}
-											onChangeStatusGroup={onChangeStatusGroup}
-											setTotalAmount={setTotalPagos}
-											setFilesBlob={setFilesBlob}
-										/>
-
-										<SaldosTransaccion
-											setSaldos={setSaldos}
-											isBlocked={groupStatus.saldosSectionStatus}
-											onChangeStatusGroup={onChangeStatusGroup}
-											setTotalAmount={setTotalSaldos}
-											setFilesBlob={setFilesBlob}
-										/>
-									</div>
+									<FacturaTransaccion
+										facturas={facturas}
+										setFacturas={setFacturas}
+										isBlocked={groupStatus.facturaSectionStatus}
+										onChangeStatusGroup={onChangeStatusGroup}
+										setTotalAmount={setTotalFacturas}
+									/>
 								</div>
-							</BoxContent>
-							<div className={style.container__1}>
-								<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
+
+								<div className={style.tipo__documentos__group}>
+									<PagosTransaccion
+										setPagos={setPagos}
+										isBlocked={groupStatus.pagosSectionStatus}
+										onChangeStatusGroup={onChangeStatusGroup}
+										setTotalAmount={setTotalPagos}
+										setFilesBlob={setFilesBlob}
+									/>
+
+									<SaldosTransaccion
+										setSaldos={setSaldos}
+										isBlocked={groupStatus.saldosSectionStatus}
+										onChangeStatusGroup={onChangeStatusGroup}
+										setTotalAmount={setTotalSaldos}
+										setFilesBlob={setFilesBlob}
+									/>
+								</div>
 							</div>
-						</ContentStructure>
-					</>
-				)}
+						</BoxContent>
+
+						<div className={style.container__1}>
+							<MainButton text="Confirmar transacción" onClick={handleCreateTransaction} />
+						</div>
+					</ContentStructure>
+					{loading && <Loading />}
+				</>
+
 			</AppStructure>
 
 			{/* ErrorSum Modal */}
@@ -401,13 +392,13 @@ export const NuevaTransaccion = () => {
 						errorDuplicatedBill
 							? "No puedes continuar con una factura con el mismo número"
 							: errorRequiredData
-							? "Faltar completar datos requeridos"
-							: "Tienes que cargar una factura para confirmar"
+								? "Faltar completar datos requeridos"
+								: "Tienes que cargar una factura para confirmar"
 					}
 					textButton="Volver"
 				/>
 			</PrimeModal>
-			{/* )} */}
+
 		</>
 	);
 };
