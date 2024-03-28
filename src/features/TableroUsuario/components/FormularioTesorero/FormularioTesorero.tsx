@@ -104,7 +104,7 @@ export const FormularioTesorero = ({ setOptionCreateSelect, onHideModal }: Props
 					<TextBoxField
 						textLabel="Contraseña:"
 						name="password"
-						type="password"
+						// type="password"
 						value={values.password || ""}
 						onChange={handleChange}
 						onBlur={handleBlur}

@@ -74,6 +74,13 @@ export const HeaderFiltrados = ({
 
 	const [activeFilterButton, setActiveFilterButton] = useState(false);
 
+	const onSetStatusFilter = (documentsType: any) => {
+		setOptionsFilter((prev: any) => ({
+			...prev,
+			...documentsType,
+		}));
+	};
+
 	return (
 		<>
 			<div className={style.header__filtrados__container}>
@@ -99,7 +106,7 @@ export const HeaderFiltrados = ({
 				<div className={style.header__filtrados__content}>
 					{/* First row */}
 
-					<StatusFilter />
+					<StatusFilter onSetStatusFilter={onSetStatusFilter} />
 
 					{/* Second row */}
 

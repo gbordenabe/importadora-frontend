@@ -4,10 +4,10 @@ import FiltroConEstado from "@/features/vendedor/components/TableroHeader/compon
 import { useModal } from "@/hooks/useModal";
 import { useState } from "react";
 
-export const StatusFilter = () => {
+export const StatusFilter = ({ onSetStatusFilter }: any) => {
 	const { modalStatus, onVisibleModal, onHideModal } = useModal();
 
-	const [status] = useState("ALL");
+	const [status, setStatus] = useState("ALL");
 	//Tipos de status:
 	// ALL = Todos
 	// OK = Aprobado
@@ -15,8 +15,8 @@ export const StatusFilter = () => {
 	// EDITED = Edición
 	// PENDING = En revisión
 
-	const [allDocuments] = useState(true);
-	const [typeDocument] = useState({
+	const [allDocuments, setAllDocuments] = useState(true);
+	const [typeDocument, setTypeDocument] = useState({
 		bill_status: "",
 		cash_status: "",
 		check_status: "",
@@ -26,9 +26,11 @@ export const StatusFilter = () => {
 		retention_status: "",
 	});
 
-	// const confirmDocument = (newStatus: any) => {
-	// 	console.log(newStatus);
-	// };
+	const onSetFilterDocument = (newStatus: any, typeDocument: any, isAllDocument: boolean) => {
+		setStatus(newStatus);
+		setTypeDocument(typeDocument);
+		setAllDocuments(isAllDocument);
+	};
 
 	return (
 		<>
@@ -108,7 +110,13 @@ export const StatusFilter = () => {
 			</div>
 
 			<CustomModal isVisible={modalStatus} onHide={onHideModal} width="45%">
-				<FiltroConEstado />
+				<FiltroConEstado
+					onSetFilterDocument={onSetFilterDocument}
+					onHideModal={onHideModal}
+					currentValue={typeDocument}
+					currentStatus={status}
+					onSetStatusFilter={onSetStatusFilter}
+				/>
 			</CustomModal>
 		</>
 	);

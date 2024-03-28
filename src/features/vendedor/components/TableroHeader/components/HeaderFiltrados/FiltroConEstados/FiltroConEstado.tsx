@@ -1,121 +1,122 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import style from "./FiltroConEstado.module.css";
 
-const FiltroConEstado = () => {
-	const [status, setStatus] = useState("ALL");
-	const [typeDocument, setTypeDocument] = useState<any>({
-		bill_status: "ALL",
-		cash_status: "ALL",
-		check_status: "ALL",
-		credit_note_status: "ALL",
-		credit_status: "ALL",
-		deposit_status: "ALL",
-		retention_status: "ALL",
-	});
-	const [allDocumentsChecked, setAllDocumentsChecked] = useState(true);
+const FiltroConEstado = ({
+	onSetFilterDocument,
+	onHideModal,
+	currentValue,
+	currentStatus,
+	onSetStatusFilter,
+}: any) => {
+	const documentTypes = {
+		bill_status: "Factura o débito",
+		cash_status: "Efectivo",
+		check_status: "Cheques",
+		deposit_status: "Deposito o transferencia",
+		credit_status: "Solicitud de crédito",
+		credit_note_status: "NC o saldo recibido",
+		retention_status: "Retención impositiva",
+	};
 
-	// Set all document types when the component mounts or when status is set to 'ALL'
-	useEffect(() => {
-		if (status === "ALL") {
-			setTypeDocument({
-				bill_status: "ALL",
-				cash_status: "ALL",
-				check_status: "ALL",
-				credit_note_status: "ALL",
-				credit_status: "ALL",
-				deposit_status: "ALL",
-				retention_status: "ALL",
-			});
-		}
-	}, [status]);
+	const statusTypes = {
+		ALL: "Todos los estados",
+		PENDING: "En revisión",
+		TO_CHANGE: "Solicitud",
+		EDITED: "Edición",
+		OK: "Aprobado",
+	};
+
+	const [status, setStatus] = useState(currentStatus);
+	// const [typeDocument, setTypeDocument] = useState<any>({
+	// 	bill_status: "ALL",
+	// 	cash_status: "ALL",
+	// 	check_status: "ALL",
+	// 	credit_note_status: "ALL",
+	// 	credit_status: "ALL",
+	// 	deposit_status: "ALL",
+	// 	retention_status: "ALL",
+	// });
+	const [typeDocument, setTypeDocument] = useState<any>(currentValue);
 
 	const handleStatusChange = (selectedStatus: any) => {
 		setStatus(selectedStatus);
-		if (selectedStatus === "ALL") {
-			setAllDocumentsChecked(true);
-		} else {
-			setAllDocumentsChecked(false);
-		}
+
+		setTypeDocument(
+			Object.fromEntries(
+				Object.entries(typeDocument).map(([key]) => {
+					return [key, selectedStatus];
+				})
+			)
+		);
 	};
 
-	const handleAllDocumentsChange = () => {
-		const newCheckedState = !allDocumentsChecked;
-		setAllDocumentsChecked(newCheckedState);
-		const newTypeDocumentState = newCheckedState ? "ALL" : "";
-		setTypeDocument({
-			bill_status: newTypeDocumentState,
-			cash_status: newTypeDocumentState,
-			check_status: newTypeDocumentState,
-			credit_note_status: newTypeDocumentState,
-			credit_status: newTypeDocumentState,
-			deposit_status: newTypeDocumentState,
-			retention_status: newTypeDocumentState,
-		});
-	};
-
-	const handleTypeDocumentChange = (docType: any) => {
-		setTypeDocument((prev: any) => ({
-			...prev,
-			[docType]: prev[docType] === "ALL" ? "" : "ALL",
+	const handleTypeDocumentChange = (docType: string) => {
+		setTypeDocument((prevState: any) => ({
+			...prevState,
+			[docType]: prevState[docType] === status ? "" : status,
 		}));
-		setAllDocumentsChecked(false);
 	};
 
-	const renderStatusCheckbox = (stat: any, label: any, colorClass: any) => (
-		<div key={stat} className={style.itemStateColor}>
-			<input type="checkbox" checked={status === stat} onChange={() => handleStatusChange(stat)} />
-			{stat !== "ALL" && (
-				<div className={`${style[colorClass]} ${style.header__filtrados__select__color}`}></div>
-			)}
-			<span className={style.titleState}>{label}</span>
-		</div>
-	);
+	const confirmFilter = () => {
+		let isAll = verificarPropiedadesConValor(typeDocument);
+		let typeDocumentToSend = { ...typeDocument };
+		if (validarAlMenosUnAll(typeDocumentToSend)) {
+			convertirSiTodosSonAll(typeDocumentToSend);
+		}
+		onSetFilterDocument(status, typeDocumentToSend, isAll);
 
-	const renderTypeDocumentCheckbox = (key: any, label: any) => (
-		<div key={key} className={style.itemStateColor}>
-			<input
-				type="checkbox"
-				checked={typeDocument[key] === "ALL"}
-				onChange={() => handleTypeDocumentChange(key)}
-			/>
-			<span className={style.titleState}>{label}</span>
-		</div>
-	);
+		// Envio de data fetch
+		onSetStatusFilter(typeDocumentToSend);
 
-	const confirm = () => {
-		console.log(typeDocument);
-		console.log(status);
+		onHideModal();
 	};
+
+	useEffect(() => {
+		if (currentValue) {
+			let newCurrentValue = convertirATodosAllSiEstanVacios({ ...currentValue });
+			setTypeDocument(newCurrentValue);
+		}
+	}, [currentValue]);
 
 	return (
 		<div className={style.filtroConEstado}>
 			<div className={style.containerChecks}>
 				<div className={style.containerMedium}>
-					{renderStatusCheckbox("ALL", "Todos", null)}
-					{renderStatusCheckbox("PENDING", "En revisión", "header__filtrados__blue")}
-					{renderStatusCheckbox("TO_CHANGE", "Solicitud", "header__filtrados__red")}
-					{renderStatusCheckbox("EDITED", "Edición", "header__filtrados__yellow")}
-					{renderStatusCheckbox("OK", "Aprobado", "header__filtrados__green")}
+					{Object.entries(statusTypes).map(([key, value]) => (
+						<div key={key} className={style.itemStateColor}>
+							<input
+								type="checkbox"
+								checked={status === key}
+								onChange={() => handleStatusChange(key)}
+							/>
+							{key != "ALL" && (
+								<div
+									className={`${style.header__filtrados__select__color} ${
+										key == "PENDING" && style.header__filtrados__blue
+									}  ${key == "TO_CHANGE" && style.header__filtrados__red} ${
+										key == "EDITED" && style.header__filtrados__yellow
+									} ${key == "OK" && style.header__filtrados__green} `}
+								></div>
+							)}
+							<span className={style.titleState}>{value}</span>
+						</div>
+					))}
 				</div>
+
 				<div className={style.containerMedium}>
-					<div className={style.itemStateColor}>
-						<input
-							type="checkbox"
-							checked={allDocumentsChecked}
-							onChange={handleAllDocumentsChange}
-						/>
-						<span className={style.titleState}>Todos</span>
-					</div>
-					{renderTypeDocumentCheckbox("bill_status", "Factura o débito")}
-					{renderTypeDocumentCheckbox("cash_status", "Efectivo / Transferencia")}
-					{renderTypeDocumentCheckbox("check_status", "Cheques")}
-					{renderTypeDocumentCheckbox("deposit_status", "Deposito")}
-					{renderTypeDocumentCheckbox("credit_status", "Crédito")}
-					{renderTypeDocumentCheckbox("credit_note_status", "Nota de crédito")}
-					{renderTypeDocumentCheckbox("retention_status", "Retención")}
+					{Object.entries(documentTypes).map(([key, value]) => (
+						<div key={key} className={style.itemStateColor}>
+							<input
+								type="checkbox"
+								checked={typeDocument[key] === status}
+								onChange={() => handleTypeDocumentChange(key)}
+							/>
+							<span className={style.titleState}>{value}</span>
+						</div>
+					))}
 				</div>
 			</div>
-			<button className={style.buttonConfirm} onClick={confirm}>
+			<button className={style.buttonConfirm} onClick={confirmFilter}>
 				Confirmar
 			</button>
 		</div>
@@ -123,3 +124,34 @@ const FiltroConEstado = () => {
 };
 
 export default FiltroConEstado;
+
+const verificarPropiedadesConValor = (obj: any) => {
+	for (let propiedad in obj) {
+		if (!obj[propiedad]) {
+			return false;
+		}
+	}
+	return true;
+};
+
+const validarAlMenosUnAll = (obj: any) => {
+	return Object.values(obj).some((valor) => valor === "ALL");
+};
+
+const convertirSiTodosSonAll = (obj: any) => {
+	const todosSonAll = Object.values(obj).every((valor) => valor === "ALL");
+
+	if (todosSonAll) {
+		Object.keys(obj).forEach((key) => (obj[key] = ""));
+	}
+};
+
+const convertirATodosAllSiEstanVacios = (obj: any) => {
+	const todosEstanVacios = Object.values(obj).every((valor) => valor === "");
+
+	if (todosEstanVacios) {
+		Object.keys(obj).forEach((key) => (obj[key] = "ALL"));
+	}
+
+	return obj;
+};
