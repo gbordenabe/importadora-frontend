@@ -55,7 +55,7 @@ export const RetencionLayout = ({
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
 							<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
 						</div>
 					</div>
@@ -81,7 +81,7 @@ export const RetencionLayout = ({
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
 								<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
 							</div>
 						</div>

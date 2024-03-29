@@ -60,7 +60,7 @@ export const DepositoLayout = ({
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos")} />
 							<DeleteButton onClick={() => handleRemove(index, 'deposits')} />
 						</div>
 					</div>
@@ -87,7 +87,7 @@ export const DepositoLayout = ({
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => toggleExpanded(index,"MaxOrMin")} />
+								<MinimziarButton onClick={() => toggleExpanded(index,"MaxOrMinPagos")} />
 								<DeleteButton onClick={() => handleRemove(index, 'deposits')} />
 							</div>
 						</div>

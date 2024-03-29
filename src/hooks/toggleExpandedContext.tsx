@@ -25,9 +25,9 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
   const [expandedSaldos, setExpandedSaldos] = useState<{ [key: number]: boolean }>({});
   const [expandedPagos, setExpandedPagos] = useState<{ [key: number]: boolean }>({});
-  // console.log('expandedItem', expandedPagos)
+ 
   const toggleExpanded = (index: number, method: string) => {
-    if(method === 'MaxOrMin') {
+    if(method === 'MaxOrMinBill') {
       setExpandedItems(prev => ({
         ...prev,
         [index]: !prev[index]
@@ -57,8 +57,8 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   };
 
   const toggleExpandedPagos = (index: number, method: string) => {
-    if(method === 'MaxOrMin') {
-      setExpandedItems(prev => ({
+    if(method === 'MaxOrMinPagos') {
+      setExpandedPagos(prev => ({
         ...prev,
         [index]: !prev[index]
       }));
@@ -87,8 +87,8 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   };
 
   const toggleExpandedSaldos = (index: number, method: string) => {
-    if(method === 'MaxOrMin') {
-      setExpandedItems(prev => ({
+    if(method === 'MaxOrMinSaldos') {
+      setExpandedSaldos(prev => ({
         ...prev,
         [index]: !prev[index]
       }));

@@ -16,8 +16,8 @@ interface Props {
 	setSection?: any;
 	errorMessage?: string;
 	closeDropdown?: any;
-	// addRegister?: any;
-	// setAddRegister?: any;
+	addRegister?: any;
+	setErrorMessage?: any
 }
 
 export const NuevoRegistro = ({
@@ -31,8 +31,8 @@ export const NuevoRegistro = ({
 	setSection,
 	errorMessage,
 	closeDropdown,
-	// addRegister,
-    // setAddRegister,
+	addRegister,
+	setErrorMessage
 }: Props) => {
 	const [stepNewRegister, setStepNewRegister] = useState(1);
 	const [total, setTotal] = useState(0);
@@ -40,6 +40,14 @@ export const NuevoRegistro = ({
 	useEffect(()=>{
 		setStepNewRegister(1)
 	},[closeDropdown])
+
+	useEffect(()=>{
+		if(addRegister) {
+		setStepNewRegister(1)
+		setErrorMessage('Completa todos los campos antes de agregar otro registro.');
+		}
+	},[addRegister])
+	
 	
 
 	const handleStepNewRegister = () => {
@@ -48,10 +56,11 @@ export const NuevoRegistro = ({
 			return;
 		}
 
+		if(!addRegister) {
 		if (stepNewRegister === 1) {
-			// if(addRegister) 
 			setStepNewRegister((prev) => prev + 1);
 		}
+	}
 	};
 
 	const calculateTotal = () => {

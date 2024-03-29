@@ -32,6 +32,7 @@ export const SaldosTransaccion = ({
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+	const [addRegister, setAddRegister] = useState(false);
 
 	const { expandedSaldos, toggleExpandedSaldos } = useToggleExpandedContext();
 
@@ -66,24 +67,6 @@ export const SaldosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		// Validar si hay algún elemento de alguna sección sin completar
-		const isIncomplete = Object.keys(formik.values).some(key => {
-			const sectionValues = formik.values[key];
-			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
-				const lastItem = sectionValues[0];
-				return (
-					lastItem &&
-					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
-				);
-			}
-			return false;
-		});
-	
-		if (isIncomplete) {
-			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
-			return;
-		}
-	
 		// Agregar el nuevo registro
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
@@ -115,6 +98,34 @@ export const SaldosTransaccion = ({
 		updatedValues.splice(index, 1);
 		formik.setFieldValue(section, updatedValues);
 	};
+
+	useEffect(() => {
+		const isIncomplete = Object.keys(formik.values).some(key => {
+			const sectionValues = formik.values[key];
+			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
+				const lastItem = sectionValues[0];
+
+				if (lastItem.tipo === 'Retención impositiva') {
+					const completedRegisterDeposits = lastItem &&
+						(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '' || lastItem.file_field_name === '')
+					return completedRegisterDeposits
+				}
+
+				const completedRegister = lastItem &&
+					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+				return completedRegister
+			}
+			return false;
+		});
+
+		if (isIncomplete) {
+			setAddRegister(true)
+			return;
+		}
+		setAddRegister(false)
+		setErrorMessage('');
+
+	}, [handleChange, handleRemove])
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
@@ -195,6 +206,8 @@ export const SaldosTransaccion = ({
 							setSection={setSection}
 							errorMessage={errorMessage}
 							closeDropdown={isDropdownOpen}
+							addRegister={addRegister}
+							setErrorMessage={setErrorMessage}
 						/>
 					</div>
 				</BlockUI>

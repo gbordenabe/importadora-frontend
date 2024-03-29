@@ -40,7 +40,7 @@ export const FacturaLayout = ({
 						<ChipText text={`Monto: ${formatPrice(values.amount || 0)}`} />
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinBill")} />
 						<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 					</div>
 				</div>
@@ -52,7 +52,7 @@ export const FacturaLayout = ({
 							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinBill")} />
 							<DeleteButton onClick={() => handleRemove(index, 'bills')} />
 						</div>
 					</div>

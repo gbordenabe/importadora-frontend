@@ -30,10 +30,10 @@ export const PagosTransaccion = ({
 	const [section, setSection] = useState<string>('');
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-	// const [addRegister, setAddRegister] = useState(false);
+	const [addRegister, setAddRegister] = useState(false);
 
 	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
-	
+
 
 	const initialValues: any = {
 		checks: [],
@@ -67,33 +67,13 @@ export const PagosTransaccion = ({
 	};
 
 	const handleAdd = (section: string, newData: any) => {
-		// Validar si hay algún elemento de alguna sección sin completar
-		const isIncomplete = Object.keys(formik.values).some(key => {
-			const sectionValues = formik.values[key];
-			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
-				const lastItem = sectionValues[0];
-				return (
-					lastItem &&
-					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
-				);
-			}
-			return false;
-		});
-	
-		if (isIncomplete) {
-			// setAddRegister(true)
-			setErrorMessage('Completa todos los campos antes de agregar otro registro.');
-			return;
-		} 
-		
-		// setAddRegister(false)
 		// Agregar el nuevo registro
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
 		currentValues.unshift(newData);
 		newValues[section] = currentValues;
 		formik.setValues(newValues);
-	
+
 		// Manejar la expansión del pago
 		if (formik.values[section].length === 0) {
 			toggleExpandedPagos(formik.values[section].length, "newPago");
@@ -103,21 +83,51 @@ export const PagosTransaccion = ({
 				lastPay.number !== '' &&
 				lastPay.amount !== '' &&
 				lastPay.date !== '';
-	
+
 			if (isLastPayComplete) {
 				const newIndex = formik.values[section].length;
 				toggleExpandedPagos(newIndex, "newRegister");
 			}
 		}
-	
-		setErrorMessage('');
+
+
 	};
 
 	const handleRemove = (index: number, section: string) => {
 		const updatedValues = [...formik.values[section]];
 		updatedValues.splice(index, 1);
 		formik.setFieldValue(section, updatedValues);
+
+
 	};
+
+	useEffect(() => {
+		const isIncomplete = Object.keys(formik.values).some(key => {
+			const sectionValues = formik.values[key];
+			if (Array.isArray(sectionValues) && sectionValues.length > 0) {
+				const lastItem = sectionValues[0];
+
+				if (lastItem.tipo === 'Depósito / Transferencia') {
+					const completedRegisterDeposits = lastItem &&
+						(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '' || lastItem.file_field_name === '')
+					return completedRegisterDeposits
+				}
+
+				const completedRegister = lastItem &&
+					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+				return completedRegister
+			}
+			return false;
+		});
+
+		if (isIncomplete) {
+			setAddRegister(true)
+			return;
+		}
+		setAddRegister(false)
+		setErrorMessage('');
+
+	}, [handleChange, handleRemove])
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
@@ -199,8 +209,8 @@ export const PagosTransaccion = ({
 							setSection={setSection}
 							errorMessage={errorMessage}
 							closeDropdown={isDropdownOpen}
-							// addRegister={addRegister}
-							// setAddRegister={setAddRegister}
+							addRegister={addRegister}
+							setErrorMessage={setErrorMessage}
 						/>
 					</div>
 				</BlockUI>

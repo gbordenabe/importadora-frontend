@@ -58,7 +58,7 @@ export const EfectivoTransferenciaLayout = ({
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos")} />
 							<DeleteButton onClick={() => handleRemove(index, 'cash')} />
 						</div>
 					</div>
@@ -78,7 +78,7 @@ export const EfectivoTransferenciaLayout = ({
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos")} />
 								<DeleteButton onClick={() => handleRemove(index, 'cash')} />
 							</div>
 						</div>

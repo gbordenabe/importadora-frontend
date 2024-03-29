@@ -42,7 +42,7 @@ export const CreditoLayout = ({
 					</div>
 
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
 						<DeleteButton onClick={() => handleRemove(index, 'credits')} />
 					</div>
 				</div>
@@ -54,7 +54,7 @@ export const CreditoLayout = ({
 							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMin")} />
+							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
 							<DeleteButton onClick={() => handleRemove(index, 'credits')} />
 						</div>
 					</div>
