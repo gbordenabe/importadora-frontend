@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App.tsx";
 import "./index.css";
@@ -15,10 +14,10 @@ import { ToggleExpandedProvider } from "./hooks/toggleExpandedContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	// <React.StrictMode>
-		<Provider store={store}>
-			<ToggleExpandedProvider>
-				<App />
-			</ToggleExpandedProvider>
-		</Provider>
+	<Provider store={store}>
+		<ToggleExpandedProvider>
+			<App />
+		</ToggleExpandedProvider>
+	</Provider>
 	// </React.StrictMode>
 );
