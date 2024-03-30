@@ -1,6 +1,7 @@
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { FileUpload } from "primereact/fileupload";
 import style from "./UploadModal.module.css";
+import { TiUpload, TiDelete } from 'react-icons/ti';
 
 
 interface Props {
@@ -64,7 +65,8 @@ export const UploadModal = ({
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload("")}
 					chooseLabel={fileToUpload && fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
-				// className={style.file__button}
+					chooseOptions={{ icon: fileToUpload && fileToUpload.objectURL ? <TiDelete style={{ fontSize: '2rem',  margin: '0 1.5px' }} /> : <TiUpload style={{ fontSize: '1rem',  margin: '0 10px'  }} /> }}
+			
 				/>
 				{fileToUpload && fileToUpload.objectURL && (
 					<div style={{ maxHeight: "200px" }}>
