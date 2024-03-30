@@ -1,47 +1,111 @@
-import { useEffect, useState } from "react";
-import style from "./TableroVendedor.module.css";
+import _ from "lodash";
 import { AppStructure } from "../../../components/AppStructure/AppStructure";
-import { MainHeader } from "../../../components/MainHeader/MainHeader";
-import { TableroHeader } from "../components/TableroHeader/TableroHeader";
-import { ListItemRow } from "../components/ListItemRow/ListItemRow";
-import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
-import { useModal } from "@/hooks/useModal";
-import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
-import { useAppSelector } from "@/store/hooks";
-import axios from "axios";
-import { url } from "@/connections/mainApi";
 import { fechaSemana } from "@/helpers/fechaSemana";
+import { ListItemRow } from "../components/ListItemRow/ListItemRow";
+import { MainHeader } from "../../../components/MainHeader/MainHeader";
+import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
+import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
+import { TableroHeader } from "../components/TableroHeader/TableroHeader";
+import { url } from "@/connections/mainApi";
+import { useAppSelector } from "@/store/hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useModal } from "@/hooks/useModal";
+import axios from "axios";
+import Loading from "@/components/Loading/Loading";
+import style from "./TableroVendedor.module.css";
 
 export const TableroVendedor = () => {
 	const menuAyuda = useModal();
 	const profileEdit = useModal();
 	const { login } = useAppSelector((state) => state.auth);
-	const [dataTransaction, setdataTransaction] = useState<any>([]);
-	const [optionsFilter, setOptionsFilter] = useState<any>(initialData);
+	const [dataTransaction, setDataTransaction] = useState<any>([]);
+	const [optionsFilter, setOptionsFilter] = useState<any>(initialFilters);
+	const [loading, setLoading] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
 
-	const token = localStorage.getItem("rt__importadora");
+	const [hasMore, setHasMore] = useState(true);
+	const listRef = useRef(null);
 
-	const fetchFilterData = () => {
-		const { clientName, empresaName, ...restData } = optionsFilter;
-
-		axios
-			.post(`${url}/transaction/get-all/mine`, restData, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then((res) => {
-				setdataTransaction(res.data);
-			})
-			.catch((error) => console.error("Hubo un error al obtener los datos", error));
-	};
+	const loadingRef = useRef(loading);
 
 	useEffect(() => {
-		fetchFilterData();
+		loadingRef.current = loading;
+	}, [loading]);
+
+	const cancelTokenSource = useRef(axios.CancelToken.source());
+
+	useEffect(() => {
+		setDataTransaction([]);
+		setCurrentPage(1);
+
+		fetchFilterData(1);
 	}, [optionsFilter]);
 
+	const fetchFilterData = useCallback(
+		(page: number) => {
+			if (loadingRef.current) return;
+			setLoading(true);
+
+			// Cancelamos cualquier operación anterior antes de iniciar una nueva
+			cancelTokenSource.current.cancel(
+				"Cancelando la petición en curso debido a un cambio en los filtros"
+			);
+			// Creamos un nuevo token de cancelación
+			cancelTokenSource.current = axios.CancelToken.source();
+
+			const token = localStorage.getItem("rt__importadora");
+			axios
+				.post(`${url}/transaction/get-all/mine?page=${page}&limit=10`, optionsFilter, {
+					headers: { Authorization: `Bearer ${token}` },
+					cancelToken: cancelTokenSource.current.token,
+				})
+				.then((res) => {
+					if (page === 1) {
+						setDataTransaction(res.data.data);
+					} else {
+						setDataTransaction((prevData: any) => [...prevData, ...res.data.data]);
+					}
+					setHasMore(res.data.data.length === 10);
+				})
+				.catch((error) => {
+					if (axios.isCancel(error)) {
+						console.log("Request canceled", error.message);
+					} else {
+						console.error("Hubo un error al obtener los datos", error);
+					}
+				})
+				.finally(() => setLoading(false));
+		},
+		[optionsFilter]
+	);
+
+	const checkScrollBottom = useCallback(() => {
+		if (!listRef.current || loadingRef.current) return;
+
+		const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+		if (scrollTop + clientHeight >= scrollHeight - 5) {
+			setCurrentPage((prevPage) => prevPage + 1);
+		}
+	}, []);
+
+	useEffect(() => {
+		const throttledCheckScroll = _.throttle(checkScrollBottom, 200);
+		const listElement: any = listRef.current;
+
+		if (listElement && hasMore) {
+			listElement.addEventListener("scroll", throttledCheckScroll);
+			return () => listElement.removeEventListener("scroll", throttledCheckScroll);
+		}
+	}, [checkScrollBottom, hasMore]);
+
+	useEffect(() => {
+		fetchFilterData(currentPage);
+	}, [currentPage, fetchFilterData]);
+
 	const handleResetFilters = () => {
-		setOptionsFilter(initialData);
+		setDataTransaction([]);
+		setOptionsFilter(initialFilters);
+		setCurrentPage(1);
 	};
 
 	return (
@@ -64,12 +128,22 @@ export const TableroVendedor = () => {
 							dataTransaction={dataTransaction}
 						/>
 
-						<div className={style.tableroVendedor__list}>
-							<div className={style.tableroVendedor__list__items}>
-								{dataTransaction?.data?.map((dataTransactionItem: any) => (
-									<ListItemRow key={dataTransactionItem.id} data={dataTransactionItem} />
-								))}
-							</div>
+						<div className={style.tableroVendedor__list} ref={listRef}>
+							{dataTransaction?.length < 10 && loading == true ? (
+								<div className={style.tableroVendedor__list__items}>
+									<Loading bgTransparent={true} />
+								</div>
+							) : (
+								<div className={style.tableroVendedor__list__items}>
+									{dataTransaction?.length > 0 ? (
+										dataTransaction?.map((dataTransactionItem: any) => (
+											<ListItemRow key={dataTransactionItem.id} data={dataTransactionItem} />
+										))
+									) : (
+										<p style={{ fontWeight: "500" }}>No se han encontrado transacciones.</p>
+									)}
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -93,7 +167,7 @@ const ajustedDateForm = () => {
 	return adjustedDate;
 };
 
-const initialData = {
+const initialFilters = {
 	statuses: ["OK", "PENDING", "TO_CHANGE", "EDITED"],
 	// statuses: ["OK"],
 	// bill_status: "",

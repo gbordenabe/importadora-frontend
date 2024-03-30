@@ -1,16 +1,19 @@
 .loading_overlay {
-    position: fixed;     
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .loading_content {
-    text-align: center;
-  }
-  
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255, 255, 255, 0.3);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.loading_content {
+	text-align: center;
+}
+
+.loading_overlay_transparent {
+	background-color: transparent !important;
+}
