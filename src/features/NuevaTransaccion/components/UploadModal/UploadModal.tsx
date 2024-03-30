@@ -9,7 +9,7 @@ interface Props {
 	setFilesBlob?: any;
 	onHideModal?: any;
 	section?: any;
-	setFileToUpload?:any;
+	setFileToUpload?: any;
 	fileToUpload?: any
 }
 
@@ -30,15 +30,24 @@ export const UploadModal = ({
 	const onSaveImg = (fileToUpload: any) => {
 		if (!fileToUpload) return;
 		if (onChange && index !== undefined) {
-			// Convirtiendo los blob para la subida adicional
-			const blobConvert = new Blob([fileToUpload], { type: fileToUpload.type });
-			setFilesBlob((prev: any) => [...prev, { fileName: fileToUpload.name, blob: blobConvert }]);
-			onChange(
-				{ target: { name: 'file_field_name', value: fileToUpload.name } },
-				index,
-				section
-			  );
-			onHideModal();
+
+			if (fileToUpload.name) {
+				const extension = fileToUpload.name.split('.').pop();
+				const filenameWithoutExtension = fileToUpload.name.replace(/\.[^/.]+$/, "");
+				const formattedFilename = filenameWithoutExtension.replace(/\./g, '-');
+				const newFilename = `${formattedFilename}.${extension}`;
+
+				const blobConvert = new Blob([fileToUpload], { type: fileToUpload.type });
+		
+				setFilesBlob((prev: any) => [...prev, { fileName: newFilename, blob: blobConvert }]);
+
+				onChange(
+					{ target: { name: 'file_field_name', value: newFilename } },
+					index,
+					section
+				);
+				onHideModal();
+			}
 		}
 	};
 
@@ -55,10 +64,10 @@ export const UploadModal = ({
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload("")}
 					chooseLabel={fileToUpload && fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
-					// className={style.file__button}
+				// className={style.file__button}
 				/>
 				{fileToUpload && fileToUpload.objectURL && (
-					<div style={{ maxHeight: "200px"}}>
+					<div style={{ maxHeight: "200px" }}>
 						<img
 							style={{ height: "100%", objectFit: "cover" }}
 							alt={"img preview"}
