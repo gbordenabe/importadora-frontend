@@ -20,70 +20,59 @@ export const TableroVendedor = () => {
 	const { login } = useAppSelector((state) => state.auth);
 	const [dataTransaction, setDataTransaction] = useState<any>([]);
 	const [optionsFilter, setOptionsFilter] = useState<any>(initialFilters);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [hasMore, setHasMore] = useState(true);
-	const listRef = useRef(null);
-
-	const loadingRef = useRef(loading);
-
-	useEffect(() => {
-		loadingRef.current = loading;
-	}, [loading]);
+	const listRef = useRef<HTMLDivElement | null>(null);
 
 	const cancelTokenSource = useRef(axios.CancelToken.source());
 
 	useEffect(() => {
-		setDataTransaction([]);
 		setCurrentPage(1);
-
 		fetchFilterData(1);
 	}, [optionsFilter]);
 
 	const fetchFilterData = useCallback(
-		(page: number) => {
-			if (loadingRef.current) return;
-			setLoading(true);
-
-			// Cancelamos cualquier operación anterior antes de iniciar una nueva
-			cancelTokenSource.current.cancel(
-				"Cancelando la petición en curso debido a un cambio en los filtros"
-			);
-			// Creamos un nuevo token de cancelación
+		async (page: number) => {
+			// Cancelar las peticiones previas
+			cancelTokenSource.current.cancel("Canceling previous requests");
 			cancelTokenSource.current = axios.CancelToken.source();
 
 			const token = localStorage.getItem("rt__importadora");
-			axios
-				.post(`${url}/transaction/get-all/mine?page=${page}&limit=10`, optionsFilter, {
-					headers: { Authorization: `Bearer ${token}` },
-					cancelToken: cancelTokenSource.current.token,
-				})
-				.then((res) => {
-					if (page === 1) {
-						setDataTransaction(res.data.data);
-					} else {
-						setDataTransaction((prevData: any) => [...prevData, ...res.data.data]);
+
+			try {
+				const response = await axios.post(
+					`${url}/transaction/get-all/mine?page=${page}&limit=10`,
+					optionsFilter,
+					{
+						headers: { Authorization: `Bearer ${token}` },
+						cancelToken: cancelTokenSource.current.token,
 					}
-					setHasMore(res.data.data.length === 10);
-				})
-				.catch((error) => {
-					if (axios.isCancel(error)) {
-						console.log("Request canceled", error.message);
-					} else {
-						console.error("Hubo un error al obtener los datos", error);
-					}
-				})
-				.finally(() => setLoading(false));
+				);
+
+				if (page === 1) {
+					setDataTransaction(response.data.data);
+				} else {
+					setDataTransaction((prevData: any) => [...prevData, ...response.data.data]);
+				}
+				setHasMore(response.data.data.length === 10);
+			} catch (error) {
+				if (!axios.isCancel(error)) {
+					console.error("There was an error fetching the data", error);
+				}
+			} finally {
+				setLoading(false);
+			}
 		},
 		[optionsFilter]
 	);
 
 	const checkScrollBottom = useCallback(() => {
-		if (!listRef.current || loadingRef.current) return;
-
-		const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-		if (scrollTop + clientHeight >= scrollHeight - 5) {
+		if (
+			listRef.current &&
+			listRef.current.scrollTop + listRef.current.clientHeight >= listRef.current.scrollHeight - 5
+		) {
 			setCurrentPage((prevPage) => prevPage + 1);
 		}
 	}, []);
@@ -100,13 +89,16 @@ export const TableroVendedor = () => {
 
 	useEffect(() => {
 		fetchFilterData(currentPage);
-	}, [currentPage, fetchFilterData]);
+	}, [currentPage]);
 
 	const handleResetFilters = () => {
-		setDataTransaction([]);
 		setOptionsFilter(initialFilters);
+		setDataTransaction([]);
 		setCurrentPage(1);
 	};
+
+	console.log(loading);
+	console.log(dataTransaction.length);
 
 	return (
 		<>
@@ -129,7 +121,7 @@ export const TableroVendedor = () => {
 						/>
 
 						<div className={style.tableroVendedor__list} ref={listRef}>
-							{dataTransaction?.length < 10 && loading == true ? (
+							{loading == true ? (
 								<div className={style.tableroVendedor__list__items}>
 									<Loading bgTransparent={true} />
 								</div>
@@ -140,7 +132,9 @@ export const TableroVendedor = () => {
 											<ListItemRow key={dataTransactionItem.id} data={dataTransactionItem} />
 										))
 									) : (
-										<p style={{ fontWeight: "500" }}>No se han encontrado transacciones.</p>
+										<>
+											<p style={{ fontWeight: "500" }}>No se han encontrado transacciones.</p>
+										</>
 									)}
 								</div>
 							)}

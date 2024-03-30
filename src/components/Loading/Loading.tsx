@@ -6,7 +6,6 @@ interface Props {
 }
 
 const Loading = ({ bgTransparent = false }: Props) => {
-	console.log(bgTransparent);
 	return (
 		<div
 			className={`${style.loading_overlay} ${bgTransparent && style.loading_overlay_transparent}`}
