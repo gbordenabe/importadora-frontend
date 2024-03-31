@@ -12,10 +12,17 @@ interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
 	onHideModal?: any;
+	currentClient?: any;
+	setCurrentClient?: any;
 }
 
-const FiltroClientes = ({ setOptionsFilter, onHideModal }: Props) => {
-	const [selected, setSelected] = useState<any>(null);
+const FiltroClientes = ({
+	setOptionsFilter,
+	onHideModal,
+	currentClient,
+	setCurrentClient,
+}: Props) => {
+	const [selected, setSelected] = useState<any>(currentClient);
 	const [clientname, setClientName] = useState("");
 	const [data, setData] = useState([]);
 
@@ -59,9 +66,9 @@ const FiltroClientes = ({ setOptionsFilter, onHideModal }: Props) => {
 	const handleUpdateData = () => {
 		setOptionsFilter((prev: any) => ({
 			...prev,
-			clientName: selected.name,
 			clients: convertirANumero([selected.id]),
 		}));
+		setCurrentClient(selected ? selected : {});
 	};
 
 	const submit = () => {

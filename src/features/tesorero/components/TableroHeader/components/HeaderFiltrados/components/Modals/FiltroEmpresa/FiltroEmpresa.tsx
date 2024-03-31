@@ -7,6 +7,8 @@ interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
 	onHideModal?: any;
+	currentEnterprise?: any;
+	setCurrentEnterprise?: any;
 }
 
 interface CompanyData {
@@ -14,17 +16,22 @@ interface CompanyData {
 	name: string;
 }
 
-const FiltroEmpresa: React.FC<Props> = ({ setOptionsFilter, onHideModal }) => {
-	const [selected, setSelected] = useState<{ id: string, name: string } | null>(null);
+const FiltroEmpresa: React.FC<Props> = ({
+	setOptionsFilter,
+	onHideModal,
+	currentEnterprise,
+	setCurrentEnterprise,
+}) => {
+	const [selected, setSelected] = useState<{ id: string; name: string } | null>(currentEnterprise);
 
 	const UserFetch = useGetFetch("/company?order_by=id&order=ASC");
 
 	const handleUpdateData = () => {
-    setOptionsFilter((prev: any) => ({
-        ...prev,
-        companies: selected ? convertirANumero([selected.id]) : [],
-        empresaName: selected ? selected.name : "Todos", // Cambio a singular, ya que solo hay una empresa
-    }));
+		setOptionsFilter((prev: any) => ({
+			...prev,
+			companies: selected ? convertirANumero([selected.id]) : [],
+		}));
+		setCurrentEnterprise(selected ? selected : {});
 	};
 
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, company: CompanyData) => {
@@ -32,44 +39,42 @@ const FiltroEmpresa: React.FC<Props> = ({ setOptionsFilter, onHideModal }) => {
 		const { id, name } = company;
 
 		if (checked) {
-				// Seleccionar esta empresa
-				setSelected({ id, name });
+			setSelected({ id, name });
 		} else {
-				// Si se desmarca la misma empresa, quitar la selección
-				if (selected?.id === id) {
-						setSelected(null);
-				}
+			if (selected?.id === id) {
+				setSelected(null);
+			}
 		}
 	};
 
 	const submit = () => {
-		handleUpdateData()
-		onHideModal()
-	}
+		handleUpdateData();
+		onHideModal();
+	};
 
 	return (
 		<div className={style.container}>
 			<div className={style.headerFilterTag}>
-					<p>Filtrar por empresa:</p>
+				<p>Filtrar por empresa:</p>
 			</div>
 			<div className={style.line}></div>
 
 			{UserFetch?.data?.data?.map((data: CompanyData) => (
 				<div className={style.checkboxContainer} key={data.id}>
-						<input
-								type="checkbox"
-								value={data.id}
-								checked={selected?.id === data.id}
-								onChange={(e) => handleCheckboxChange(e, data)}
-						/>
-						<label className={style.btn__filter}>{data.name}</label>
+					<input
+						type="checkbox"
+						value={data.id}
+						checked={selected?.id === data.id}
+						onChange={(e) => handleCheckboxChange(e, data)}
+					/>
+					<label className={style.btn__filter}>{data.name}</label>
 				</div>
 			))}
 
 			<button className={style.buttonConfirm} onClick={submit}>
-					Confirmar
+				Confirmar
 			</button>
-	</div>
+		</div>
 	);
 };
 

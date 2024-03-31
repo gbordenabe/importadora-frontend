@@ -2,9 +2,9 @@ import CustomModal from "@/components/CustomModal/CustomModal";
 import style from "./StatusFilter.module.css";
 import FiltroConEstado from "@/features/vendedor/components/TableroHeader/components/HeaderFiltrados/FiltroConEstados/FiltroConEstado";
 import { useModal } from "@/hooks/useModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const StatusFilter = ({ onSetStatusFilter }: any) => {
+export const StatusFilter = ({ onSetStatusFilter, optionsFilter }: any) => {
 	const { modalStatus, onVisibleModal, onHideModal } = useModal();
 
 	const [status, setStatus] = useState("ALL");
@@ -16,21 +16,45 @@ export const StatusFilter = ({ onSetStatusFilter }: any) => {
 	// PENDING = En revisión
 
 	const [allDocuments, setAllDocuments] = useState(true);
-	const [typeDocument, setTypeDocument] = useState({
-		bill_status: "",
-		cash_status: "",
-		check_status: "",
-		credit_note_status: "",
-		credit_status: "",
-		deposit_status: "",
-		retention_status: "",
-	});
+	// const [typeDocument, setTypeDocument] = useState({
+	// 	bill_status: "",
+	// 	cash_status: "",
+	// 	check_status: "",
+	// 	credit_note_status: "",
+	// 	credit_status: "",
+	// 	deposit_status: "",
+	// 	retention_status: "",
+	// });
 
-	const onSetFilterDocument = (newStatus: any, typeDocument: any, isAllDocument: boolean) => {
+	let currentValue = {
+		bill_status: optionsFilter.bill_status,
+		cash_status: optionsFilter.cash_status,
+		check_status: optionsFilter.check_status,
+		credit_note_status: optionsFilter.credit_note_status,
+		credit_status: optionsFilter.credit_status,
+		deposit_status: optionsFilter.deposit_status,
+		retention_status: optionsFilter.retention_status,
+	};
+
+	const onSetFilterDocument = (newStatus: any, isAllDocument: boolean) => {
 		setStatus(newStatus);
-		setTypeDocument(typeDocument);
 		setAllDocuments(isAllDocument);
 	};
+
+	useEffect(() => {
+		if (
+			currentValue.bill_status == "" &&
+			currentValue.cash_status == "" &&
+			currentValue.check_status == "" &&
+			currentValue.credit_note_status == "" &&
+			currentValue.credit_status == "" &&
+			currentValue.deposit_status == "" &&
+			currentValue.retention_status == ""
+		) {
+			setStatus("ALL");
+			setAllDocuments(true);
+		}
+	}, [optionsFilter]);
 
 	return (
 		<>
@@ -80,27 +104,27 @@ export const StatusFilter = ({ onSetStatusFilter }: any) => {
 					) : (
 						<>
 							<div className={style.header__filtrados__documentType}>
-								{typeDocument.bill_status && (
+								{optionsFilter.bill_status && (
 									<div className={style.header__filtrados__documentType__item}>Factura</div>
 								)}
-								{typeDocument.cash_status && (
+								{optionsFilter.cash_status && (
 									<div className={style.header__filtrados__documentType__item}>Efectivo</div>
 								)}
-								{typeDocument.check_status && (
+								{optionsFilter.check_status && (
 									<div className={style.header__filtrados__documentType__item}>Cheque</div>
 								)}
-								{typeDocument.deposit_status && (
+								{optionsFilter.deposit_status && (
 									<div className={style.header__filtrados__documentType__item}>
 										Deposito o trans.
 									</div>
 								)}
-								{typeDocument.credit_status && (
+								{optionsFilter.credit_status && (
 									<div className={style.header__filtrados__documentType__item}>Crédito</div>
 								)}
-								{typeDocument.credit_note_status && (
+								{optionsFilter.credit_note_status && (
 									<div className={style.header__filtrados__documentType__item}>Nota de crédito</div>
 								)}
-								{typeDocument.retention_status && (
+								{optionsFilter.retention_status && (
 									<div className={style.header__filtrados__documentType__item}>Retención</div>
 								)}
 							</div>
@@ -113,7 +137,7 @@ export const StatusFilter = ({ onSetStatusFilter }: any) => {
 				<FiltroConEstado
 					onSetFilterDocument={onSetFilterDocument}
 					onHideModal={onHideModal}
-					currentValue={typeDocument}
+					currentValue={currentValue}
 					currentStatus={status}
 					onSetStatusFilter={onSetStatusFilter}
 				/>

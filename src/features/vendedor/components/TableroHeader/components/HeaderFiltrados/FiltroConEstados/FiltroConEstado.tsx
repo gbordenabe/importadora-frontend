@@ -27,30 +27,35 @@ const FiltroConEstado = ({
 	};
 
 	const [status, setStatus] = useState(currentStatus);
-	// const [typeDocument, setTypeDocument] = useState<any>({
-	// 	bill_status: "ALL",
-	// 	cash_status: "ALL",
-	// 	check_status: "ALL",
-	// 	credit_note_status: "ALL",
-	// 	credit_status: "ALL",
-	// 	deposit_status: "ALL",
-	// 	retention_status: "ALL",
-	// });
 	const [typeDocument, setTypeDocument] = useState<any>(currentValue);
 
 	const handleStatusChange = (selectedStatus: any) => {
 		setStatus(selectedStatus);
 
-		setTypeDocument(
-			Object.fromEntries(
-				Object.entries(typeDocument).map(([key]) => {
-					return [key, selectedStatus];
-				})
-			)
-		);
+		if (selectedStatus === "ALL") {
+			setTypeDocument(
+				Object.fromEntries(
+					Object.entries(typeDocument).map(([key]) => {
+						return [key, selectedStatus];
+					})
+				)
+			);
+		} else {
+			setTypeDocument(
+				Object.fromEntries(
+					Object.entries(typeDocument).map(([key, value]) => {
+						const newValue = value ? selectedStatus : value;
+						return [key, newValue];
+					})
+				)
+			);
+		}
 	};
 
 	const handleTypeDocumentChange = (docType: string) => {
+		if (status === "ALL") {
+			return;
+		}
 		setTypeDocument((prevState: any) => ({
 			...prevState,
 			[docType]: prevState[docType] === status ? "" : status,
@@ -63,7 +68,7 @@ const FiltroConEstado = ({
 		if (validarAlMenosUnAll(typeDocumentToSend)) {
 			convertirSiTodosSonAll(typeDocumentToSend);
 		}
-		onSetFilterDocument(status, typeDocumentToSend, isAll);
+		onSetFilterDocument(status, isAll);
 
 		// Envio de data fetch
 		onSetStatusFilter(typeDocumentToSend);
@@ -155,3 +160,16 @@ const convertirATodosAllSiEstanVacios = (obj: any) => {
 
 	return obj;
 };
+
+// ---- Antiguo handleStatusChange
+// const handleStatusChange = (selectedStatus: any) => {
+// 	setStatus(selectedStatus);
+
+// 	setTypeDocument(
+// 		Object.fromEntries(
+// 			Object.entries(typeDocument).map(([key]) => {
+// 				return [key, selectedStatus];
+// 			})
+// 		)
+// 	);
+// };
