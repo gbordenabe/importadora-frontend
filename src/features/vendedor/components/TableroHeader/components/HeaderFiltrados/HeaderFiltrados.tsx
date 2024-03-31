@@ -12,6 +12,7 @@ import FiltroClientes from "@/features/tesorero/components/TableroHeader/compone
 
 import { StatusFilter } from "./StatusFilter/StatusFilter";
 import { formatDate } from "@/helpers/formatDate";
+import { InputNumber } from "primereact/inputnumber";
 
 interface Props {
 	optionsFilter?: any;
@@ -51,9 +52,9 @@ export const HeaderFiltrados = ({
 		});
 	};
 
-	const [filterFacturas, setFilterFacturas] = useState(null);
-	const [filterCheques, setFilterCheques] = useState(null);
-	const [filterImporte, setFilterImporte] = useState(null);
+	const [filterFacturas, setFilterFacturas] = useState<any>("");
+	const [filterCheques, setFilterCheques] = useState<any>("");
+	const [filterImporte, setFilterImporte] = useState<any>("");
 	const [currentEnterprise, setCurrentEnterprise] = useState<any>({});
 	const [currentClient, setCurrentClient] = useState<any>({});
 
@@ -68,9 +69,9 @@ export const HeaderFiltrados = ({
 	};
 
 	const onResetFilters = () => {
-		setFilterFacturas(null);
-		setFilterCheques(null);
-		setFilterImporte(null);
+		setFilterFacturas("");
+		setFilterCheques("");
+		setFilterImporte("");
 		setCurrentEnterprise({});
 		setCurrentClient({});
 		handleResetFilters();
@@ -185,13 +186,16 @@ export const HeaderFiltrados = ({
 								className={style.header__filtrados__documentType__item}
 								style={{ justifyContent: "space-between" }}
 							>
-								<input
-									type="number"
-									className={style.header__input__filter}
+								<InputNumber
+									inputId="filter-importe"
+									value={filterImporte}
 									placeholder="Buscar"
-									onChange={(e: any) => setFilterImporte(e.target.value)}
-									value={filterImporte || ""}
+									onValueChange={(e: any) => setFilterImporte(e.target.value)}
+									mode="currency"
+									currency="USD"
+									locale="en-US"
 								/>
+
 								<IoSearchSharp
 									size={15}
 									onClick={() => onFilterChangeNumber(filterImporte, "total_amount")}

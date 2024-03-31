@@ -1,4 +1,3 @@
-// import style from "./DetalleTransaccion.module.css";
 import { AppStructure } from "@/components/AppStructure/AppStructure";
 import { BoxContent } from "@/components/BoxContent/BoxContent";
 import { ContentStructure } from "@/components/ContentStructure/ContentStructure";
@@ -6,7 +5,6 @@ import { FaRegFile } from "react-icons/fa";
 import { formatPrice } from "@/helpers/formatPrice";
 import { GroupTypeItem } from "./GroupTypeItem/GroupTypeItem";
 import { MainHeader } from "@/components/MainHeader/MainHeader";
-import { MainTitle } from "@/components/MainTitle/MainTitle";
 import { Tooltip } from "primereact/tooltip";
 import { url } from "@/connections/mainApi";
 import { useAppSelector } from "@/store/hooks";
@@ -18,6 +16,7 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ImageModal } from "./ImageModal/ImageModal";
 import { HeaderDetailTransaction } from "@/components/HeaderDetailTransaction/HeaderDetailTransaction";
+import { MainTitleDetail } from "@/components/MainTitleDetail/MainTitleDetail";
 
 export const DetalleTransaccion = () => {
 	const { id } = useParams();
@@ -400,7 +399,7 @@ export const DetalleTransaccion = () => {
 			<AppStructure>
 				<MainHeader />
 				<ContentStructure>
-					<MainTitle title="Revisión de transacción" />
+					<MainTitleDetail title="Revisión de transacción" />
 
 					<BoxContent>
 						<HeaderDetailTransaction data={data} />

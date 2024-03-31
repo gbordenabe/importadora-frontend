@@ -14,6 +14,7 @@ import FiltroClientes from "@/features/tesorero/components/TableroHeader/compone
 import { StatusFilter } from "@/features/vendedor/components/TableroHeader/components/HeaderFiltrados/StatusFilter/StatusFilter";
 import { formatDate } from "@/helpers/formatDate";
 import FiltroVendedores from "./components/Modals/FiltroVendedores/FiltroVendedores";
+import { InputNumber } from "primereact/inputnumber";
 
 interface Props {
 	optionsFilter?: any;
@@ -157,7 +158,7 @@ export const HeaderFiltrados = ({
 
 					{/* Thrid row */}
 
-					<div className={style.header__filtrados__content__item__row2}>
+					<div className={style.header__filtrados__content__item__row3}>
 						<div className={style.header__filtrados__content__itemGroup}>
 							<p className={style.header__filtrados__content__text}>N° de Factura o deb.:</p>
 							<div
@@ -203,13 +204,16 @@ export const HeaderFiltrados = ({
 								className={style.header__filtrados__documentType__item}
 								style={{ justifyContent: "space-between" }}
 							>
-								<input
-									type="number"
-									className={style.header__input__filter}
+								<InputNumber
+									inputId="filter-importe"
+									value={filterImporte}
 									placeholder="Buscar"
-									onChange={(e: any) => setFilterImporte(e.target.value)}
-									value={filterImporte || ""}
+									onValueChange={(e: any) => setFilterImporte(e.target.value)}
+									mode="currency"
+									currency="USD"
+									locale="en-US"
 								/>
+
 								<IoSearchSharp
 									size={15}
 									onClick={() => onFilterChangeNumber(filterImporte, "total_amount")}
