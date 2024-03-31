@@ -11,12 +11,20 @@ interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
 	onHideModal?: any;
+	currentSeller?: any;
+	setCurrentSeller?: any;
 }
 
-const FiltroVendedores = ({ optionsFilter, setOptionsFilter, onHideModal }: Props) => {
+const FiltroVendedores = ({
+	optionsFilter,
+	setOptionsFilter,
+	onHideModal,
+	currentSeller,
+	setCurrentSeller,
+}: Props) => {
 	console.log(optionsFilter);
-	const [selected, setSelected] = useState<{ id: string; name: string } | null>(null);
-	const [clientname, setClientName] = useState("");
+	const [selected, setSelected] = useState<any>(currentSeller);
+	const [sellerName, setSellerName] = useState("");
 	const [data, setData] = useState([]);
 
 	const token = localStorage.getItem("rt__importadora");
@@ -41,7 +49,7 @@ const FiltroVendedores = ({ optionsFilter, setOptionsFilter, onHideModal }: Prop
 				Authorization: `Bearer ${token}`,
 			};
 			const response = await axios.get(
-				`${url}/user?nameFilter=${clientname}&order_by=id&order=ASC&roleId=1`,
+				`${url}/user?nameFilter=${sellerName}&order_by=id&order=ASC&roleId=1`,
 				{
 					headers,
 				}
@@ -53,16 +61,21 @@ const FiltroVendedores = ({ optionsFilter, setOptionsFilter, onHideModal }: Prop
 	};
 
 	useEffect(() => {
-		setOptionsFilter((prev: any) => ({
-			...prev,
-			sellers: selected ? convertirANumero([selected.id]) : [],
-			vendedorName: selected ? selected.name : "",
-		}));
-	}, [selected]);
-
-	useEffect(() => {
 		getSeller();
 	}, []);
+
+	const handleUpdateData = () => {
+		setOptionsFilter((prev: any) => ({
+			...prev,
+			sellers: convertirANumero([selected.id]),
+		}));
+		setCurrentSeller(selected ? selected : {});
+	};
+
+	const submit = () => {
+		handleUpdateData();
+		onHideModal();
+	};
 
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, sellerData: any) => {
 		if (e.target.checked) {
@@ -84,8 +97,8 @@ const FiltroVendedores = ({ optionsFilter, setOptionsFilter, onHideModal }: Prop
 			<div className={style.container__1}>
 				<TextBoxField
 					name="clientname"
-					onChange={(e) => setClientName(e.target.value)}
-					value={clientname}
+					onChange={(e) => setSellerName(e.target.value)}
+					value={sellerName}
 				/>
 
 				<PrimaryButton text="Buscar" fitWidth onClick={getSellerFilter} />
@@ -107,7 +120,7 @@ const FiltroVendedores = ({ optionsFilter, setOptionsFilter, onHideModal }: Prop
 				</div>
 			))}
 
-			<button className={style.buttonConfirm} onClick={() => onHideModal()}>
+			<button className={style.buttonConfirm} onClick={submit}>
 				Confirmar
 			</button>
 		</div>

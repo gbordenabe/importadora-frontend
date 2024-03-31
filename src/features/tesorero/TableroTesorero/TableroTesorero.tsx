@@ -1,48 +1,93 @@
-import { useEffect, useState } from "react";
-import style from "./TableroTesorero.module.css";
 import { AppStructure } from "../../../components/AppStructure/AppStructure";
-import { MainHeader } from "../../../components/MainHeader/MainHeader";
-import { TableroHeader } from "../components/TableroHeader/TableroHeader";
-import { ListItemRow } from "../components/ListItemRow/ListItemRow";
-import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
-import { useModal } from "@/hooks/useModal";
-import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
-import { useAppSelector } from "@/store/hooks";
-import axios from "axios";
-import { url } from "@/connections/mainApi";
 import { fechaSemana } from "@/helpers/fechaSemana";
+import { ListItemRow } from "../components/ListItemRow/ListItemRow";
+import { MainHeader } from "../../../components/MainHeader/MainHeader";
+import { MenuAyuda } from "@/features/MenuAyuda/MenuAyuda";
+import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
+import { TableroHeader } from "../components/TableroHeader/TableroHeader";
+import { url } from "@/connections/mainApi";
+import { useAppSelector } from "@/store/hooks";
+import { useEffect, useState } from "react";
+import { useModal } from "@/hooks/useModal";
+import axios from "axios";
+import Loading from "@/components/Loading/Loading";
+import style from "./TableroTesorero.module.css";
+
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const TableroTesorero = () => {
+	const [dataTransaction, setDataTransaction] = useState<any>([]);
+	const [optionsFilter, setOptionsFilter] = useState<any>(initialFilters);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [hasMore, setHasMore] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
+	const [isResettingFilters, setIsResettingFilters] = useState(false);
+	const [infiniteScrollKey, setInfiniteScrollKey] = useState(0);
+	const [isInitialLoad, setIsInitialLoad] = useState(true);
+	const [totalCount, setTotalCount] = useState(0);
+
 	const menuAyuda = useModal();
-	// const profileEdit = useModal();
+	const profileEdit = useModal();
 	const { login } = useAppSelector((state) => state.auth);
-	const [dataTransaction, setdataTransaction] = useState<any>([]);
-	const [optionsFilter, setOptionsFilter] = useState<any>(initialData);
 
-	const token = localStorage.getItem("rt__importadora");
+	const fetchFilterData = async () => {
+		try {
+			const token = localStorage.getItem("rt__importadora");
+			const response = await axios.post(
+				`${url}/transaction/get-all?page=${currentPage}&limit=10`,
+				optionsFilter,
+				{
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
 
-	const fetchFilterData = () => {
-		const { clientName, empresaName, ...restData } = optionsFilter;
+			const newData = response?.data?.data;
+			const totalPages = response?.data?.totalPages;
 
-		axios
-			.post(`${url}/transaction/get-all`, restData, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
-			.then((res) => {
-				setdataTransaction(res.data);
-			})
-			.catch((error) => console.error("Hubo un error al obtener los datos", error));
+			setDataTransaction((prev: any) => (currentPage === 1 ? [...newData] : [...prev, ...newData]));
+			setTotalCount(response?.data?.count);
+			setHasMore(currentPage < totalPages);
+		} catch (error) {
+			console.error(error);
+			setHasMore(false);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	const handleResetFilters = () => {
+		setIsResettingFilters(true);
 	};
 
 	useEffect(() => {
 		fetchFilterData();
+
+		if (isInitialLoad) {
+			setIsInitialLoad(false);
+		}
+	}, [currentPage, infiniteScrollKey]);
+
+	useEffect(() => {
+		if (!isInitialLoad) {
+			setIsLoading(true);
+			setDataTransaction([]);
+			setHasMore(true);
+			setCurrentPage(1);
+			setInfiniteScrollKey((prevKey) => prevKey + 1);
+		}
 	}, [optionsFilter]);
 
-	const handleResetFilters = () => {
-		setOptionsFilter(initialData);
-	};
+	useEffect(() => {
+		if (isResettingFilters) {
+			setIsLoading(true);
+			setDataTransaction([]);
+			setOptionsFilter(initialFilters);
+			setHasMore(true);
+			setCurrentPage(1);
+			setIsResettingFilters(false);
+			setInfiniteScrollKey((prevKey) => prevKey + 1);
+		}
+	}, [isResettingFilters]);
 
 	return (
 		<>
@@ -55,21 +100,33 @@ export const TableroTesorero = () => {
 
 					<div className={style.tableroVendedor__content}>
 						<TableroHeader
-								showMenuAyuda={menuAyuda.onVisibleModal}
-								// showProfileEdit={profileEdit.onVisibleModal}
-								optionsFilter={optionsFilter}
-								setOptionsFilter={setOptionsFilter}
-								fetchFilterData={fetchFilterData}
-								handleResetFilters={handleResetFilters}
-								dataTransaction={dataTransaction}
+							showMenuAyuda={menuAyuda.onVisibleModal}
+							showProfileEdit={profileEdit.onVisibleModal}
+							optionsFilter={optionsFilter}
+							setOptionsFilter={setOptionsFilter}
+							fetchFilterData={fetchFilterData}
+							handleResetFilters={handleResetFilters}
+							totalCount={totalCount}
 						/>
 
 						<div className={style.tableroVendedor__list}>
-							<div className={style.tableroVendedor__list__items}>
-								{dataTransaction?.data?.map((dataTransactionItem: any) => (
-									<ListItemRow key={dataTransactionItem.id} data={dataTransactionItem} />
-								))}
-							</div>
+							<InfiniteScroll
+								key={infiniteScrollKey}
+								className={style.tableroVendedor__list__items}
+								dataLength={dataTransaction.length}
+								hasMore={hasMore}
+								next={() => setCurrentPage((prev: any) => prev + 1)}
+								loader={<Loading bgTransparent={true} />}
+								height={550}
+							>
+								{!isLoading && dataTransaction.length === 0 ? (
+									<p style={{ fontWeight: "500" }}>No se han encontrado transacciones.</p>
+								) : (
+									dataTransaction.map((dataTransactionItem: any) => (
+										<ListItemRow key={dataTransactionItem.id} data={dataTransactionItem} />
+									))
+								)}
+							</InfiniteScroll>
 						</div>
 					</div>
 				</div>
@@ -93,22 +150,22 @@ const ajustedDateForm = () => {
 	return adjustedDate;
 };
 
-const initialData = {
+const initialFilters = {
 	statuses: ["OK", "PENDING", "TO_CHANGE", "EDITED"],
-	// statuses: ["OK"],
-	// bill_status: "",
-	// cash_status: "",
-	// check_status: "",
-	// credit_note_status: "",
-	// credit_status: "",
-	// deposit_status: "",
-	// retention_status: "",
+	bill_status: "",
+	cash_status: "",
+	check_status: "",
+	credit_note_status: "",
+	credit_status: "",
+	deposit_status: "",
+	retention_status: "",
 	created_at_start: fechaSemana(),
 	created_at_end: ajustedDateForm(),
 	// companies: [],
 	// clients: [],
-	check_document_number: "",
 	bill_number: "",
+	check_document_number: "",
+	// total_amount: "",
 	// cash_document_number: "",
 	// deposit_document_number: "",
 	// bill_amount_min: 0,

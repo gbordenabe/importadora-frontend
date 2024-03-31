@@ -9,7 +9,7 @@ interface Props {
 	setOptionsFilter?: (filter: any) => void;
 	fetchFilterData?: any;
 	handleResetFilters?: any;
-	dataTransaction?: any;
+	totalCount?: number;
 }
 
 export const TableroHeader = ({
@@ -19,7 +19,7 @@ export const TableroHeader = ({
 	setOptionsFilter,
 	fetchFilterData,
 	handleResetFilters,
-	dataTransaction,
+	totalCount,
 }: Props) => {
 	return (
 		<div className={style.tableroVendedor__content__header}>
@@ -28,7 +28,7 @@ export const TableroHeader = ({
 				setOptionsFilter={setOptionsFilter}
 				fetchFilterData={fetchFilterData}
 				handleResetFilters={handleResetFilters}
-				dataTransaction={dataTransaction}
+				totalCount={totalCount}
 			/>
 			<HeaderConfiguracion showMenuAyuda={showMenuAyuda} showProfileEdit={showProfileEdit} />
 		</div>

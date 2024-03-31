@@ -1,17 +1,17 @@
+import { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import style from "./HeaderFiltrados.module.css";
 import { VscFilter } from "react-icons/vsc";
 import { RxReload } from "react-icons/rx";
+import { IoSearchSharp } from "react-icons/io5";
 
 import CustomModal from "@/components/CustomModal/CustomModal";
 import FiltroFechas from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroFechas/FiltroFechas";
 import FiltroEmpresa from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroEmpresa/FiltroEmpresa";
 import FiltroClientes from "@/features/tesorero/components/TableroHeader/components/HeaderFiltrados/components/Modals/FiltroClientes/FiltroClientes";
 
-import { formatDate } from "@/helpers/formatDate";
-import { useState } from "react";
-import { IoSearchSharp } from "react-icons/io5";
 import { StatusFilter } from "./StatusFilter/StatusFilter";
+import { formatDate } from "@/helpers/formatDate";
 
 interface Props {
 	optionsFilter?: any;
