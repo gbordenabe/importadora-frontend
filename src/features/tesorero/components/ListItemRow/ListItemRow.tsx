@@ -83,7 +83,7 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.cash_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Efectivo/Transf.{`(${data?.cash.length})`}: <span>{`${formatPrice(+totalAmountCash)}`}</span>
+								Efectivo{`(${data?.cash.length})`}: <span>{`${formatPrice(+totalAmountCash)}`}</span>
 							</p>
 						</div>
 					) : null}
@@ -99,7 +99,7 @@ export const ListItemRow = ({ data }: any) => {
 						<div className={style.list__item__estado__container}>
 							<StatusCircle status={data?.deposit_status} size="15px" />
 							<p className={style.itemBox__text}>
-								Depositos{`(${data?.deposits.length})`}: <span>{`${formatPrice(+totalAmountDeposit)}`}</span>
+								Deposito/Transf.{`(${data?.deposits.length})`}: <span>{`${formatPrice(+totalAmountDeposit)}`}</span>
 							</p>
 						</div>
 					) : null}

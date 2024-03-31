@@ -432,7 +432,7 @@ export const DetalleTransaccion = () => {
 							<GroupTypeItem
 								columns={columnsEfectivoTransferencia}
 								data={data?.cash}
-								title={`Efectivo/Transferencia (${data?.cash?.length})`}
+								title={`Efectivo (${data?.cash?.length})`}
 								typeGroup="cash"
 								fetchData={fetchData}
 								status={data?.cash_status}
@@ -444,7 +444,7 @@ export const DetalleTransaccion = () => {
 							<GroupTypeItem
 								columns={columnsDeposito}
 								data={data?.deposits}
-								title={`Deposito (${data?.deposits?.length})`}
+								title={`Deposito / Transferencia (${data?.deposits?.length})`}
 								typeGroup="deposits"
 								fetchData={fetchData}
 								status={data?.deposit_status}
@@ -456,7 +456,7 @@ export const DetalleTransaccion = () => {
 							<GroupTypeItem
 								columns={columnsCredits}
 								data={data?.credits}
-								title={`Credito (${data?.credits?.length})`}
+								title={`Solicitud de crédito (${data?.credits?.length})`}
 								typeGroup="credits"
 								fetchData={fetchData}
 								status={data?.credit_status}
@@ -468,7 +468,7 @@ export const DetalleTransaccion = () => {
 							<GroupTypeItem
 								columns={columnsNotaCredito}
 								data={data?.credit_notes}
-								title={`Notas de Credito (${data?.credit_notes?.length})`}
+								title={`NC o saldo recibido (${data?.credit_notes?.length})`}
 								typeGroup="credit_notes"
 								fetchData={fetchData}
 								status={data?.credit_note_status}
@@ -480,7 +480,7 @@ export const DetalleTransaccion = () => {
 							<GroupTypeItem
 								columns={columnsRetencion}
 								data={data?.retentions}
-								title={`Retención (${data?.retentions?.length})`}
+								title={`Retención impositiva (${data?.retentions?.length})`}
 								typeGroup="retentions"
 								fetchData={fetchData}
 								status={data?.retention_status}
