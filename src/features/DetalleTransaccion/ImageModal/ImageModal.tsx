@@ -7,7 +7,6 @@ interface Props {
 }
 
 export const ImageModal = ({ fileData }: Props) => {
-
 	const urlAWS = "https://importadora-prod.s3.sa-east-1.amazonaws.com";
 
 	const handleDownload = async () => {
@@ -16,7 +15,7 @@ export const ImageModal = ({ fileData }: Props) => {
 		const imageUrl = `${urlAWS}/${fileData.file_name}`;
 		const link = document.createElement("a");
 		link.href = imageUrl;
-		link.setAttribute("download", fileData.file_name); // Opcional: Puedes asignar un nombre de archivo específico aquí
+		link.setAttribute("download", fileData.file_name);
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);

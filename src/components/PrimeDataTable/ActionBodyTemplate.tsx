@@ -117,7 +117,6 @@ export const ActionBodyTemplate = ({
 					</div>
 				</div>
 
-				{/* Creación de usuarios*/}
 				<PrimeModal
 					header={`Aprobar registro`}
 					modalStatus={modalStatus}

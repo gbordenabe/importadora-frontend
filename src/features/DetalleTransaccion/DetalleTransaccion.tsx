@@ -18,6 +18,7 @@ import StatusCircle from "@/components/StatusCircle/StatusCircle";
 import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { ImageModal } from "./ImageModal/ImageModal";
+import { HeaderDetailTransaction } from "@/components/HeaderDetailTransaction/HeaderDetailTransaction";
 
 export const DetalleTransaccion = () => {
 	const { id } = useParams();
@@ -403,7 +404,7 @@ export const DetalleTransaccion = () => {
 					<MainTitle title="Revisión de transacción" />
 
 					<BoxContent>
-						<HeaderTransaccion isDetails={true} data={data} />
+						<HeaderDetailTransaction data={data} />
 
 						{data?.bills?.length > 0 && (
 							<GroupTypeItem
@@ -515,7 +516,7 @@ const renderEstadoBody = (rowData: any) => {
 					data-pr-position="top"
 					style={{ cursor: "pointer" }}
 				>
-					<StatusCircle status={rowData.status} size="25px" icon={true}/>
+					<StatusCircle status={rowData.status} size="25px" icon={true} />
 				</span>
 			</div>
 		);
