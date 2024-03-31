@@ -5,7 +5,6 @@ import { ContentStructure } from "@/components/ContentStructure/ContentStructure
 import { FaRegFile } from "react-icons/fa";
 import { formatPrice } from "@/helpers/formatPrice";
 import { GroupTypeItem } from "./GroupTypeItem/GroupTypeItem";
-import { HeaderTransaccion } from "../../components/HeaderTransaccion/HeaderTransaccion";
 import { MainHeader } from "@/components/MainHeader/MainHeader";
 import { MainTitle } from "@/components/MainTitle/MainTitle";
 import { Tooltip } from "primereact/tooltip";
