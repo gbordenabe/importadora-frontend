@@ -25,9 +25,10 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
   const [expandedSaldos, setExpandedSaldos] = useState<{ [key: number]: boolean }>({});
   const [expandedPagos, setExpandedPagos] = useState<{ [key: number]: boolean }>({});
- 
+
+
   const toggleExpanded = (index: number, method: string) => {
-    if(method === 'MaxOrMinBill') {
+    if (method === 'MaxOrMinBill') {
       setExpandedItems(prev => ({
         ...prev,
         [index]: !prev[index]
@@ -42,78 +43,116 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
         ...prev,
         [index]: true,
       }));
-    }  else {
-       setExpandedItems(prev => {
-            const newExpandedItems: { [key: number]: boolean } = {};
-            Object.keys(prev).forEach((key) => {
-              const keyElement = parseInt(key);
-              newExpandedItems[keyElement] = true;
-            });
-            newExpandedItems[index] = true;
-            newExpandedItems[0] = false;
-            return newExpandedItems;
+    } else {
+      setExpandedItems(prev => {
+        const newExpandedItems: { [key: number]: boolean } = {};
+        Object.keys(prev).forEach((key) => {
+          const keyElement = parseInt(key);
+          newExpandedItems[keyElement] = true;
         });
-  }
+        newExpandedItems[index] = true;
+        newExpandedItems[0] = false;
+        return newExpandedItems;
+      });
+    }
   };
 
-  const toggleExpandedPagos = (index: number, method: string) => {
-    if(method === 'MaxOrMinPagos') {
-      setExpandedPagos(prev => ({
+  const toggleExpandedPagos = (index: number, method: string, section: string) => {
+    if (method === 'MaxOrMinPagos') {
+      setExpandedPagos((prev: any) => {
+        const updatedSection = {
+          ...prev[section],
+          [index]: !prev[section][index]
+        };
+        return {
+          ...prev,
+          [section]: updatedSection
+        };
+      });
+    } else if (method === "newPago") {
+      setExpandedPagos((prev: any) => ({
         ...prev,
-        [index]: !prev[index]
+        [section]: {
+          ...prev[section],
+          [index]: false
+        }
       }));
-    } else if (method === "newPago") { //abierto
-      setExpandedPagos(prev => ({
-        ...prev,
-        [index]: false,
-      }));
-    } else if (method === "allMin") { //cerrado
-      setExpandedPagos(prev => ({
-        ...prev,
-        [index]: true,
-      }));
-    }  else {
-      setExpandedPagos(prev => {
-            const newExpandedItems: { [key: number]: boolean } = {};
-            Object.keys(prev).forEach((key) => {
-              const keyElement = parseInt(key);
-              newExpandedItems[keyElement] = true;
-            });
-            newExpandedItems[index] = true;
-            newExpandedItems[0] = false;
-            return newExpandedItems;
+    } else if (method === "allMin") {
+      setExpandedPagos((prev: any) => {
+        const newExpandedPagos: any = {};
+        Object.keys(prev).forEach((sec: string) => {
+          newExpandedPagos[sec] = {};
+          Object.keys(prev[sec]).forEach((idx: string) => {
+            newExpandedPagos[sec][idx] = true;
+          });
         });
-  }
+        return newExpandedPagos;
+      });
+    } else {
+      setExpandedPagos((prev: any) => {
+        const newExpandedItems: { [key: number]: boolean } = {};
+        Object.keys(prev[section]).forEach((key) => {
+          const keyElement = parseInt(key);
+          newExpandedItems[keyElement] = true;
+        });
+        newExpandedItems[index] = true;
+        newExpandedItems[0] = false;
+
+        return {
+          ...prev,
+          [section]: newExpandedItems
+        };
+      });
+    }
   };
 
-  const toggleExpandedSaldos = (index: number, method: string) => {
-    if(method === 'MaxOrMinSaldos') {
-      setExpandedSaldos(prev => ({
-        ...prev,
-        [index]: !prev[index]
-      }));
+  const toggleExpandedSaldos = (index: number, method: string, section: string) => {
+    if (method === 'MaxOrMinSaldos') {
+      setExpandedSaldos((prev: any) => {
+        const updatedSection = {
+          ...prev[section],
+          [index]: !prev[section][index]
+        };
+        return {
+          ...prev,
+          [section]: updatedSection
+        };
+      });
     } else if (method === "newSaldo") { //abierto
-      setExpandedSaldos(prev => ({
+      setExpandedSaldos((prev: any) => ({
         ...prev,
-        [index]: false,
+        [section]: {
+          ...prev[section],
+          [index]: false
+        }
       }));
     } else if (method === "allMin") { //cerrado
-      setExpandedSaldos(prev => ({
-        ...prev,
-        [index]: true,
-      }));
-    }  else {
-      setExpandedSaldos(prev => {
-            const newExpandedItems: { [key: number]: boolean } = {};
-            Object.keys(prev).forEach((key) => {
-              const keyElement = parseInt(key);
-              newExpandedItems[keyElement] = true;
-            });
-            newExpandedItems[index] = true;
-            newExpandedItems[0] = false;
-            return newExpandedItems;
+      setExpandedSaldos((prev: any) => {
+        const newExpandedPagos: any = {};
+        Object.keys(prev).forEach((sec: string) => {
+          newExpandedPagos[sec] = {};
+          Object.keys(prev[sec]).forEach((idx: string) => {
+            newExpandedPagos[sec][idx] = true;
+          });
         });
-  }
+        return newExpandedPagos;
+      });
+    } else {
+      setExpandedSaldos((prev: any) => {
+        const newExpandedItems: { [key: number]: boolean } = {};
+        Object.keys(prev[section]).forEach((key) => {
+          const keyElement = parseInt(key);
+          newExpandedItems[keyElement] = true;
+        });
+        newExpandedItems[index] = true;
+        newExpandedItems[0] = false;
+
+        return {
+          ...prev,
+          [section]: newExpandedItems
+        };
+      });
+    }
   };
 
   const contextValue: ToggleExpandedContextType

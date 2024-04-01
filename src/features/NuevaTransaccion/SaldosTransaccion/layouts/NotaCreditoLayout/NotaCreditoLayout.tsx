@@ -33,7 +33,7 @@ export const NotaCreditoLayout = ({
 }: Props) => {
 	return (
 		<div className={style.layout__container}>
-			{expandedItems[index] ? (
+			{expandedItems  && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section][index]? (
 				<div className={style.layout__header}>
 					<div className={style.layout__header__group}>
 						<p className={style.layout__header__title}>{values.tipo}</p>
@@ -43,7 +43,7 @@ export const NotaCreditoLayout = ({
 						</div>
 					</div>
 					<div className={style.layout__header__group}>
-						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
+						<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
 						<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 					</div>
 				</div>
@@ -55,7 +55,7 @@ export const NotaCreditoLayout = ({
 							{values.type && <ChipText text={values.type} />}
 						</div>
 						<div className={style.layout__header__group}>
-							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos")} />
+							<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
 							<DeleteButton onClick={() => handleRemove(index, 'credit_notes')} />
 						</div>
 					</div>

@@ -76,7 +76,7 @@ export const SaldosTransaccion = ({
 	
 		// Manejar la expansión del pago
 		if (formik.values[section].length === 0) {
-			toggleExpandedSaldos(formik.values[section].length, "newSaldo");
+			toggleExpandedSaldos(formik.values[section].length, "newSaldo", section);
 		} else {
 			const lastSaldo = formik.values[section][0];
 			const isLastSaldoComplete =
@@ -86,7 +86,7 @@ export const SaldosTransaccion = ({
 	
 			if (isLastSaldoComplete) {
 				const newIndex = formik.values[section].length;
-				toggleExpandedSaldos(newIndex, "newRegister");
+				toggleExpandedSaldos(newIndex, "newRegister", section);
 			}
 		}
 	

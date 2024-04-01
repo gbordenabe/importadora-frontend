@@ -76,7 +76,7 @@ export const PagosTransaccion = ({
 
 		// Manejar la expansión del pago
 		if (formik.values[section].length === 0) {
-			toggleExpandedPagos(formik.values[section].length, "newPago");
+			toggleExpandedPagos(formik.values[section].length, "newPago", section);
 		} else {
 			const lastPay = formik.values[section][0];
 			const isLastPayComplete =
@@ -86,7 +86,7 @@ export const PagosTransaccion = ({
 
 			if (isLastPayComplete) {
 				const newIndex = formik.values[section].length;
-				toggleExpandedPagos(newIndex, "newRegister");
+				toggleExpandedPagos(newIndex, "newRegister", section);
 			}
 		}
 

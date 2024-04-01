@@ -45,7 +45,7 @@ export const ChequeLayout = ({
 	return (
 		<>
 			<div className={style.layout__container}>
-				{expandedItems[index] ? (
+				{expandedItems  && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section][index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>{values.tipo}</p>
@@ -60,7 +60,7 @@ export const ChequeLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton
-								onClick={() => toggleExpanded(index, "MaxOrMinPagos")}
+								onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)}
 							/>
 							<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 						</div>
@@ -82,7 +82,7 @@ export const ChequeLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton
-									onClick={() => toggleExpanded(index, "MaxOrMinPagos")}
+									onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)}
 								/>
 								<DeleteButton onClick={() => handleRemove(index, 'checks')} />
 							</div>

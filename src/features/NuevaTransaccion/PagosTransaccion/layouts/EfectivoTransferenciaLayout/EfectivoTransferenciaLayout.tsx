@@ -44,7 +44,7 @@ export const EfectivoTransferenciaLayout = ({
 	return (
 		<>
 			<div className={style.layout__container}>
-				{expandedItems[index] ? (
+				{expandedItems  && typeof section !== 'undefined'  && typeof index !== 'undefined' && expandedItems[section][index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>{values.tipo}</p>
@@ -58,7 +58,7 @@ export const EfectivoTransferenciaLayout = ({
 							</div>
 						</div>
 						<div className={style.layout__header__group}>
-							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos")} />
+							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
 							<DeleteButton onClick={() => handleRemove(index, 'cash')} />
 						</div>
 					</div>
@@ -78,7 +78,7 @@ export const EfectivoTransferenciaLayout = ({
 								</div>
 							</div>
 							<div className={style.layout__header__group}>
-								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos")} />
+								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
 								<DeleteButton onClick={() => handleRemove(index, 'cash')} />
 							</div>
 						</div>
