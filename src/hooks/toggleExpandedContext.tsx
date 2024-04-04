@@ -88,16 +88,31 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
         });
         return newExpandedPagos;
       });
+    } else if (method === 'addRegister') {
+      setExpandedPagos((prev: any) => {
+        const newExpandedItems: { [key: number]: boolean } = {};
+          Object.keys(prev[section]).forEach((key) => {
+            const keyElement = parseInt(key);
+            newExpandedItems[keyElement] = true;
+          });
+          newExpandedItems[index] = true;
+          newExpandedItems[0] = false;
+
+
+        return {
+          ...prev,
+          [section]: newExpandedItems
+        };
+      });
     } else {
       setExpandedPagos((prev: any) => {
         const newExpandedItems: { [key: number]: boolean } = {};
-        Object.keys(prev[section]).forEach((key) => {
-          const keyElement = parseInt(key);
-          newExpandedItems[keyElement] = true;
-        });
-        newExpandedItems[index] = true;
-        newExpandedItems[0] = false;
-
+        if (prev[section]) {
+          Object.keys(prev[section]).forEach((key) => {
+            const keyElement = parseInt(key);
+            newExpandedItems[keyElement] = true;
+          });
+        }
         return {
           ...prev,
           [section]: newExpandedItems
@@ -137,16 +152,30 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
         });
         return newExpandedPagos;
       });
+    } else if (method === 'addRegister') {
+      setExpandedSaldos((prev: any) => {
+        const newExpandedItems: { [key: number]: boolean } = {};
+          Object.keys(prev[section]).forEach((key) => {
+            const keyElement = parseInt(key);
+            newExpandedItems[keyElement] = true;
+          });
+          newExpandedItems[index] = true;
+          newExpandedItems[0] = false;
+
+        return {
+          ...prev,
+          [section]: newExpandedItems
+        };
+      });
     } else {
       setExpandedSaldos((prev: any) => {
         const newExpandedItems: { [key: number]: boolean } = {};
-        Object.keys(prev[section]).forEach((key) => {
-          const keyElement = parseInt(key);
-          newExpandedItems[keyElement] = true;
-        });
-        newExpandedItems[index] = true;
-        newExpandedItems[0] = false;
-
+        if (prev[section]) {
+          Object.keys(prev[section]).forEach((key) => {
+            const keyElement = parseInt(key);
+            newExpandedItems[keyElement] = true;
+          });
+        }
         return {
           ...prev,
           [section]: newExpandedItems

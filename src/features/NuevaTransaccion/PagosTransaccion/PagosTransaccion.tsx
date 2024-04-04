@@ -66,7 +66,7 @@ export const PagosTransaccion = ({
 		formik.setFieldValue(section, updatedSectionValues);
 	};
 
-	const handleAdd = (section: string, newData: any) => {
+	const handleAdd = (section: any, newData: any) => {
 		// Agregar el nuevo registro
 		const newValues = { ...formik.values };
 		const currentValues = [...formik.values[section]];
@@ -74,23 +74,30 @@ export const PagosTransaccion = ({
 		newValues[section] = currentValues;
 		formik.setValues(newValues);
 
+
 		// Manejar la expansión del pago
-		if (formik.values[section].length === 0) {
-			toggleExpandedPagos(formik.values[section].length, "newPago", section);
-		} else {
-			const lastPay = formik.values[section][0];
-			const isLastPayComplete =
-				lastPay.number !== '' &&
-				lastPay.amount !== '' &&
-				lastPay.date !== '';
+		const sections = formik.values
+	
+		if (sections && sections[section] && sections[section].length > 0) {
+			for (const sec in sections) {
+				if (sec === section) {
+					const newIndex = sections[section].length;
+					toggleExpandedPagos(newIndex, "addRegister", section);
+				} else {
+					toggleExpandedPagos(null, "minOneSection", sec);
+				}
 
-			if (isLastPayComplete) {
-				const newIndex = formik.values[section].length;
-				toggleExpandedPagos(newIndex, "newRegister", section);
 			}
+		} else {
+			for (const sec in sections) {
+				if (sec === section) {
+					toggleExpandedPagos(0, "newSaldo", section);
+				} else {
+					toggleExpandedPagos(null, "minOneSection", sec);
+				}
+			}
+			toggleExpandedPagos(0, "newPago", section);
 		}
-
-
 	};
 
 	const handleRemove = (index: number, section: string) => {

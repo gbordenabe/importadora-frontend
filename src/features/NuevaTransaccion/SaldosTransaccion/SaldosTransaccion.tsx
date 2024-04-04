@@ -73,24 +73,30 @@ export const SaldosTransaccion = ({
 		currentValues.unshift(newData);
 		newValues[section] = currentValues;
 		formik.setValues(newValues);
-	
-		// Manejar la expansión del pago
-		if (formik.values[section].length === 0) {
-			toggleExpandedSaldos(formik.values[section].length, "newSaldo", section);
+
+		// Manejar la expansión de saldo
+		const sections = formik.values
+
+		if (sections && sections[section] && sections[section].length > 0) {
+			console.log('entra por el if')
+			for (const sec in sections) {
+				if (sec === section) {
+					const newIndex = sections[section].length;
+					toggleExpandedSaldos(newIndex, "addRegister", section);
+				} else {
+					toggleExpandedSaldos(null, "minOneSection", sec);
+				}
+			}
 		} else {
-			const lastSaldo = formik.values[section][0];
-			const isLastSaldoComplete =
-				lastSaldo.number !== '' &&
-				lastSaldo.amount !== '' &&
-				lastSaldo.date !== '';
-	
-			if (isLastSaldoComplete) {
-				const newIndex = formik.values[section].length;
-				toggleExpandedSaldos(newIndex, "newRegister", section);
+			console.log('entra por el else')
+			for (const sec in sections) {
+				if (sec === section) {
+					toggleExpandedSaldos(0, "newSaldo", section);
+				} else {
+					toggleExpandedSaldos(null, "minOneSection", sec);
+				}
 			}
 		}
-	
-		setErrorMessage('');
 	};
 
 	const handleRemove = (index: number, section: string) => {
@@ -134,9 +140,9 @@ export const SaldosTransaccion = ({
 					<h2>Saldos</h2>
 					<div>
 						{isBlocked ? (
-							<SecondaryButton text="Editar" type='submit' onClick={() => {onChangeStatusGroup("saldos"); handleCloseDropdown()}} />
+							<SecondaryButton text="Editar" type='submit' onClick={() => { onChangeStatusGroup("saldos"); handleCloseDropdown() }} />
 						) : (
-							<PrimaryButton text="Confirmar" type='submit' onClick={() => {onChangeStatusGroup("saldos"); handleCloseDropdown()}} />
+							<PrimaryButton text="Confirmar" type='submit' onClick={() => { onChangeStatusGroup("saldos"); handleCloseDropdown() }} />
 						)}
 					</div>
 				</div>

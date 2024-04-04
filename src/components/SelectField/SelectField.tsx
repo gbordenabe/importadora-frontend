@@ -40,7 +40,7 @@ export const SelectField = ({
 		if (option) {
 			return (
 				<div>
-					<div>{option.name}</div>
+					<div>{`${option.client_number} - ${option.name}`}</div>
 				</div>
 			);
 		}

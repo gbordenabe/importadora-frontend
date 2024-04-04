@@ -45,7 +45,7 @@ export const ChequeLayout = ({
 	return (
 		<>
 			<div className={style.layout__container}>
-				{expandedItems  && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section][index] ? (
+				{expandedItems  && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section]  && expandedItems[section][index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>{values.tipo}</p>
