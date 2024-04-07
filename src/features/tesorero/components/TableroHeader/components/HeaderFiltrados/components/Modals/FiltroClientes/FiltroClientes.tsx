@@ -33,7 +33,7 @@ const FiltroClientes = ({
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
-			const response = await axios.get(`${url}/client?order_by=id&order=ASC`, {
+			const response = await axios.get(`${url}/client?order_by=name&order=ASC`, {
 				headers,
 			});
 			setData(response.data.data);

@@ -24,7 +24,7 @@ const FiltroEmpresa: React.FC<Props> = ({
 }) => {
 	const [selected, setSelected] = useState<{ id: string; name: string } | null>(currentEnterprise);
 
-	const UserFetch = useGetFetch("/company?order_by=id&order=ASC");
+	const UserFetch = useGetFetch("/company?order_by=name&order=ASC");
 
 	const handleUpdateData = () => {
 		setOptionsFilter((prev: any) => ({

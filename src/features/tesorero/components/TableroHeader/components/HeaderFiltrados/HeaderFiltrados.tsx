@@ -16,6 +16,10 @@ import { formatDate } from "@/helpers/formatDate";
 import FiltroVendedores from "./components/Modals/FiltroVendedores/FiltroVendedores";
 import { InputNumber } from "primereact/inputnumber";
 
+import axios from "axios";
+import { url } from "@/connections/mainApi";
+import { downloadFile } from "@/helpers/downloadFile";
+
 interface Props {
 	optionsFilter?: any;
 	setOptionsFilter?: any;
@@ -95,6 +99,40 @@ export const HeaderFiltrados = ({
 		}));
 	};
 
+	const handleDownloadCsv = async () => {
+		try {
+			const token = localStorage.getItem("rt__importadora");
+
+			// const { data } = await axios.get(`${url}/transaction/csv`, {
+			// 	headers: {
+			// 		Authorization: `Bearer ${token}`,
+			// 	},
+			// 	responseType: "blob",
+			// });
+
+			const response = await axios({
+				method: "get",
+				url: `${url}/transaction/csv`,
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				responseType: "blob",
+				data: optionsFilter,
+			});
+
+			const { data } = response;
+
+			if (!data) {
+				alert("No se han podido cargar el archivo o ha habido un problema con el servidor");
+				return;
+			}
+
+			downloadFile(data, "transacciones");
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<>
 			<div className={style.header__filtrados__container}>
@@ -113,7 +151,7 @@ export const HeaderFiltrados = ({
 					>
 						<RxReload size={14} />
 					</div>
-					<div className={style.header__filtrados__icon}>
+					<div className={style.header__filtrados__icon} onClick={handleDownloadCsv}>
 						<FiDownload size={14} />
 					</div>
 				</div>

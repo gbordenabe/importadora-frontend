@@ -34,7 +34,7 @@ const FiltroVendedores = ({
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
-			const response = await axios.get(`${url}/user?order_by=id&order=ASC&roleId=1`, {
+			const response = await axios.get(`${url}/user?order_by=name&order=ASC&roleId=1`, {
 				headers,
 			});
 			setData(response.data.data);
@@ -67,7 +67,7 @@ const FiltroVendedores = ({
 	const handleUpdateData = () => {
 		setOptionsFilter((prev: any) => ({
 			...prev,
-			sellers: convertirANumero([selected.id]),
+			sellers: selected?.id ? convertirANumero([selected?.id]) : [],
 		}));
 		setCurrentSeller(selected ? selected : {});
 	};

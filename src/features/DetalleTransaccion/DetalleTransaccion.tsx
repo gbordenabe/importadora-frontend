@@ -140,6 +140,10 @@ export const DetalleTransaccion = () => {
 		{
 			nombre: "Adjunto",
 			body: (rowData: any) => {
+				if (!rowData?.file) {
+					return <></>;
+				}
+
 				return (
 					<div
 						style={{
@@ -192,6 +196,9 @@ export const DetalleTransaccion = () => {
 		{
 			nombre: "Adjunto",
 			body: (rowData: any) => {
+				if (!rowData?.file) {
+					return <></>;
+				}
 				return (
 					<div
 						style={{
@@ -248,6 +255,9 @@ export const DetalleTransaccion = () => {
 		{
 			nombre: "Adjunto",
 			body: (rowData: any) => {
+				if (!rowData?.file) {
+					return <></>;
+				}
 				return (
 					<div
 						style={{
@@ -377,6 +387,9 @@ export const DetalleTransaccion = () => {
 		{
 			nombre: "Adjunto",
 			body: (rowData: any) => {
+				if (!rowData?.file) {
+					return <></>;
+				}
 				return (
 					<div
 						style={{
@@ -506,19 +519,27 @@ export const DetalleTransaccion = () => {
 const renderEstadoBody = (rowData: any) => {
 	if (rowData.status === "TO_CHANGE") {
 		return (
-			<div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+			<>
 				<Tooltip target=".custom-tooltip" />
-				<span
-					className="custom-tooltip"
-					data-pr-tooltip={rowData.request_change_comment}
-					data-pr-position="top"
-					style={{ cursor: "pointer" }}
+				<div
+					style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem" }}
 				>
-					<StatusCircle status={rowData.status} size="25px" icon={true} />
-				</span>
-			</div>
+					<span
+						className="custom-tooltip"
+						data-pr-tooltip={rowData.request_change_comment}
+						data-pr-position="top"
+						style={{ cursor: "pointer" }}
+					>
+						<StatusCircle status={rowData.status} size="25px" icon={true} />
+					</span>
+				</div>
+			</>
 		);
 	} else {
-		return <StatusCircle status={rowData.status} size="25px" />;
+		return (
+			<div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1rem" }}>
+				<StatusCircle status={rowData.status} size="25px" />
+			</div>
+		);
 	}
 };

@@ -55,6 +55,7 @@ export const GroupTypeItem = ({
 					observation: formData.observation,
 					type: formData.type,
 					bank_name: formData.bank_name,
+					file_field_name: formData.file_field_name,
 				};
 				break;
 			case "bills":

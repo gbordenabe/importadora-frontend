@@ -16,7 +16,8 @@ interface Props {
 
 export const MainTitleDetail = ({ title, onShowModal, isShowModal }: Props) => {
 	const { id } = useParams();
-	const [dataDownload, setDataDownload] = useState<any>("");
+	const [dataDownloadAdjuntos, setDataDownloadAdjuntos] = useState<any>("");
+	// const [dataDownloadCsv, setDataDownloadAdjuntosCsv] = useState<any>("");
 
 	const { role } = useAppSelector((state) => state?.auth?.login);
 
@@ -43,19 +44,32 @@ export const MainTitleDetail = ({ title, onShowModal, isShowModal }: Props) => {
 						},
 					}
 				)
-				.then((res) => setDataDownload(res.data))
+				.then((res) => setDataDownloadAdjuntos(res.data))
 				.catch((err) => console.log(err));
+
+			// axios
+			// 	.post(
+			// 		`${url}/transaction/csv/${id}`,
+			// 		{},
+			// 		{
+			// 			headers: {
+			// 				Authorization: `Bearer ${token}`,
+			// 			},
+			// 		}
+			// 	)
+			// 	.then((res) => setDataDownloadAdjuntosCsv(res.data))
+			// 	.catch((err) => console.log(err));
 		}
 	}, [id]);
 
-	const handleDownload = async () => {
-		if (!dataDownload) {
-			alert("No se han encontrado adjuntos o ha habido un problema con el servidor");
+	const handleDownload = async (download: any) => {
+		if (!download) {
+			alert("No se han podido cargar los archivos o ha habido un problema con el servidor");
 			return;
 		}
 
 		const link = document.createElement("a");
-		link.href = dataDownload;
+		link.href = download;
 		link.setAttribute("download", "adjuntos");
 		document.body.appendChild(link);
 		link.click();
@@ -74,13 +88,22 @@ export const MainTitleDetail = ({ title, onShowModal, isShowModal }: Props) => {
 			</button>
 
 			{role?.name == "TREASURER" && (
-				<div>
-					<PrimaryButton
-						text="Descargar Adjuntos"
-						icon={<BiSolidArchiveIn />}
-						onClick={handleDownload}
-					/>
-				</div>
+				<>
+					<div>
+						<PrimaryButton
+							text="Descargar Adjuntos"
+							icon={<BiSolidArchiveIn />}
+							onClick={() => handleDownload(dataDownloadAdjuntos)}
+						/>
+					</div>
+					{/* <div>
+						<PrimaryButton
+							text="Descargar CSV"
+							icon={<BiSolidArchiveIn />}
+							onClick={() => handleDownload(dataDownloadCsv)}
+						/>
+					</div> */}
+				</>
 			)}
 		</div>
 	);

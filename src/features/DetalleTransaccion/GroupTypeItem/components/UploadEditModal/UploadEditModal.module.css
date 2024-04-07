@@ -1,0 +1,24 @@
+.modalUpload__container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.buttonUpload__container {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.label__input {
+	font-weight: 700;
+}
+
+.upload__description {
+	color: #737278;
+	font-size: 13px;
+}
+
+.buttons__container {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+}
