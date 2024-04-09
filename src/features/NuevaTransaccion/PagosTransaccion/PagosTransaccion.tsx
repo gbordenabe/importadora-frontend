@@ -116,13 +116,13 @@ export const PagosTransaccion = ({
 
 				if (lastItem.tipo === 'Depósito / Transferencia') {
 					const completedRegisterDeposits = lastItem &&
-						(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '' || lastItem.file_field_name === '')
-					return completedRegisterDeposits
+						(lastItem.number === '' || lastItem.amount === null || lastItem.date === '' || lastItem.file_field_name === '')
+						return completedRegisterDeposits
 				}
 
 				const completedRegister = lastItem &&
-					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
-				return completedRegister
+					(lastItem.number === '' || lastItem.amount === null || lastItem.date === '')
+					return completedRegister
 			}
 			return false;
 		});

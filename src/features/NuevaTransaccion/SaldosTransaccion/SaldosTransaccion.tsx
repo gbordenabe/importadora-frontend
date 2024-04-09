@@ -76,9 +76,7 @@ export const SaldosTransaccion = ({
 
 		// Manejar la expansión de saldo
 		const sections = formik.values
-
 		if (sections && sections[section] && sections[section].length > 0) {
-			console.log('entra por el if')
 			for (const sec in sections) {
 				if (sec === section) {
 					const newIndex = sections[section].length;
@@ -88,7 +86,6 @@ export const SaldosTransaccion = ({
 				}
 			}
 		} else {
-			console.log('entra por el else')
 			for (const sec in sections) {
 				if (sec === section) {
 					toggleExpandedSaldos(0, "newSaldo", section);
@@ -113,12 +110,12 @@ export const SaldosTransaccion = ({
 
 				if (lastItem.tipo === 'Retención impositiva') {
 					const completedRegisterDeposits = lastItem &&
-						(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '' || lastItem.file_field_name === '')
+						(lastItem.number === '' || lastItem.amount === null || lastItem.date === '' || lastItem.file_field_name === '')
 					return completedRegisterDeposits
 				}
 
 				const completedRegister = lastItem &&
-					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+					(lastItem.number === '' || lastItem.amount === null || lastItem.date === '')
 				return completedRegister
 			}
 			return false;

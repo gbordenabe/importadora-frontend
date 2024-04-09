@@ -31,6 +31,7 @@ export const NuevaTransaccion = () => {
 	const errorTransaction = useModal();
 	const errorConfirmTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
+	const errorAllSectionCompleted = useModal();
 	const errorBillValidation = useModal();
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ companyId: undefined, clientId: undefined });
@@ -51,6 +52,14 @@ export const NuevaTransaccion = () => {
 	const [totalFacturas, setTotalFacturas] = useState(0);
 	const [totalPagos, setTotalPagos] = useState(0);
 	const [totalSaldos, setTotalSaldos] = useState(0);
+
+	// Bloquear cuadro
+	const [groupStatus, setGroupStatus] = useState({
+		userSectionStatus: false,
+		facturaSectionStatus: true,
+		pagosSectionStatus: true,
+		saldosSectionStatus: true,
+	});
 
 	// Crear transacción
 	const createTransaction = async (data: any) => {
@@ -75,7 +84,13 @@ export const NuevaTransaccion = () => {
 	};
 
 	const handleCreateTransaction = () => {
+		 const allSectionsConfirmed = Object.values(groupStatus).every(status => status);
 
+		 if (!allSectionsConfirmed) {
+			errorAllSectionCompleted.onVisibleModal();
+			 return;
+		 }
+	 
 		if (totalFacturas != totalPagos + totalSaldos) {
 			errorTransaction.onVisibleModal();
 			return;
@@ -126,14 +141,6 @@ export const NuevaTransaccion = () => {
 			setSku(nuevoSku);
 		}
 	}, [usuarios.companyId, usuarios.clientId]);
-
-	// Bloquear cuadro
-	const [groupStatus, setGroupStatus] = useState({
-		userSectionStatus: false,
-		facturaSectionStatus: true,
-		pagosSectionStatus: true,
-		saldosSectionStatus: true,
-	});
 
 	const onChangeStatusGroup = (sectionName: string) => {
 		let properties: string[];
@@ -349,6 +356,20 @@ export const NuevaTransaccion = () => {
 							? "Falta cargar información para confirmar transacción"
 							: "El monto de facturación no coincide con la suma de pagos y saldos"
 					}
+					textButton="Volver"
+				/>
+			</PrimeModal>
+
+			{/* ErrorAllSectionConfirm Modal */}
+			<PrimeModal
+				header={'Error en transaccion'}
+				modalStatus={errorAllSectionCompleted.modalStatus}
+				onHideModal={errorAllSectionCompleted.onHideModal}
+				titleCenter
+			>
+				<ValidationModal
+					onHideModal={errorAllSectionCompleted.onHideModal}
+					description={'Confirme para crear una transaccion'}
 					textButton="Volver"
 				/>
 			</PrimeModal>

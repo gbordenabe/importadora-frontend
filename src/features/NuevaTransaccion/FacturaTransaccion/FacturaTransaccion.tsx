@@ -83,7 +83,7 @@ export const FacturaTransaccion = ({
 				const lastItem = sectionValues[0];
 				return (
 					lastItem &&
-					(lastItem.number === '' || lastItem.amount === '' || lastItem.date === '')
+					(lastItem.number === '' || lastItem.amount === null || lastItem.date === '')
 				);
 			}
 			return false;
@@ -108,7 +108,7 @@ export const FacturaTransaccion = ({
 			const lastBill = formik.values[section][0];
 			const isLastBillComplete =
 				lastBill.number !== '' &&
-				lastBill.amount !== '' &&
+				lastBill.amount !== null &&
 				lastBill.date !== '';
 	
 			if (isLastBillComplete) {
@@ -117,8 +117,6 @@ export const FacturaTransaccion = ({
 			}
 		}
 
-		
-	
 		setErrorMessage('');
 	};
 
