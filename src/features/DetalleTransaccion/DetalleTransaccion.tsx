@@ -412,7 +412,7 @@ export const DetalleTransaccion = () => {
 			<AppStructure>
 				<MainHeader />
 				<ContentStructure>
-					<MainTitleDetail title="Revisión de transacción" />
+					<MainTitleDetail title="Revisión de transacción" createdBy={data?.created_by} createdAt={data?.created_at}/>
 
 					<BoxContent>
 						<HeaderDetailTransaction data={data} />

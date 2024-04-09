@@ -7,28 +7,34 @@ import { BiSolidArchiveIn } from "react-icons/bi";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppSelector } from "@/store/hooks";
+import { useGetFetch } from "@/hooks/useGetFetch";
+import { IoIosArrowDown } from "react-icons/io";
+import StatusCircle from "../StatusCircle/StatusCircle";
+import { formatDate } from "@/helpers/formatDate";
+import { formatStatus, formatType } from "@/helpers/fromatInfo";
 
 interface Props {
 	title: string;
-	onShowModal?: any;
-	isShowModal?: boolean;
+	createdBy?: any;
+	createdAt?: any;
 }
 
-export const MainTitleDetail = ({ title, onShowModal, isShowModal }: Props) => {
+export const MainTitleDetail = ({ title, createdBy, createdAt }: Props) => {
 	const { id } = useParams();
 	const [dataDownloadAdjuntos, setDataDownloadAdjuntos] = useState<any>("");
 	// const [dataDownloadCsv, setDataDownloadAdjuntosCsv] = useState<any>("");
+	const [dropdownActive, setDropdownActive] = useState(false);
+	const historyGetData = useGetFetch(`/transaction/history/${id}`);
+	console.log(historyGetData.data);
+
+	// /transaction/history/{id}
 
 	const { role } = useAppSelector((state) => state?.auth?.login);
 
 	const navigate = useNavigate();
 
 	const handleNavigateLogin = () => {
-		if (isShowModal) {
-			onShowModal();
-		} else {
-			navigate("/");
-		}
+		navigate("/");
 	};
 
 	useEffect(() => {
@@ -98,13 +104,44 @@ export const MainTitleDetail = ({ title, onShowModal, isShowModal }: Props) => {
 					</div>
 					{/* <div>
 						<PrimaryButton
-							text="Descargar CSV"
+							text="Descargar PDF"
 							icon={<BiSolidArchiveIn />}
 							onClick={() => handleDownload(dataDownloadCsv)}
 						/>
 					</div> */}
 				</>
 			)}
+
+			<div style={{ position: "relative" }}>
+				<div className={style.historial__box} onClick={() => setDropdownActive((prev) => !prev)}>
+					<StatusCircle status={"PENDING"} size="15px" />
+					<p>{formatDate(createdAt)}</p>
+					<p>{`Creación de la transacción por ${createdBy?.name}`}</p>
+
+					<IoIosArrowDown size={20} style={{ marginLeft: "10px" }} />
+				</div>
+
+				{dropdownActive && (
+					<div className={style.historial__box__dropdown}>
+						<div className={style.historial__box__item}>
+							<StatusCircle status={"PENDING"} size="15px" />
+							<p>{formatDate(createdAt)}</p>
+							<p>{`Creación de la transacción ${createdBy?.name}`}</p>
+						</div>
+
+						{historyGetData?.data &&
+							historyGetData?.data?.map((item: any) => (
+								<div className={style.historial__box__item} key={item.id}>
+									<StatusCircle status={item.statuses} size="15px" />
+									<p>{formatDate(createdAt)}</p>
+									<p>{`${formatStatus(item.statuses)} ${formatType(item.payment_type)} por ${
+										item?.created_by?.name
+									} ${item?.created_by?.role?.name == "SELLER" ? "(Vendedor)" : "(Tesorero)"}`}</p>
+								</div>
+							))}
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

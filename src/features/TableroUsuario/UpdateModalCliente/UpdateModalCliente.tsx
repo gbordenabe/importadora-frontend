@@ -3,7 +3,7 @@ import style from "./UpdateModalCliente.module.css";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
-// import { SelectField } from "@/components/SelectField/SelectField";
+import { SelectField } from "@/components/SelectField/SelectField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -173,7 +173,7 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 				</div>
 
 				{/* Arreglar el componente principal de select, se edito el componente general */}
-				{/* <div>
+				<div>
 					<SelectField
 						textLabel="Provincia:"
 						name="province"
@@ -194,7 +194,7 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 						onBlur={handleBlur}
 					/>
 					{touched.city && errors.city && <span className="msg__form__error">{errors.city}</span>}
-				</div> */}
+				</div>
 
 				{/* <SelectField
 					textLabel="Localidad:"

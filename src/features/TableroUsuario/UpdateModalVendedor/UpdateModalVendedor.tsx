@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import style from "./UpdateModalVendedor.module.css";
 import { TextBoxField } from "@/components/TextBoxField/TextBoxField";
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";
 import { PrimaryButton } from "@/components/PrimaryButton/PrimaryButton";
-// import { SelectField } from "@/components/SelectField/SelectField";
+import { SelectField } from "@/components/SelectField/SelectField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -51,42 +51,42 @@ export const UpdateModalVendedor = ({ onHideModal, currentUpdateData, updateFetc
 		}),
 	});
 
-	// const [provincias, setProvincias] = useState<any>([]);
-	// const [municipios, setMunicipios] = useState<any>([]);
+	const [provincias, setProvincias] = useState<any>([]);
+	const [municipios, setMunicipios] = useState<any>([]);
 	// const [localidades, setLocalidades] = useState<any>([]);
 
-	// useEffect(() => {
-	// 	fetch("https://apis.datos.gob.ar/georef/api/provincias?max=500")
-	// 		.then((res) => res.json())
-	// 		.then((data) => {
-	// 			const respData = data?.provincias.map((item: any) => ({
-	// 				id: item.id,
-	// 				name: item.nombre,
-	// 				value: item.nombre,
-	// 			}));
+	useEffect(() => {
+		fetch("https://apis.datos.gob.ar/georef/api/provincias?max=500")
+			.then((res) => res.json())
+			.then((data) => {
+				const respData = data?.provincias.map((item: any) => ({
+					id: item.id,
+					name: item.nombre,
+					value: item.nombre,
+				}));
 
-	// 			setProvincias(respData);
-	// 		});
-	// }, []);
+				setProvincias(respData);
+			});
+	}, []);
 
-	// useEffect(() => {
-	// 	if (values?.province) {
-	// 		// setVendedor((prev: any) => ({ ...prev, city: "", location: "" }));
-	// 		fetch(
-	// 			`https://apis.datos.gob.ar/georef/api/departamentos?provincia=${values.province}&max=500`
-	// 		)
-	// 			.then((res) => res.json())
-	// 			.then((data) => {
-	// 				const respData = data?.departamentos.map((item: any) => ({
-	// 					id: item.id,
-	// 					name: item.nombre,
-	// 					value: item.nombre,
-	// 				}));
+	useEffect(() => {
+		if (values?.province) {
+			// setVendedor((prev: any) => ({ ...prev, city: "", location: "" }));
+			fetch(
+				`https://apis.datos.gob.ar/georef/api/departamentos?provincia=${values.province}&max=500`
+			)
+				.then((res) => res.json())
+				.then((data) => {
+					const respData = data?.departamentos.map((item: any) => ({
+						id: item.id,
+						name: item.nombre,
+						value: item.nombre,
+					}));
 
-	// 				setMunicipios(respData);
-	// 			});
-	// 	}
-	// }, [values.province]);
+					setMunicipios(respData);
+				});
+		}
+	}, [values.province]);
 
 	// useEffect(() => {
 	// 	if (vendedor?.city) {
@@ -165,7 +165,7 @@ export const UpdateModalVendedor = ({ onHideModal, currentUpdateData, updateFetc
 
 				{/* Se hicieron cambios en un componente general, es necesario ajustarlo. "SelectField" */}
 
-				{/* <div>
+				<div>
 					<SelectField
 						textLabel="Provincia:"
 						name="province"
@@ -188,7 +188,7 @@ export const UpdateModalVendedor = ({ onHideModal, currentUpdateData, updateFetc
 						onBlur={handleBlur}
 					/>
 					{touched.city && errors.city && <span className="msg__form__error">{errors.city}</span>}
-				</div> */}
+				</div>
 
 				{/* <SelectField
 					textLabel="Localidad:"

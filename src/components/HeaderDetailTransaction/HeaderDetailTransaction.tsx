@@ -2,7 +2,7 @@ import style from "./HeaderDetailTransaction.module.css";
 import { BoxContent } from "../BoxContent/BoxContent";
 import { ChipText } from "@/components/ChipText/ChipText";
 import { useAppSelector } from "@/store/hooks";
-import { generarFechaCorta } from "@/helpers/generateDate";
+import { formatDate } from "@/helpers/formatDate";
 
 interface Props {
 	data?: any;
@@ -15,7 +15,7 @@ export const HeaderDetailTransaction = ({ data }: Props) => {
 		<BoxContent>
 			<div className={style.headerTransaccion__container}>
 				<ChipText text={`SKU: ${data?.sku || ""}`} />
-				<ChipText text={generarFechaCorta()} />
+				<ChipText text={formatDate(data?.created_at)} />
 				<ChipText
 					text={`Vendedor: ${
 						data?.created_by?.name
