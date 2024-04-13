@@ -11,7 +11,7 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
+import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
 
 interface Props {
 	section: string,
@@ -24,6 +24,8 @@ interface Props {
 	setFilesBlob?: any,
 	expandedItems?: any;
 	toggleExpanded?: any
+	allPagos?: any;
+	setIndexToRemove?: any
 }
 
 export const ChequeLayout = ({
@@ -36,16 +38,18 @@ export const ChequeLayout = ({
 	handleRemove,
 	errors,
 	expandedItems,
-	toggleExpanded
+	toggleExpanded,
+	allPagos,
+	setIndexToRemove
 }:
 	Props) => {
 	const uploadFileModal = useModal();
-	const [fileToUpload, setFileToUpload] = useState<any>("");
+	const { fileToUpload, setFileToUpload } = useToggleExpandedContext();
 
 	return (
 		<>
 			<div className={style.layout__container}>
-				{expandedItems  && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section]  && expandedItems[section][index] ? (
+				{expandedItems && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section] && expandedItems[section][index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>{values.tipo}</p>
@@ -62,7 +66,11 @@ export const ChequeLayout = ({
 							<MaximizarButton
 								onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)}
 							/>
-							<DeleteButton onClick={() => handleRemove(index, 'checks')} />
+							<DeleteButton onClick={() => {
+								handleRemove(index, 'checks')
+								setIndexToRemove(index)
+							}
+							} />
 						</div>
 					</div>
 				) : (
@@ -84,7 +92,11 @@ export const ChequeLayout = ({
 								<MinimziarButton
 									onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)}
 								/>
-								<DeleteButton onClick={() => handleRemove(index, 'checks')} />
+								<DeleteButton onClick={() => {
+									handleRemove(index, 'checks')
+									setIndexToRemove(index)
+								}
+								} />
 							</div>
 						</div>
 						<div className={style.layout__content}>
@@ -153,10 +165,12 @@ export const ChequeLayout = ({
 			>
 				<UploadModal
 					section={section}
-					index={index}
+					indexPago={index}
+					index={allPagos[section].length !== 0 ? allPagos[section].length - 1 : undefined}
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
+					allPagos={allPagos[section]}
 					setFileToUpload={setFileToUpload}
 					fileToUpload={fileToUpload}
 				/>

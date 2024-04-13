@@ -31,8 +31,11 @@ export const PagosTransaccion = ({
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
 	const [addRegister, setAddRegister] = useState(false);
+	const [indexToRemove, setIndexToRemove] = useState<number>(0);
+	console.log('indexToRemove', indexToRemove)
 
-	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
+	const { expandedPagos, toggleExpandedPagos, fileToUpload, setFileToUpload } = useToggleExpandedContext();
+
 
 
 	const initialValues: any = {
@@ -53,6 +56,16 @@ export const PagosTransaccion = ({
 		setPagos(formik.values);
 	}, [formik.values]);
 
+	useEffect(() => {
+		if (fileToUpload.length !== 0 && formik.values[section].length < fileToUpload.length) {
+			console.log('pasa')
+			const updatedFileToUpload = [...fileToUpload];
+			updatedFileToUpload.splice(indexToRemove, 1); 
+			setFileToUpload(updatedFileToUpload);
+		}
+	}, [formik.values[section]]);
+
+	// console.log('fomik', formik.values);
 
 	const handleCloseDropdown = () => {
 		setIsDropdownOpen(!isDropdownOpen);
@@ -77,7 +90,7 @@ export const PagosTransaccion = ({
 
 		// Manejar la expansión del pago
 		const sections = formik.values
-	
+
 		if (sections && sections[section] && sections[section].length > 0) {
 			for (const sec in sections) {
 				if (sec === section) {
@@ -117,12 +130,12 @@ export const PagosTransaccion = ({
 				if (lastItem.tipo === 'Depósito / Transferencia') {
 					const completedRegisterDeposits = lastItem &&
 						(lastItem.number === '' || lastItem.amount === null || lastItem.date === '' || lastItem.file_field_name === '')
-						return completedRegisterDeposits
+					return completedRegisterDeposits
 				}
 
 				const completedRegister = lastItem &&
 					(lastItem.number === '' || lastItem.amount === null || lastItem.date === '')
-					return completedRegister
+				return completedRegister
 			}
 			return false;
 		});
@@ -163,12 +176,14 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
+												setIndexToRemove={setIndexToRemove}
 												errors={formik.errors.checks}
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
 												expandedItems={expandedPagos}
 												toggleExpanded={toggleExpandedPagos}
+												allPagos={formik.values}
 											/>
 										)}
 										{pago.tipo === "Depósito / Transferencia" && (
@@ -177,12 +192,14 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
+												setIndexToRemove={setIndexToRemove}
 												errors={formik.errors.deposits}
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
 												expandedItems={expandedPagos}
 												toggleExpanded={toggleExpandedPagos}
+												allPagos={formik.values}
 											/>
 										)}
 										{pago.tipo === "Efectivo" && (
@@ -191,12 +208,14 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
+												setIndexToRemove={setIndexToRemove}
 												errors={formik.errors.cash}
 												index={index}
 												setFilesBlob={setFilesBlob}
 												fileName={pago.file_field_name}
 												expandedItems={expandedPagos}
 												toggleExpanded={toggleExpandedPagos}
+												allPagos={formik.values}
 											/>
 										)}
 									</div>

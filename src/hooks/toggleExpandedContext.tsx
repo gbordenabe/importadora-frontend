@@ -6,7 +6,13 @@ interface ToggleExpandedContextType {
   expandedSaldos: any,
   toggleExpandedSaldos: any,
   expandedPagos: any,
-  toggleExpandedPagos: any
+  toggleExpandedPagos: any,
+  fileToUpload: any,
+  setFileToUpload: any,
+  fileToUploadDeposits: any,
+  setFileToUploadDeposits: any,
+  fileToUploadCash: any,
+  setFileToUploadCash: any
 }
 
 export const ToggleExpandedContext = createContext<ToggleExpandedContextType | null>(null);
@@ -25,7 +31,12 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
   const [expandedSaldos, setExpandedSaldos] = useState<{ [key: number]: boolean }>({});
   const [expandedPagos, setExpandedPagos] = useState<{ [key: number]: boolean }>({});
-
+  const [fileToUpload, setFileToUpload] = useState<any>([]);
+  // console.log('fileToUpload', fileToUpload)
+  const [fileToUploadDeposits, setFileToUploadDeposits] = useState<any>([]);
+  // console.log('fileToUploadDeposits', fileToUploadDeposits)
+  const [fileToUploadCash, setFileToUploadCash] = useState<any>([]);
+  // console.log('fileToUploadCash', fileToUploadCash)
 
   const toggleExpanded = (index: number, method: string) => {
     if (method === 'MaxOrMinBill') {
@@ -191,7 +202,13 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
     expandedSaldos,
     toggleExpandedSaldos,
     expandedPagos,
-    toggleExpandedPagos
+    toggleExpandedPagos,
+    fileToUpload,
+    setFileToUpload,
+    fileToUploadDeposits,
+    setFileToUploadDeposits,
+    fileToUploadCash,
+    setFileToUploadCash 
   };
 
   return (

@@ -11,10 +11,10 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
+import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
 
 interface Props {
-	section?: string;
+	section: string;
 	values?: any;
 	handleChange?: any
 	handleRemove?: any;
@@ -23,7 +23,9 @@ interface Props {
 	setFilesBlob?: any;
 	fileName?: any,
 	expandedItems?: any;
-	toggleExpanded?: any
+	toggleExpanded?: any;
+	allPagos?: any;
+	setIndexToRemove?: any
 }
 
 export const EfectivoTransferenciaLayout = ({
@@ -36,15 +38,17 @@ export const EfectivoTransferenciaLayout = ({
 	errors,
 	fileName,
 	expandedItems,
-	toggleExpanded
+	toggleExpanded,
+	allPagos,
+	setIndexToRemove
 }: Props) => {
 	const uploadFileModal = useModal();
-	const [fileToUpload, setFileToUpload] = useState<any>("");
-	
+	const { fileToUploadCash, setFileToUploadCash } = useToggleExpandedContext();
+
 	return (
 		<>
 			<div className={style.layout__container}>
-				{expandedItems && typeof section !== 'undefined'  && typeof index !== 'undefined' && expandedItems[section] && expandedItems[section][index]  ? (
+				{expandedItems && typeof section !== 'undefined' && typeof index !== 'undefined' && expandedItems[section] && expandedItems[section][index] ? (
 					<div className={style.layout__header}>
 						<div className={style.layout__header__group}>
 							<p className={style.layout__header__title}>{values.tipo}</p>
@@ -59,7 +63,11 @@ export const EfectivoTransferenciaLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
-							<DeleteButton onClick={() => handleRemove(index, 'cash')} />
+							<DeleteButton onClick={() => {
+								handleRemove(index, 'cash')
+								setIndexToRemove(index)
+							}
+							} />
 						</div>
 					</div>
 				) : (
@@ -79,7 +87,11 @@ export const EfectivoTransferenciaLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
-								<DeleteButton onClick={() => handleRemove(index, 'cash')} />
+								<DeleteButton onClick={() => {
+									handleRemove(index, 'cash')
+									setIndexToRemove(index)
+								}
+								} />
 							</div>
 						</div>
 						<div className={style.layout__content}>
@@ -143,12 +155,14 @@ export const EfectivoTransferenciaLayout = ({
 			>
 				<UploadModal
 					section={section}
-					index={index}
+					indexPago={index}
+					index={allPagos[section].length !== 0 ? allPagos[section].length - 1 : undefined}
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
-					setFileToUpload={setFileToUpload}
-					fileToUpload={fileToUpload}
+					setFileToUpload={setFileToUploadCash}
+					fileToUpload={fileToUploadCash}
+					allPagos={allPagos[section]}
 				/>
 			</PrimeModal>
 		</>

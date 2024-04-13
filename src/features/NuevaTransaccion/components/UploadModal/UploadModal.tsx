@@ -6,45 +6,63 @@ import { TiUpload, TiDelete } from 'react-icons/ti';
 
 interface Props {
 	index?: any;
+	indexPago?: any;
 	onChange?: any;
 	setFilesBlob?: any;
 	onHideModal?: any;
 	section?: any;
+	allPagos?: any;
 	setFileToUpload?: any;
 	fileToUpload?: any
 }
 
 export const UploadModal = ({
 	index,
+	indexPago,
 	onChange,
 	setFilesBlob,
 	onHideModal,
 	section,
+	allPagos,
 	setFileToUpload,
 	fileToUpload
 }: Props) => {
+	
+	console.log('index', index)
+	console.log('indexPago', indexPago)
+	console.log('fileToUpload', fileToUpload)
+
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];
-		setFileToUpload(fileResp);
+		const existingFile = fileToUpload[indexPago];
+		if(fileToUpload.length === allPagos.length) {
+			 existingFile.file = fileResp;
+			 setFileToUpload([...fileToUpload]);
+		} else {
+			console.log('else')
+		setFileToUpload((prev: any[]) => [ { file: fileResp },  ...prev]);
+		}
+		
 	};
 
-	const onSaveImg = (fileToUpload: any) => {
-		if (!fileToUpload) return;
-		if (onChange && index !== undefined) {
+	const onSaveImg = () => {
+		const uploadedFile = fileToUpload[indexPago]?.file;
+		if (!uploadedFile) return;
+		if (onChange && indexPago !== undefined) {
 
-			if (fileToUpload.name) {
-				const extension = fileToUpload.name.split('.').pop();
-				const filenameWithoutExtension = fileToUpload.name.replace(/\.[^/.]+$/, "");
+			if (uploadedFile.name) {
+				const extension = uploadedFile.name.split('.').pop();
+				const filenameWithoutExtension = uploadedFile.name.replace(/\.[^/.]+$/, "");
 				const formattedFilename = filenameWithoutExtension.replace(/\./g, '-');
 				const newFilename = `${formattedFilename}.${extension}`;
 
-				const blobConvert = new Blob([fileToUpload], { type: fileToUpload.type });
+				const blobConvert = new Blob([uploadedFile], { type: uploadedFile.type });
 		
 				setFilesBlob((prev: any) => [...prev, { fileName: newFilename, blob: blobConvert }]);
 
 				onChange(
 					{ target: { name: 'file_field_name', value: newFilename } },
-					index,
+					indexPago,
 					section
 				);
 				onHideModal();
@@ -61,20 +79,20 @@ export const UploadModal = ({
 					name="file_field_name"
 					accept=".jpg,.jpeg,.png,.pdf"
 					maxFileSize={1000000}
-					// customUpload={true}
 					onSelect={onFileSelect}
-					onClear={() => setFileToUpload("")}
-					chooseLabel={fileToUpload && fileToUpload.objectURL ? `${fileToUpload.name}` : "Selecciona desde tu dispositivo"}
-					chooseOptions={{ icon: fileToUpload && fileToUpload.objectURL ? <TiDelete style={{ fontSize: '2rem',  margin: '0 1.5px' }} /> : <TiUpload style={{ fontSize: '1rem',  margin: '0 10px'  }} /> }}
+					onClear={() => setFileToUpload((prev: any[]) => prev.filter((_, idx) => idx !== index))}
+                    chooseLabel={ fileToUpload.length === allPagos.length && fileToUpload[indexPago]?.file?.objectURL ? `${fileToUpload[indexPago]?.file?.name}` : "Selecciona desde tu dispositivo"}
+                    chooseOptions={{ icon: fileToUpload.length === allPagos.length && fileToUpload[indexPago]?.file?.objectURL ? <TiDelete style={{ fontSize: '2rem', margin: '0 1.5px' }} /> : <TiUpload style={{ fontSize: '1rem', margin: '0 10px' }} /> }}
 			
 				/>
-				{fileToUpload && fileToUpload.objectURL && (
+
+				{fileToUpload.length === allPagos.length && fileToUpload[indexPago]?.file?.objectURL && (
 					<div style={{ maxHeight: "200px" }}>
 						<img
 							style={{ height: "100%", objectFit: "cover" }}
 							alt={"img preview"}
 							role="presentation"
-							src={fileToUpload.objectURL}
+							src={fileToUpload[indexPago]?.file?.objectURL}
 							width={100}
 						/>
 					</div>
@@ -84,7 +102,7 @@ export const UploadModal = ({
 
 			<div className={style.buttons__container}>
 				<SecondaryButton text="Volver" onClick={onHideModal} fitWidth />
-				<SecondaryButton text="Guardar" onClick={() => onSaveImg(fileToUpload)} fitWidth />
+				<SecondaryButton text="Guardar" onClick={() => onSaveImg()} fitWidth />
 			</div>
 		</div>
 	);
