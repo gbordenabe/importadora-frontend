@@ -28,9 +28,9 @@ export const UploadModal = ({
 	fileToUpload
 }: Props) => {
 	
-	console.log('index', index)
-	console.log('indexPago', indexPago)
-	console.log('fileToUpload', fileToUpload)
+	// console.log('index', index)
+	// console.log('indexPago', indexPago)
+	// console.log('fileToUpload', fileToUpload)
 
 	const onFileSelect = (e: any) => {
 		const fileResp = e.files[0];
@@ -39,7 +39,7 @@ export const UploadModal = ({
 			 existingFile.file = fileResp;
 			 setFileToUpload([...fileToUpload]);
 		} else {
-			console.log('else')
+			// console.log('else')
 		setFileToUpload((prev: any[]) => [ { file: fileResp },  ...prev]);
 		}
 		
@@ -78,7 +78,7 @@ export const UploadModal = ({
 					mode={"basic"}
 					name="file_field_name"
 					accept=".jpg,.jpeg,.png,.pdf"
-					maxFileSize={1000000}
+					maxFileSize={10000000}
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload((prev: any[]) => prev.filter((_, idx) => idx !== index))}
                     chooseLabel={ fileToUpload.length === allPagos.length && fileToUpload[indexPago]?.file?.objectURL ? `${fileToUpload[indexPago]?.file?.name}` : "Selecciona desde tu dispositivo"}

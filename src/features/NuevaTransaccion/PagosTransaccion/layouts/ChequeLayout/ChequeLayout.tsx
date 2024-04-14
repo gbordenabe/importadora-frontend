@@ -44,7 +44,7 @@ export const ChequeLayout = ({
 }:
 	Props) => {
 	const uploadFileModal = useModal();
-	const { fileToUpload, setFileToUpload } = useToggleExpandedContext();
+	const { fileToUploadChecks, setFileToUploadChecks } = useToggleExpandedContext();
 
 	return (
 		<>
@@ -171,8 +171,8 @@ export const ChequeLayout = ({
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
 					allPagos={allPagos[section]}
-					setFileToUpload={setFileToUpload}
-					fileToUpload={fileToUpload}
+					setFileToUpload={setFileToUploadChecks}
+					fileToUpload={fileToUploadChecks}
 				/>
 			</PrimeModal>
 		</>

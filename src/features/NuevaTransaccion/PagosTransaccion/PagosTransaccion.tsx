@@ -31,10 +31,13 @@ export const PagosTransaccion = ({
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
 	const [addRegister, setAddRegister] = useState(false);
-	const [indexToRemove, setIndexToRemove] = useState<number>(0);
-	console.log('indexToRemove', indexToRemove)
+	// const [indexToRemove, setIndexToRemove] = useState<number>(0);
+	// const [indexToRemoveDeposits, setIndexToRemoveDeposits] = useState<number>(0);
+	// const [indexToRemoveCash, setIndexToRemoveCash] = useState<number>(0);
+	// // console.log('indexToRemove', indexToRemove)
 
-	const { expandedPagos, toggleExpandedPagos, fileToUpload, setFileToUpload } = useToggleExpandedContext();
+	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
+	//fileToUploadChecks, setFileToUploadChecks, fileToUploadDeposits, setFileToUploadDeposits, fileToUploadCash, setFileToUploadCash
 
 
 
@@ -56,14 +59,26 @@ export const PagosTransaccion = ({
 		setPagos(formik.values);
 	}, [formik.values]);
 
-	useEffect(() => {
-		if (fileToUpload.length !== 0 && formik.values[section].length < fileToUpload.length) {
-			console.log('pasa')
-			const updatedFileToUpload = [...fileToUpload];
-			updatedFileToUpload.splice(indexToRemove, 1); 
-			setFileToUpload(updatedFileToUpload);
-		}
-	}, [formik.values[section]]);
+	// useEffect(() => {
+	// 	if (fileToUploadChecks.length !== 0 && formik.values[section].length < fileToUploadChecks.length) {
+	// 		console.log('pasa')
+	// 		const updatedFileToUpload = [...fileToUploadChecks];
+	// 		updatedFileToUpload.splice(indexToRemove, 1); 
+	// 		setFileToUploadChecks(updatedFileToUpload);
+	// 	}
+	// 	if (fileToUploadDeposits.length !== 0 && formik.values[section].length < fileToUploadDeposits.length) {
+	// 		console.log('pasa deposits')
+	// 		const updatedfileToUploadDeposits = [...fileToUploadDeposits];
+	// 		updatedfileToUploadDeposits.splice(indexToRemoveDeposits, 1); 
+	// 		setFileToUploadDeposits(updatedfileToUploadDeposits);
+	// 	}
+	// 	if (fileToUploadCash.length !== 0 && formik.values[section].length < fileToUploadCash.length) {
+	// 		console.log('pasa cash')
+	// 		const updatedfileToUploadCash = [...fileToUploadCash];
+	// 		updatedfileToUploadCash.splice(indexToRemoveCash, 1); 
+	// 		setFileToUploadCash(updatedfileToUploadCash);
+	// 	}
+	// }, [formik.values[section]]);
 
 	// console.log('fomik', formik.values);
 
@@ -176,7 +191,7 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												setIndexToRemove={setIndexToRemove}
+												// setIndexToRemove={setIndexToRemove}
 												errors={formik.errors.checks}
 												index={index}
 												setFilesBlob={setFilesBlob}
@@ -192,7 +207,7 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												setIndexToRemove={setIndexToRemove}
+												// setIndexToRemove={setIndexToRemoveDeposits}
 												errors={formik.errors.deposits}
 												index={index}
 												setFilesBlob={setFilesBlob}
@@ -208,7 +223,7 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												setIndexToRemove={setIndexToRemove}
+												// setIndexToRemove={setIndexToRemoveCash}
 												errors={formik.errors.cash}
 												index={index}
 												setFilesBlob={setFilesBlob}

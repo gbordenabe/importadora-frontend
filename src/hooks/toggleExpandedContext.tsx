@@ -7,8 +7,8 @@ interface ToggleExpandedContextType {
   toggleExpandedSaldos: any,
   expandedPagos: any,
   toggleExpandedPagos: any,
-  fileToUpload: any,
-  setFileToUpload: any,
+  fileToUploadChecks: any,
+  setFileToUploadChecks: any,
   fileToUploadDeposits: any,
   setFileToUploadDeposits: any,
   fileToUploadCash: any,
@@ -31,8 +31,8 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
   const [expandedItems, setExpandedItems] = useState<{ [key: number]: boolean }>({});
   const [expandedSaldos, setExpandedSaldos] = useState<{ [key: number]: boolean }>({});
   const [expandedPagos, setExpandedPagos] = useState<{ [key: number]: boolean }>({});
-  const [fileToUpload, setFileToUpload] = useState<any>([]);
-  // console.log('fileToUpload', fileToUpload)
+  const [fileToUploadChecks, setFileToUploadChecks] = useState<any>([]);
+  // console.log('fileToUploadChecks', fileToUploadChecks)
   const [fileToUploadDeposits, setFileToUploadDeposits] = useState<any>([]);
   // console.log('fileToUploadDeposits', fileToUploadDeposits)
   const [fileToUploadCash, setFileToUploadCash] = useState<any>([]);
@@ -203,8 +203,8 @@ export const ToggleExpandedProvider = ({ children }: { children: React.ReactNode
     toggleExpandedSaldos,
     expandedPagos,
     toggleExpandedPagos,
-    fileToUpload,
-    setFileToUpload,
+    fileToUploadChecks,
+    setFileToUploadChecks,
     fileToUploadDeposits,
     setFileToUploadDeposits,
     fileToUploadCash,
