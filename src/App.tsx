@@ -3,6 +3,7 @@ import { AppRoutes } from "./routes/AppRoute";
 import { useAppDispatch } from "./store/hooks";
 import { refreshToken, setLoadingFalse } from "./store/slices/auth";
 import { addLocale, locale } from "primereact/api";
+import { pdfjs } from "react-pdf";
 
 export const App = () => {
 	addLocale("es", {
@@ -43,6 +44,9 @@ export const App = () => {
 	});
 
 	locale("es");
+
+	pdfjs.GlobalWorkerOptions.workerSrc =
+		"//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.js";
 
 	const dispatch = useAppDispatch();
 	// refresh token

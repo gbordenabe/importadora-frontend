@@ -64,6 +64,8 @@ const FiltroClientes = ({
 	}, []);
 
 	const handleUpdateData = () => {
+		if (!selected.id) return;
+
 		setOptionsFilter((prev: any) => ({
 			...prev,
 			clients: convertirANumero([selected.id]),

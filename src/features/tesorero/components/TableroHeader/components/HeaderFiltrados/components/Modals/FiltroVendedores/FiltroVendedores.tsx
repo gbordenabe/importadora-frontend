@@ -34,7 +34,7 @@ const FiltroVendedores = ({
 			const headers = {
 				Authorization: `Bearer ${token}`,
 			};
-			const response = await axios.get(`${url}/user?order_by=name&order=ASC&roleId=1`, {
+			const response = await axios.get(`${url}/user?order_by=user_name&order=ASC&roleId=1`, {
 				headers,
 			});
 			setData(response.data.data);
@@ -49,7 +49,7 @@ const FiltroVendedores = ({
 				Authorization: `Bearer ${token}`,
 			};
 			const response = await axios.get(
-				`${url}/user?nameFilter=${sellerName}&order_by=id&order=ASC&roleId=1`,
+				`${url}/user?nameFilter=${sellerName}&order_by=user_name&order=ASC&roleId=1`,
 				{
 					headers,
 				}
@@ -79,7 +79,7 @@ const FiltroVendedores = ({
 
 	const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, sellerData: any) => {
 		if (e.target.checked) {
-			setSelected({ id: sellerData.id.toString(), name: sellerData.name });
+			setSelected({ id: sellerData.id.toString(), user_name: sellerData.user_name });
 		} else {
 			if (selected?.id === sellerData.id.toString()) {
 				setSelected(null);
@@ -96,7 +96,7 @@ const FiltroVendedores = ({
 
 			<div className={style.container__1}>
 				<TextBoxField
-					name="clientname"
+					name="user_name"
 					onChange={(e) => setSellerName(e.target.value)}
 					value={sellerName}
 				/>
@@ -115,7 +115,7 @@ const FiltroVendedores = ({
 							value={sellerData.id}
 							onChange={(e) => handleCheckboxChange(e, sellerData)}
 						/>
-						<label className={style.btn__filter}>{sellerData.name}</label>
+						<label className={style.btn__filter}>{sellerData.user_name}</label>
 					</div>
 				</div>
 			))}

@@ -18,7 +18,7 @@
 
 .historial__box__dropdown {
 	min-width: 100%;
-	min-height: 200px;
+	/* min-height: 200px; */
 	max-height: 400px;
 
 	position: absolute;

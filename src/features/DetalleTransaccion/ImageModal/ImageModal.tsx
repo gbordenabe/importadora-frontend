@@ -1,3 +1,4 @@
+// Componente para retirar, reemplazado por ImageModalFullScreen
 import style from "./ImageModal.module.css";
 
 import { SecondaryButton } from "@/components/SecondaryButton/SecondaryButton";

@@ -29,7 +29,7 @@ const FiltroEmpresa: React.FC<Props> = ({
 	const handleUpdateData = () => {
 		setOptionsFilter((prev: any) => ({
 			...prev,
-			companies: selected ? convertirANumero([selected.id]) : [],
+			companies: selected?.id ? convertirANumero([selected.id]) : [],
 		}));
 		setCurrentEnterprise(selected ? selected : {});
 	};

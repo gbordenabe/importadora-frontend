@@ -13,10 +13,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import StatusCircle from "@/components/StatusCircle/StatusCircle";
 import { useModal } from "@/hooks/useModal";
-import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
-import { ImageModal } from "./ImageModal/ImageModal";
 import { HeaderDetailTransaction } from "@/components/HeaderDetailTransaction/HeaderDetailTransaction";
 import { MainTitleDetail } from "@/components/MainTitleDetail/MainTitleDetail";
+import { ImageModalFullScreen } from "./ImageModalFullScreen/ImageModalFullScreen";
 
 export const DetalleTransaccion = () => {
 	const { id } = useParams();
@@ -412,7 +411,12 @@ export const DetalleTransaccion = () => {
 			<AppStructure>
 				<MainHeader />
 				<ContentStructure>
-					<MainTitleDetail title="Revisión de transacción" createdBy={data?.created_by} createdAt={data?.created_at}/>
+					<MainTitleDetail
+						title="Revisión de transacción"
+						createdBy={data?.created_by}
+						createdAt={data?.created_at}
+						sku={data?.sku}
+					/>
 
 					<BoxContent>
 						<HeaderDetailTransaction data={data} />
@@ -505,13 +509,9 @@ export const DetalleTransaccion = () => {
 			</AppStructure>
 
 			{/* Add Modal */}
-			<PrimeModal
-				header="Imagen"
-				modalStatus={imgModal.modalStatus}
-				onHideModal={imgModal.onHideModal}
-			>
-				<ImageModal fileData={fileData} />
-			</PrimeModal>
+			{imgModal.modalStatus && (
+				<ImageModalFullScreen onHideModal={imgModal.onHideModal} fileData={fileData} />
+			)}
 		</>
 	);
 };

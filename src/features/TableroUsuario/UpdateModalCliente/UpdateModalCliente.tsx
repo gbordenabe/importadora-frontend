@@ -126,7 +126,7 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 			<div className={style.form__group}>
 				<div>
 					<TextBoxField
-						textLabel="Nombre del values:"
+						textLabel="Nombre del cliente:"
 						name="name"
 						value={values.name || ""}
 						onChange={handleChange}
@@ -148,7 +148,7 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 				</div>
 				<div>
 					<TextBoxField
-						textLabel="N° de values:"
+						textLabel="N° de cliente:"
 						name="client_number"
 						value={values.client_number || ""}
 						onChange={handleChange}
