@@ -11,7 +11,8 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
+import { useEffect, useRef, useState } from "react";
+import { useUploadFileContext } from "@/hooks/uploadFileContext";
 
 interface Props {
 	section: string,
@@ -25,7 +26,6 @@ interface Props {
 	expandedItems?: any;
 	toggleExpanded?: any
 	allPagos?: any;
-	setIndexToRemove?: any
 }
 
 export const ChequeLayout = ({
@@ -40,11 +40,33 @@ export const ChequeLayout = ({
 	expandedItems,
 	toggleExpanded,
 	allPagos,
-	setIndexToRemove
 }:
 	Props) => {
 	const uploadFileModal = useModal();
-	const { fileToUploadChecks, setFileToUploadChecks } = useToggleExpandedContext();
+	const { fileToUploadChecks, setFileToUploadChecks } = useUploadFileContext();
+	const [indexToRemove, setIndexToRemove] = useState<any>(null)
+
+	const isFirstRun = useRef(true);
+
+	useEffect(() => {
+		if (isFirstRun.current) {
+			isFirstRun.current = false;
+			return;
+		}
+		if (allPagos[section] && allPagos[section].length > fileToUploadChecks.length) {
+			const elementsToAdd = allPagos[section].length - fileToUploadChecks.length;
+			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+			setFileToUploadChecks((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+		}
+	}, [allPagos[section]?.length, fileToUploadChecks?.length]);
+
+	useEffect(() => {
+		if (fileToUploadChecks.length !== 0 && allPagos[section].length < fileToUploadChecks.length) {
+			const updatedFileToUpload = [...fileToUploadChecks]
+			updatedFileToUpload.splice(indexToRemove, 1);
+			setFileToUploadChecks(updatedFileToUpload);
+		}
+	}, [allPagos[section]]);
 
 	return (
 		<>
@@ -165,12 +187,11 @@ export const ChequeLayout = ({
 			>
 				<UploadModal
 					section={section}
-					indexPago={index}
-					index={allPagos[section].length !== 0 ? allPagos[section].length - 1 : undefined}
+					index={index}
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
-					allPagos={allPagos[section]}
+					values={allPagos[section]}
 					setFileToUpload={setFileToUploadChecks}
 					fileToUpload={fileToUploadChecks}
 				/>

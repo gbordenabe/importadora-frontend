@@ -11,7 +11,8 @@ import { useModal } from "@/hooks/useModal";
 import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useState } from "react";
+import { useUploadFileContext } from "@/hooks/uploadFileContext";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
 	section: string,
@@ -23,7 +24,8 @@ interface Props {
 	fileName?: any,
 	setFilesBlob?: any,
 	expandedItems?: any;
-	toggleExpanded?: any
+	toggleExpanded?: any;
+	allSaldos?: any;
 }
 
 export const RetencionLayout = ({
@@ -36,10 +38,34 @@ export const RetencionLayout = ({
 	handleRemove,
 	errors,
 	expandedItems,
-	toggleExpanded
+	toggleExpanded,
+	allSaldos
 }: Props) => {
 	const uploadFileModal = useModal();
-	const [fileToUpload, setFileToUpload] = useState<any>("");
+	const { fileToUploadRetention, setFileToUploadRetention } = useUploadFileContext();
+	const [indexToRemove, setIndexToRemove] = useState<any>(null)
+
+	const isFirstRun = useRef(true);
+
+	useEffect(() => {
+		if (isFirstRun.current) {
+			isFirstRun.current = false;
+			return;
+		}
+		if (allSaldos[section] && allSaldos[section].length > fileToUploadRetention.length) {
+			const elementsToAdd = allSaldos[section].length - fileToUploadRetention.length;
+			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+			setFileToUploadRetention((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+		}
+	}, [allSaldos[section]?.length, fileToUploadRetention?.length]);
+
+	useEffect(() => {
+		if (fileToUploadRetention.length !== 0 && allSaldos[section].length < fileToUploadRetention.length) {
+			const updatedFileToUpload = [...fileToUploadRetention]
+			updatedFileToUpload.splice(indexToRemove, 1);
+			setFileToUploadRetention(updatedFileToUpload);
+		}
+	}, [allSaldos[section]]);
 
 	return (
 		<>
@@ -56,7 +82,11 @@ export const RetencionLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
-							<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
+							<DeleteButton onClick={() => {
+								handleRemove(index, 'retentions')
+								setIndexToRemove(index)
+							}
+							} />
 						</div>
 					</div>
 				) : (
@@ -82,7 +112,11 @@ export const RetencionLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
-								<DeleteButton onClick={() => handleRemove(index, 'retentions')} />
+								<DeleteButton onClick={() => {
+									handleRemove(index, 'retentions')
+									setIndexToRemove(index)
+								}
+								} />
 							</div>
 						</div>
 						<div className={style.layout__content}>
@@ -137,8 +171,9 @@ export const RetencionLayout = ({
 								onChange={handleChange}
 								setFilesBlob={setFilesBlob}
 								onHideModal={uploadFileModal.onHideModal}
-								setFileToUpload={setFileToUpload}
-								fileToUpload={fileToUpload}
+								values={allSaldos[section]}
+								setFileToUpload={setFileToUploadRetention}
+								fileToUpload={fileToUploadRetention}
 							/>
 						</PrimeModal>
 					</>

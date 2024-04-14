@@ -11,7 +11,8 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
+import { useEffect, useRef, useState } from "react";
+import { useUploadFileContext } from "@/hooks/uploadFileContext";
 
 interface Props {
 	section: string;
@@ -25,7 +26,6 @@ interface Props {
 	expandedItems?: any;
 	toggleExpanded?: any;
 	allPagos?: any;
-	setIndexToRemove?: any
 }
 
 export const EfectivoTransferenciaLayout = ({
@@ -40,10 +40,33 @@ export const EfectivoTransferenciaLayout = ({
 	expandedItems,
 	toggleExpanded,
 	allPagos,
-	setIndexToRemove
 }: Props) => {
 	const uploadFileModal = useModal();
-	const { fileToUploadCash, setFileToUploadCash } = useToggleExpandedContext();
+	const { fileToUploadCash, setFileToUploadCash } = useUploadFileContext();
+	const [indexToRemove, setIndexToRemove] = useState<any>(null)
+	
+	const isFirstRun = useRef(true);
+
+	useEffect(() => {
+		if (isFirstRun.current) {
+			isFirstRun.current = false;
+			return;
+		}
+		if (allPagos[section] && allPagos[section].length > fileToUploadCash.length) {
+			const elementsToAdd = allPagos[section].length - fileToUploadCash.length;
+			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+			setFileToUploadCash((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+		}
+	}, [allPagos[section]?.length, fileToUploadCash?.length]);
+
+	useEffect(() => {
+		if (fileToUploadCash.length !== 0 && allPagos[section].length < fileToUploadCash.length) {
+			let updatedFileToUpload = [...fileToUploadCash].reverse();
+			updatedFileToUpload.splice(indexToRemove, 1);
+			updatedFileToUpload.reverse()
+			setFileToUploadCash(updatedFileToUpload);
+		}
+	}, [allPagos[section]]);
 
 	return (
 		<>
@@ -155,14 +178,13 @@ export const EfectivoTransferenciaLayout = ({
 			>
 				<UploadModal
 					section={section}
-					indexPago={index}
-					index={allPagos[section].length !== 0 ? allPagos[section].length - 1 : undefined}
+					index={index}
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
 					setFileToUpload={setFileToUploadCash}
 					fileToUpload={fileToUploadCash}
-					allPagos={allPagos[section]}
+					values={allPagos[section]}
 				/>
 			</PrimeModal>
 		</>

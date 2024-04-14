@@ -31,16 +31,9 @@ export const PagosTransaccion = ({
 	const [errorMessage, setErrorMessage] = useState('');
 	const [isDropdownOpen, setIsDropdownOpen] = useState(true);
 	const [addRegister, setAddRegister] = useState(false);
-	// const [indexToRemove, setIndexToRemove] = useState<number>(0);
-	// const [indexToRemoveDeposits, setIndexToRemoveDeposits] = useState<number>(0);
-	// const [indexToRemoveCash, setIndexToRemoveCash] = useState<number>(0);
-	// // console.log('indexToRemove', indexToRemove)
 
 	const { expandedPagos, toggleExpandedPagos } = useToggleExpandedContext();
-	//fileToUploadChecks, setFileToUploadChecks, fileToUploadDeposits, setFileToUploadDeposits, fileToUploadCash, setFileToUploadCash
-
-
-
+	
 	const initialValues: any = {
 		checks: [],
 		deposits: [],
@@ -58,29 +51,6 @@ export const PagosTransaccion = ({
 	useEffect(() => {
 		setPagos(formik.values);
 	}, [formik.values]);
-
-	// useEffect(() => {
-	// 	if (fileToUploadChecks.length !== 0 && formik.values[section].length < fileToUploadChecks.length) {
-	// 		console.log('pasa')
-	// 		const updatedFileToUpload = [...fileToUploadChecks];
-	// 		updatedFileToUpload.splice(indexToRemove, 1); 
-	// 		setFileToUploadChecks(updatedFileToUpload);
-	// 	}
-	// 	if (fileToUploadDeposits.length !== 0 && formik.values[section].length < fileToUploadDeposits.length) {
-	// 		console.log('pasa deposits')
-	// 		const updatedfileToUploadDeposits = [...fileToUploadDeposits];
-	// 		updatedfileToUploadDeposits.splice(indexToRemoveDeposits, 1); 
-	// 		setFileToUploadDeposits(updatedfileToUploadDeposits);
-	// 	}
-	// 	if (fileToUploadCash.length !== 0 && formik.values[section].length < fileToUploadCash.length) {
-	// 		console.log('pasa cash')
-	// 		const updatedfileToUploadCash = [...fileToUploadCash];
-	// 		updatedfileToUploadCash.splice(indexToRemoveCash, 1); 
-	// 		setFileToUploadCash(updatedfileToUploadCash);
-	// 	}
-	// }, [formik.values[section]]);
-
-	// console.log('fomik', formik.values);
 
 	const handleCloseDropdown = () => {
 		setIsDropdownOpen(!isDropdownOpen);
@@ -191,7 +161,6 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												// setIndexToRemove={setIndexToRemove}
 												errors={formik.errors.checks}
 												index={index}
 												setFilesBlob={setFilesBlob}
@@ -207,7 +176,6 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												// setIndexToRemove={setIndexToRemoveDeposits}
 												errors={formik.errors.deposits}
 												index={index}
 												setFilesBlob={setFilesBlob}
@@ -223,7 +191,6 @@ export const PagosTransaccion = ({
 												values={pago}
 												handleChange={handleChange}
 												handleRemove={handleRemove}
-												// setIndexToRemove={setIndexToRemoveCash}
 												errors={formik.errors.cash}
 												index={index}
 												setFilesBlob={setFilesBlob}

@@ -11,7 +11,8 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
+import { useEffect, useRef, useState } from "react";
+import { useUploadFileContext } from "@/hooks/uploadFileContext";
 
 interface Props {
 	section: string,
@@ -25,7 +26,6 @@ interface Props {
 	expandedItems?: any;
 	toggleExpanded?: any;
 	allPagos?: any;
-	setIndexToRemove?: any
 }
 
 
@@ -41,10 +41,33 @@ export const DepositoLayout = ({
 	expandedItems,
 	toggleExpanded,
 	allPagos,
-	setIndexToRemove
 }: Props) => {
 	const uploadFileModal = useModal();
-	const { fileToUploadDeposits, setFileToUploadDeposits } = useToggleExpandedContext();
+	const { fileToUploadDeposits, setFileToUploadDeposits } = useUploadFileContext();
+	const [indexToRemove, setIndexToRemove] = useState<any>(null)
+	
+	const isFirstRun = useRef(true);
+
+	useEffect(() => {
+		if (isFirstRun.current) {
+			isFirstRun.current = false;
+			return;
+		}
+		if (allPagos[section] && allPagos[section].length > fileToUploadDeposits.length) {
+			const elementsToAdd = allPagos[section].length - fileToUploadDeposits.length;
+			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+			setFileToUploadDeposits((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+		}
+	}, [allPagos[section]?.length, fileToUploadDeposits?.length]);
+
+	useEffect(() => {
+		if (fileToUploadDeposits.length !== 0 && allPagos[section].length < fileToUploadDeposits.length) {
+			let updatedFileToUpload = [...fileToUploadDeposits].reverse();
+			updatedFileToUpload.splice(indexToRemove, 1);
+			updatedFileToUpload.reverse()
+			setFileToUploadDeposits(updatedFileToUpload);
+		}
+	}, [allPagos[section]]);
 
 	return (
 		<>
@@ -174,14 +197,13 @@ export const DepositoLayout = ({
 			>
 				<UploadModal
 					section={section}
-					indexPago={index}
-					index={allPagos[section].length !== 0 ? allPagos[section].length - 1 : undefined}
+					index={index}
 					onChange={handleChange}
 					setFilesBlob={setFilesBlob}
 					onHideModal={uploadFileModal.onHideModal}
 					setFileToUpload={setFileToUploadDeposits}
 					fileToUpload={fileToUploadDeposits}
-					allPagos={allPagos[section]}
+					values={allPagos[section]}
 				/>
 			</PrimeModal>
 		</>

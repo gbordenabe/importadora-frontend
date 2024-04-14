@@ -41,7 +41,6 @@ export const NuevaTransaccion = () => {
 	const [saldos, setSaldos] = useState<any>();
 
 	const [filesBlob, setFilesBlob] = useState([]);
-	// console.log('filesblob', filesBlob)
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [errorDuplicatedBill, setErrorDuplicatedBill] = useState(false);
@@ -64,7 +63,6 @@ export const NuevaTransaccion = () => {
 
 	// Crear transacción
 	const createTransaction = async (data: any) => {
-		// console.log('data', data)
 		setLoading(true);
 		try {
 
@@ -109,7 +107,6 @@ export const NuevaTransaccion = () => {
 			...pagosClasificados,
 			...saldosClasificados,
 		};
-		console.log('newTransaccion', newTransaction)
 
 		const formData = new FormData();
 
@@ -124,7 +121,6 @@ export const NuevaTransaccion = () => {
 				formData.append(key, value as string);
 			}
 		}
-		console.log('formData', formData)
 
 		createTransaction(formData);
 	};

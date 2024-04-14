@@ -189,6 +189,7 @@ export const SaldosTransaccion = ({
 												fileName={saldo.file_field_name}
 												expandedItems={expandedSaldos}
 												toggleExpanded={toggleExpandedSaldos}
+												allSaldos={formik.values}
 											/>
 										)}
 									</div>

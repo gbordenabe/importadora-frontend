@@ -63,10 +63,6 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 		}
 	}, [data]);
 
-	console.log(formData);
-	// console.log("fileToUpload => ", fileToUpload);
-	// console.log("blob => ", filesBlob);
-
 	return (
 		<>
 			<div className={styles.formContainer}>

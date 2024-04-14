@@ -42,8 +42,6 @@ export const DetalleTransaccion = () => {
 		fetchData();
 	}, []);
 
-	// console.log(data);
-
 	const onImgModal = (file: any) => {
 		setFileData(file);
 		imgModal.onVisibleModal();
