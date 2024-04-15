@@ -12,7 +12,7 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { formatPrice } from "@/helpers/formatPrice";
 import { useUploadFileContext } from "@/hooks/uploadFileContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
 	section: string,
@@ -43,29 +43,27 @@ export const RetencionLayout = ({
 }: Props) => {
 	const uploadFileModal = useModal();
 	const { fileToUploadRetention, setFileToUploadRetention } = useUploadFileContext();
-	const [indexToRemove, setIndexToRemove] = useState<any>(null)
-
-	const isFirstRun = useRef(true);
-
+	const [initialized, setInitialized] = useState(false);
+	
 	useEffect(() => {
-		if (isFirstRun.current) {
-			isFirstRun.current = false;
-			return;
+		if (!initialized) {
+			setInitialized(true);
+			if (allSaldos[section]?.length && allSaldos[section].length > fileToUploadRetention.length) {
+				const elementsToAdd = allSaldos[section].length - fileToUploadRetention.length;
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				setFileToUploadRetention((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+			}
 		}
-		if (allSaldos[section] && allSaldos[section].length > fileToUploadRetention.length) {
-			const elementsToAdd = allSaldos[section].length - fileToUploadRetention.length;
-			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
-			setFileToUploadRetention((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
-		}
-	}, [allSaldos[section]?.length, fileToUploadRetention?.length]);
+	}, [allSaldos[section]?.length, fileToUploadRetention.length, initialized]);
 
-	useEffect(() => {
-		if (fileToUploadRetention.length !== 0 && allSaldos[section].length < fileToUploadRetention.length) {
-			const updatedFileToUpload = [...fileToUploadRetention]
-			updatedFileToUpload.splice(indexToRemove, 1);
-			setFileToUploadRetention(updatedFileToUpload);
-		}
-	}, [allSaldos[section]]);
+	const handleDelete = async () => {
+		await handleRemove(index, 'retentions');
+		setFileToUploadRetention((prevFileToUpload: any) => {
+		  const updatedFileToUpload = [...prevFileToUpload];
+		  updatedFileToUpload.splice(index, 1);
+		  return updatedFileToUpload;
+		});
+	  };
 
 	return (
 		<>
@@ -82,11 +80,7 @@ export const RetencionLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
-							<DeleteButton onClick={() => {
-								handleRemove(index, 'retentions')
-								setIndexToRemove(index)
-							}
-							} />
+							<DeleteButton onClick={handleDelete} />
 						</div>
 					</div>
 				) : (
@@ -112,11 +106,7 @@ export const RetencionLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinSaldos", section)} />
-								<DeleteButton onClick={() => {
-									handleRemove(index, 'retentions')
-									setIndexToRemove(index)
-								}
-								} />
+								<DeleteButton onClick={handleDelete} />
 							</div>
 						</div>
 						<div className={style.layout__content}>

@@ -11,7 +11,7 @@ import { PrimeModal } from "@/primeComponents/PrimeModal/PrimeModal";
 import { UploadModal } from "@/features/NuevaTransaccion/components/UploadModal/UploadModal";
 import { useModal } from "@/hooks/useModal";
 import { formatPrice } from "@/helpers/formatPrice";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useUploadFileContext } from "@/hooks/uploadFileContext";
 
 interface Props {
@@ -44,30 +44,27 @@ export const DepositoLayout = ({
 }: Props) => {
 	const uploadFileModal = useModal();
 	const { fileToUploadDeposits, setFileToUploadDeposits } = useUploadFileContext();
-	const [indexToRemove, setIndexToRemove] = useState<any>(null)
+	const [initialized, setInitialized] = useState(false);
 	
-	const isFirstRun = useRef(true);
-
 	useEffect(() => {
-		if (isFirstRun.current) {
-			isFirstRun.current = false;
-			return;
+		if (!initialized) {
+			setInitialized(true);
+			if (allPagos[section]?.length && allPagos[section].length > fileToUploadDeposits.length) {
+				const elementsToAdd = allPagos[section].length - fileToUploadDeposits.length;
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				setFileToUploadDeposits((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
+			}
 		}
-		if (allPagos[section] && allPagos[section].length > fileToUploadDeposits.length) {
-			const elementsToAdd = allPagos[section].length - fileToUploadDeposits.length;
-			const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
-			setFileToUploadDeposits((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
-		}
-	}, [allPagos[section]?.length, fileToUploadDeposits?.length]);
+	}, [allPagos[section]?.length, fileToUploadDeposits.length, initialized]);
 
-	useEffect(() => {
-		if (fileToUploadDeposits.length !== 0 && allPagos[section].length < fileToUploadDeposits.length) {
-			let updatedFileToUpload = [...fileToUploadDeposits].reverse();
-			updatedFileToUpload.splice(indexToRemove, 1);
-			updatedFileToUpload.reverse()
-			setFileToUploadDeposits(updatedFileToUpload);
-		}
-	}, [allPagos[section]]);
+	const handleDelete = async () => {
+		await handleRemove(index, 'deposits');
+		setFileToUploadDeposits((prevFileToUpload: any) => {
+		  const updatedFileToUpload = [...prevFileToUpload];
+		  updatedFileToUpload.splice(index, 1);
+		  return updatedFileToUpload;
+		});
+	  };
 
 	return (
 		<>
@@ -88,11 +85,7 @@ export const DepositoLayout = ({
 						</div>
 						<div className={style.layout__header__group}>
 							<MaximizarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
-							<DeleteButton onClick={() => {
-								handleRemove(index, 'deposits')
-								setIndexToRemove(index)
-							}
-							} />
+							<DeleteButton onClick={handleDelete} />
 						</div>
 					</div>
 				) : (
@@ -119,11 +112,7 @@ export const DepositoLayout = ({
 							</div>
 							<div className={style.layout__header__group}>
 								<MinimziarButton onClick={() => toggleExpanded(index, "MaxOrMinPagos", section)} />
-								<DeleteButton onClick={() => {
-									handleRemove(index, 'deposits')
-									setIndexToRemove(index)
-								}
-								} />
+								<DeleteButton onClick={handleDelete} />
 							</div>
 						</div>
 						<div className={style.layout__content}>

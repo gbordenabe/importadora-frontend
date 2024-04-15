@@ -28,7 +28,6 @@ export const UploadFileProvider = ({ children }: { children: React.ReactNode }) 
   const [fileToUploadCash, setFileToUploadCash] = useState<any>([]);
   const [fileToUploadRetention, setFileToUploadRetention] = useState<any>([])
 
-
   const contextValue: UploadFileContextType
     = {
     fileToUploadChecks,
