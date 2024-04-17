@@ -107,6 +107,7 @@ export const TableroTesorero = () => {
 							fetchFilterData={fetchFilterData}
 							handleResetFilters={handleResetFilters}
 							totalCount={totalCount}
+							currentPage={currentPage}
 						/>
 
 						<div className={style.tableroVendedor__list}>

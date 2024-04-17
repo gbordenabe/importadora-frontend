@@ -26,6 +26,7 @@ interface Props {
 	fetchFilterData?: any;
 	handleResetFilters?: any;
 	totalCount?: number;
+	currentPage?: number;
 }
 
 export const HeaderFiltrados = ({
@@ -33,6 +34,7 @@ export const HeaderFiltrados = ({
 	setOptionsFilter,
 	handleResetFilters,
 	totalCount,
+	currentPage,
 }: Props) => {
 	const {
 		modalStatus: modalStatus2,
@@ -103,24 +105,28 @@ export const HeaderFiltrados = ({
 		try {
 			const token = localStorage.getItem("rt__importadora");
 
-			// const { data } = await axios.get(`${url}/transaction/csv`, {
+			const { data } = await axios.post(
+				`${url}/transaction/csv?page=${currentPage}&limit=10`,
+				optionsFilter,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					responseType: "blob",
+				}
+			);
+
+			// const response = await axios({
+			// 	method: "get",
+			// 	url: `${url}/transaction/csv`,
 			// 	headers: {
 			// 		Authorization: `Bearer ${token}`,
 			// 	},
 			// 	responseType: "blob",
+			// 	data: optionsFilter,
 			// });
 
-			const response = await axios({
-				method: "get",
-				url: `${url}/transaction/csv`,
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				responseType: "blob",
-				data: optionsFilter,
-			});
-
-			const { data } = response;
+			// const { data } = response;
 
 			if (!data) {
 				alert("No se han podido cargar el archivo o ha habido un problema con el servidor");

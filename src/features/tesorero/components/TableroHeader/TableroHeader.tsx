@@ -10,6 +10,7 @@ interface Props {
 	fetchFilterData?: any;
 	handleResetFilters?: any;
 	totalCount?: number;
+	currentPage?: number;
 }
 
 export const TableroHeader = ({
@@ -20,6 +21,7 @@ export const TableroHeader = ({
 	fetchFilterData,
 	handleResetFilters,
 	totalCount,
+	currentPage
 }: Props) => {
 	return (
 		<div className={style.tableroVendedor__content__header}>
@@ -29,6 +31,7 @@ export const TableroHeader = ({
 				fetchFilterData={fetchFilterData}
 				handleResetFilters={handleResetFilters}
 				totalCount={totalCount}
+				currentPage={currentPage}
 			/>
 			<HeaderConfiguracion showMenuAyuda={showMenuAyuda} showProfileEdit={showProfileEdit} />
 		</div>
