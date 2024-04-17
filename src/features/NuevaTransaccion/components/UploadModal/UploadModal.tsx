@@ -74,8 +74,8 @@ export const UploadModal = ({
 					maxFileSize={10000000}
 					onSelect={onFileSelect}
 					onClear={() => setFileToUpload((prev: any[]) => prev.filter((_, idx) => idx !== index))}
-					chooseLabel={fileToUpload.length === values.length && fileToUpload[index]?.file?.objectURL ? `${fileToUpload[index]?.file?.name}` : "Selecciona desde tu dispositivo"}
-					chooseOptions={{ icon: fileToUpload.length === values.length && fileToUpload[index]?.file?.objectURL ? <TiDelete style={{ fontSize: '2rem', margin: '0 1.5px' }} /> : <TiUpload style={{ fontSize: '1rem', margin: '0 10px' }} /> }}
+					chooseLabel={fileToUpload.length === values.length && (fileToUpload[index]?.file?.type === 'image/jpeg' || fileToUpload[index]?.file?.type === 'image/jpg' || fileToUpload[index]?.file?.type === 'image/png' || fileToUpload[index]?.file?.type === 'application/pdf') ? `${fileToUpload[index]?.file?.name}` : "Selecciona desde tu dispositivo"}
+					chooseOptions={{ icon: fileToUpload.length === values.length && (fileToUpload[index]?.file?.type === 'image/jpeg' || fileToUpload[index]?.file?.type === 'image/jpg' || fileToUpload[index]?.file?.type === 'image/png' || fileToUpload[index]?.file?.type === 'application/pdf') ? <TiDelete style={{ fontSize: '2rem', margin: '0 1.5px' }} /> : <TiUpload style={{ fontSize: '1rem', margin: '0 10px' }} /> }}
 
 				/>
 
@@ -90,7 +90,7 @@ export const UploadModal = ({
 						/>
 					</div>
 				)}
-				<p className={style.upload__description}>Formatos disponibles: JPG, PNG y PDF</p>
+				<p className={style.upload__description}>Formatos disponibles: JPG, JPEG, PNG y PDF</p>
 			</div>
 
 			<div className={style.buttons__container}>
