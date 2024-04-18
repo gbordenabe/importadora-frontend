@@ -102,15 +102,15 @@ export const MainTitleDetail = ({ title, createdBy, createdAt, sku }: Props) => 
 							onClick={() => handleDownload(dataDownloadAdjuntos, "Nombre")}
 						/>
 					</div>
-					<div>
-						<PrimaryButton
-							text="Exportar PDF"
-							icon={<BiSolidArchiveIn />}
-							onClick={() => downloadFile(dataDownloadPdf, `${sku}`)}
-						/>
-					</div>
 				</>
 			)}
+			<div>
+				<PrimaryButton
+					text="Exportar PDF"
+					icon={<BiSolidArchiveIn />}
+					onClick={() => downloadFile(dataDownloadPdf, `${sku}`)}
+				/>
+			</div>
 
 			<div style={{ position: "relative" }}>
 				<div className={style.historial__box} onClick={() => setDropdownActive((prev) => !prev)}>

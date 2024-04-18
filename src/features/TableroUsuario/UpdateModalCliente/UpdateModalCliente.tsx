@@ -208,7 +208,7 @@ export const UpdateModalCliente = ({ onHideModal, currentUpdateData, updateFetch
 			<div className={style.container__buttons}>
 				<SecondaryButton text="Volver" onClick={onHideModal} fitWidth />
 
-				<PrimaryButton text="Editar values" type="submit" fitWidth />
+				<PrimaryButton text="Editar cliente" type="submit" fitWidth />
 			</div>
 		</form>
 	);
