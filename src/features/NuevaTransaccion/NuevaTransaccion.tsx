@@ -25,6 +25,7 @@ import { CancelarTransaccionModal } from "./CancelarTransaccionModal/CancelarTra
 import Loading from "@/components/Loading/Loading";
 import { clasificarFacturas } from "@/helpers/convertirFacturas";
 import { useToggleExpandedContext } from "@/hooks/toggleExpandedContext";
+import { useUploadFileContext } from "@/hooks/uploadFileContext";
 
 export const NuevaTransaccion = () => {
 	const navigate = useNavigate();
@@ -32,6 +33,7 @@ export const NuevaTransaccion = () => {
 	const errorConfirmTransaction = useModal();
 	const cancelarTransaccionModal = useModal();
 	const errorAllSectionCompleted = useModal();
+	const errorRepeatedFile = useModal();
 	const errorBillValidation = useModal();
 	const [sku, setSku] = useState("");
 	const [usuarios, setUsuarios] = useState<any>({ companyId: undefined, clientId: undefined });
@@ -52,6 +54,8 @@ export const NuevaTransaccion = () => {
 	const [totalFacturas, setTotalFacturas] = useState(0);
 	const [totalPagos, setTotalPagos] = useState(0);
 	const [totalSaldos, setTotalSaldos] = useState(0);
+
+	const {setFileToUploadChecks, setFileToUploadDeposits, setFileToUploadCash, setFileToUploadRetention  } = useUploadFileContext();
 
 	// Bloquear cuadro
 	const [groupStatus, setGroupStatus] = useState({
@@ -76,7 +80,7 @@ export const NuevaTransaccion = () => {
 
 			navigate("/tablero-vendedor");
 		} catch (error: any) {
-			errorConfirmTransaction.onVisibleModal();
+			errorRepeatedFile.onVisibleModal();
 		}
 		finally {
 			setLoading(false);
@@ -130,6 +134,12 @@ export const NuevaTransaccion = () => {
 			const fecha = generarFecha();
 			setSku(fecha);
 		}
+		return () => {
+			setFileToUploadChecks([])
+			setFileToUploadDeposits([])
+			setFileToUploadCash([])
+			setFileToUploadRetention([])
+		  };
 	}, []);
 
 	useEffect(() => {
@@ -395,6 +405,20 @@ export const NuevaTransaccion = () => {
 				<ValidationModal
 					onHideModal={errorConfirmTransaction.onHideModal}
 					description={"Por favor intente nuevamente"}
+					textButton="Volver"
+				/>
+			</PrimeModal>
+
+			{/* Error Reapeated file */}
+			<PrimeModal
+				header="Error en archivo adjunto"
+				modalStatus={errorRepeatedFile.modalStatus}
+				onHideModal={errorRepeatedFile.onHideModal}
+				titleCenter
+			>
+				<ValidationModal
+					onHideModal={errorRepeatedFile.onHideModal}
+					description={"Existe un archivo adjunto cargado previamente"}
 					textButton="Volver"
 				/>
 			</PrimeModal>
