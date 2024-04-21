@@ -50,7 +50,7 @@ export const RetencionLayout = ({
 			setInitialized(true);
 			if (allSaldos[section]?.length && allSaldos[section].length > fileToUploadRetention.length) {
 				const elementsToAdd = allSaldos[section].length - fileToUploadRetention.length;
-				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: {name: '' } }));
 				setFileToUploadRetention((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
 			}
 		}

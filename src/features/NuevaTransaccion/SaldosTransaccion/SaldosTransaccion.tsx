@@ -110,12 +110,12 @@ export const SaldosTransaccion = ({
 
 				if (lastItem.tipo === 'Retención impositiva') {
 					const completedRegisterDeposits = lastItem &&
-						(lastItem.number === '' || lastItem.amount === null || lastItem.date === '' || lastItem.file_field_name === '')
+						(lastItem.number === '' || lastItem.amount === null || lastItem.amount === 0 || lastItem.date === '' || lastItem.file_field_name === '')
 					return completedRegisterDeposits
 				}
 
 				const completedRegister = lastItem &&
-					(lastItem.number === '' || lastItem.amount === null || lastItem.date === '')
+					(lastItem.number === '' || lastItem.amount === null || lastItem.amount === 0 || lastItem.date === '')
 				return completedRegister
 			}
 			return false;

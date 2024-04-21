@@ -51,7 +51,7 @@ export const ChequeLayout = ({
 			setInitialized(true);
 			if (allPagos[section]?.length && allPagos[section].length > fileToUploadChecks.length) {
 				const elementsToAdd = allPagos[section].length - fileToUploadChecks.length;
-				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: {name: '' } }));
 				setFileToUploadChecks((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
 			}
 		}

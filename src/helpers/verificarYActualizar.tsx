@@ -16,6 +16,9 @@ const verificarYActualizar = (
 						console.log(`Hay un elemento sin los datos completos en la propiedad ${propiedad}`);
 						return {loadData: true, message: "requiredData"}; // Falta datos
 					}
+					if(propiedad === 'amount' && item[propiedad] === 0) {
+						return {loadData: true, message: "requiredData"}; // Falta datos
+					}
 				}
 
 				if (sectionKey === "bills") {

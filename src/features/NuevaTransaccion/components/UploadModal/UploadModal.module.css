@@ -22,3 +22,8 @@
 	gap: 20px;
 	justify-content: center;
 }
+
+.message_error {
+	color: red;
+	font-size: 10px;
+}

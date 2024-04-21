@@ -25,3 +25,8 @@
 .mainButton__fitWidth {
 	width: fit-content;
 }
+
+.disabledButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -50,7 +50,7 @@ export const EfectivoTransferenciaLayout = ({
 			setInitialized(true);
 			if (allPagos[section]?.length && allPagos[section].length > fileToUploadCash.length) {
 				const elementsToAdd = allPagos[section].length - fileToUploadCash.length;
-				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: {name: '' } }));
 				setFileToUploadCash((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
 			}
 		}

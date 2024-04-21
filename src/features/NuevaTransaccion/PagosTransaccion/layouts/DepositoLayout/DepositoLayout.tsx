@@ -51,7 +51,7 @@ export const DepositoLayout = ({
 			setInitialized(true);
 			if (allPagos[section]?.length && allPagos[section].length > fileToUploadDeposits.length) {
 				const elementsToAdd = allPagos[section].length - fileToUploadDeposits.length;
-				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: null }));
+				const additionalFiles = Array.from({ length: elementsToAdd }, () => ({ file: {name: '' } }));
 				setFileToUploadDeposits((prevFileToUpload: any) => [...additionalFiles, ...prevFileToUpload]);
 			}
 		}

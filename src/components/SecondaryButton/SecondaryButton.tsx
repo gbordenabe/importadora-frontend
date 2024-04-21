@@ -12,7 +12,7 @@ interface Props {
 export const SecondaryButton = ({ text, onClick, icon, fitWidth, disabled, type }: Props) => {
 	return (
 		<button
-			className={`${style.mainButton__container} ${fitWidth && style.mainButton__fitWidth}`}
+			className={`${style.mainButton__container} ${fitWidth && style.mainButton__fitWidth} ${disabled && style.disabledButton}`}
 			onClick={onClick}
 			disabled={disabled}
 			type={type}
