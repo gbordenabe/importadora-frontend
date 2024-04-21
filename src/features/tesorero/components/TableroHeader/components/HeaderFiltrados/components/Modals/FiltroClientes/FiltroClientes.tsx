@@ -97,7 +97,7 @@ const FiltroClientes = ({
 
 			<div className={style.line}></div>
 
-			{data?.map((data: any) => (
+			{data?.slice(0, 5)?.map((data: any) => (
 				<div key={data.id}>
 					<div className={style.checkboxContainer}>
 						<input

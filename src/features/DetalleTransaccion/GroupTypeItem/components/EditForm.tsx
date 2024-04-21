@@ -29,7 +29,7 @@ interface EditFormProps {
 }
 
 const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, handleBack }) => {
-	const [formData, setFormData] = useState<EditFormData>(data);
+	const [newData, setNewData] = useState<EditFormData>(data);
 
 	// Archivo adjunto
 	const uploadFileModal = useModal();
@@ -47,19 +47,38 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 				? Number(e.target.value) // Convertir el valor a número si el input es de tipo 'number'
 				: e.target.value;
 
-		setFormData({ ...formData, [campo]: value });
+		setNewData({ ...newData, [campo]: value });
 	};
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		onSave({ ...formData, typeGroup });
+
+		let newDataUpdate = { ...newData, file: fileToUpload };
+		console.log(newDataUpdate);
+
+		// const formDataStructure = new FormData();
+
+		// filesBlob.forEach((file: any) => {
+		// 	formData.append(file.fileName, file.blob, file.fileName);
+		// });
+
+		// for (const [key, value] of Object.entries(newTransaction)) {
+		// 	if (Array.isArray(value)) {
+		// 		formData.append(key, JSON.stringify(value));
+		// 	} else {
+		// 		formData.append(key, value as string);
+		// 	}
+		// }
+
+		onSave({ ...newDataUpdate, typeGroup });
+		// onSave({ ...formData, typeGroup });
 	};
 
 	useEffect(() => {
 		if (data?.date) {
 			const parts = data.date.split("-");
 			const parsedDate = new Date(parts[0], parts[1] - 1, parts[2]);
-			setFormData((prev) => ({ ...prev, date: parsedDate }));
+			setNewData((prev) => ({ ...prev, date: parsedDate }));
 		}
 	}, [data]);
 
@@ -72,7 +91,7 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 						.map((column, index) => {
 							let typeSpanish;
 							if (column.campo === "type") {
-								switch (formData[column.campo]) {
+								switch (newData[column.campo]) {
 									case "THIRD_PARTY":
 										typeSpanish = "De terceros";
 										break; // No olvides los break para evitar que se ejecute el siguiente caso
@@ -111,7 +130,7 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 										<>
 											<TextBoxField
 												textLabel={column.nombre}
-												value={formData[column.campo]}
+												value={newData[column.campo]}
 												onChange={(e) => handleChange(e, column.campo)}
 												type="number"
 												disabled={column.campo === "amount" ? true : false}
@@ -123,7 +142,7 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 										<>
 											<TextBoxField
 												textLabel={column.nombre}
-												value={formData[column.campo]}
+												value={newData[column.campo]}
 												onChange={(e) => handleChange(e, column.campo)}
 											/>
 										</>
@@ -133,7 +152,7 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 										<>
 											<CalendarInput
 												label={column.nombre}
-												value={formData[column.campo]}
+												value={newData[column.campo]}
 												onChange={(e: any) => handleChange(e, column.campo)}
 											/>
 										</>

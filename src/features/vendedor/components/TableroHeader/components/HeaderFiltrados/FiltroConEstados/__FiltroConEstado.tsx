@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import style from "./FiltroConEstado.module.css";
+import style from "./__FiltroConEstado.module.css";
 
-const FiltroConEstado = ({
+const __FiltroConEstado = ({
 	onSetFilterDocument,
 	onHideModal,
 	currentValue,
@@ -43,11 +43,9 @@ const FiltroConEstado = ({
 		} else {
 			setTypeDocument(
 				Object.fromEntries(
-					Object.entries(typeDocument).map(([key]) => {
-						// Object.entries(typeDocument).map(([key, value]) => {
-						// const newValue = value ? selectedStatus : value;
-						// return [key, newValue];
-						return [key, ""];
+					Object.entries(typeDocument).map(([key, value]) => {
+						const newValue = value ? selectedStatus : value;
+						return [key, newValue];
 					})
 				)
 			);
@@ -70,7 +68,6 @@ const FiltroConEstado = ({
 		if (validarAlMenosUnAll(typeDocumentToSend)) {
 			convertirSiTodosSonAll(typeDocumentToSend);
 		}
-
 		onSetFilterDocument(status, isAll);
 
 		// Envio de data fetch
@@ -131,7 +128,7 @@ const FiltroConEstado = ({
 	);
 };
 
-export default FiltroConEstado;
+export default __FiltroConEstado;
 
 const verificarPropiedadesConValor = (obj: any) => {
 	for (let propiedad in obj) {
@@ -163,3 +160,16 @@ const convertirATodosAllSiEstanVacios = (obj: any) => {
 
 	return obj;
 };
+
+// ---- Antiguo handleStatusChange
+// const handleStatusChange = (selectedStatus: any) => {
+// 	setStatus(selectedStatus);
+
+// 	setTypeDocument(
+// 		Object.fromEntries(
+// 			Object.entries(typeDocument).map(([key]) => {
+// 				return [key, selectedStatus];
+// 			})
+// 		)
+// 	);
+// };

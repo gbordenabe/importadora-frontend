@@ -34,7 +34,7 @@ export const HeaderFiltrados = ({
 	setOptionsFilter,
 	handleResetFilters,
 	totalCount,
-	currentPage,
+	// currentPage,
 }: Props) => {
 	const {
 		modalStatus: modalStatus2,
@@ -100,13 +100,14 @@ export const HeaderFiltrados = ({
 			...documentsType,
 		}));
 	};
-
+	
 	const handleDownloadCsv = async () => {
 		try {
 			const token = localStorage.getItem("rt__importadora");
 
 			const { data } = await axios.post(
-				`${url}/transaction/csv?page=${currentPage}&limit=10`,
+				// `${url}/transaction/csv?page=${currentPage}&limit=10`,
+				`${url}/transaction/csv`,
 				optionsFilter,
 				{
 					headers: {
@@ -195,7 +196,7 @@ export const HeaderFiltrados = ({
 						<div className={style.header__filtrados__content__itemGroup} onClick={onVisibleModal5}>
 							<p className={style.header__filtrados__text}>Vendedor:</p>
 							<div className={style.header__filtrados__documentType__item}>
-								{currentSeller?.name ? currentSeller?.name : "Todos"}
+								{currentSeller?.user_name ? currentSeller?.user_name : "Todos"}
 							</div>
 						</div>
 					</div>

@@ -145,8 +145,6 @@ export const GroupTypeItem = ({
 
 			const data = await response.json();
 			console.log("Success:", data);
-
-			// Asumiendo que `fetchData` y `setIsEditing` están definidos y son relevantes en este contexto
 			fetchData();
 			setIsEditing(false);
 		} catch (error) {

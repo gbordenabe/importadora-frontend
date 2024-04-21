@@ -106,7 +106,7 @@ const FiltroVendedores = ({
 
 			<div className={style.line}></div>
 
-			{data.map((sellerData: any) => (
+			{data?.slice(0, 5).map((sellerData: any) => (
 				<div key={sellerData.id}>
 					<div className={style.checkboxContainer}>
 						<input
