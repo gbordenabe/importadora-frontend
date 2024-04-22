@@ -131,14 +131,32 @@ export const GroupTypeItem = ({
 		}
 
 		console.log(payload);
-		const newFormData = new FormData();
 
-		for (const [key, value] of Object.entries(formData)) {
+		const ignoreKeys = [
+			'id',
+			'status',
+			'created_at',
+			'updated_at',
+			'request_change_comment',
+			'approving_treasurer',
+			'created_by',
+			'updated_by',
+			'historical',
+			'typeGroup'
+		]
+
+		const newFormData = new FormData();
+		for (const [key, value] of Object.entries(payload)) {
 			if (Array.isArray(value)) {
 				newFormData.append(key, JSON.stringify(value));
-			} else {
+			} else if (!ignoreKeys.includes(key)) {
 				newFormData.append(key, value as string);
 			}
+		}
+
+
+		for (let [key, value] of newFormData.entries()) {
+		console.log(key, value);
 		}
 		// console.log(newFormData); //consoleo la data antes de transformar a form data
 		// for (let [key, value] of newFormData.entries()) {
@@ -150,11 +168,10 @@ export const GroupTypeItem = ({
 			const response = await fetch(endpoint, {
 				method: "PATCH",
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 				// body: JSON.stringify(payload),
-				body: JSON.stringify(newFormData),
+				body: newFormData,
 			});
 
 			if (!response.ok) {
