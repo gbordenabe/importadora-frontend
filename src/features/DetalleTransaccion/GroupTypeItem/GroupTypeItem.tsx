@@ -130,7 +130,7 @@ export const GroupTypeItem = ({
 				return;
 		}
 
-		// console.log(payload);
+		console.log(payload);
 		const newFormData = new FormData();
 
 		for (const [key, value] of Object.entries(formData)) {
