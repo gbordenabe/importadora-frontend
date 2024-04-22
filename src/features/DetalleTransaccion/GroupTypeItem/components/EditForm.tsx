@@ -35,7 +35,7 @@ const EditForm: React.FC<EditFormProps> = ({ columns, data, onSave, typeGroup, h
 	const uploadFileModal = useModal();
 	const [fileToUpload, setFileToUpload] = useState<any>("");
 	const [filesBlob, setFilesBlob] = useState([]);
-	console.log(filesBlob);
+
 	// --end archivo adjunto edit--
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>, campo: string) => {

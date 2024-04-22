@@ -112,7 +112,7 @@ export const MainTitleDetail = ({ title, createdBy, createdAt, sku }: Props) => 
 				/>
 			</div>
 
-			<div style={{ position: "relative" }}>
+			<div style={{ position: "relative", zIndex: "5" }}>
 				<div className={style.historial__box} onClick={() => setDropdownActive((prev) => !prev)}>
 					{historyGetData?.data?.length && historyGetData?.data[0].statuses !== "PENDING" ? (
 						<>

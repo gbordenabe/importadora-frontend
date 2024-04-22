@@ -56,6 +56,7 @@ export const GroupTypeItem = ({
 					type: formData.type,
 					bank_name: formData.bank_name,
 					file_field_name: formData.file_field_name,
+					file: formData.file,
 				};
 				break;
 			case "bills":
@@ -129,6 +130,22 @@ export const GroupTypeItem = ({
 				return;
 		}
 
+		// console.log(payload);
+		const newFormData = new FormData();
+
+		for (const [key, value] of Object.entries(formData)) {
+			if (Array.isArray(value)) {
+				newFormData.append(key, JSON.stringify(value));
+			} else {
+				newFormData.append(key, value as string);
+			}
+		}
+		// console.log(newFormData); //consoleo la data antes de transformar a form data
+		// for (let [key, value] of newFormData.entries()) {
+		// 	console.log(key, value);
+		// }
+
+		// Actualizando al endpoint
 		try {
 			const response = await fetch(endpoint, {
 				method: "PATCH",
@@ -136,7 +153,8 @@ export const GroupTypeItem = ({
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify(payload),
+				// body: JSON.stringify(payload),
+				body: JSON.stringify(newFormData),
 			});
 
 			if (!response.ok) {
